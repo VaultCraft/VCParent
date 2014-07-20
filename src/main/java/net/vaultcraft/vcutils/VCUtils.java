@@ -13,6 +13,6 @@ public class VCUtils extends JavaPlugin {
     }
 
     public void onDisable() {
-        
+
     }
 }
