@@ -1,7 +1,6 @@
 package net.vaultcraft.vcutils.item;
 
 import net.vaultcraft.vcutils.VCUtils;
-import org.arkhamnetwork.survivalgames.SurvivalGamesPlugin;
 import org.bukkit.Color;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,7 +14,7 @@ import java.util.List;
  */
 public class ItemUtils {
 
-    static Plugin plugin = VCUtils.
+    static Plugin plugin = VCUtils.getInstance();
 
     public static ItemStack setLore(ItemStack itemStack, List<String> lore) {
         ItemMeta itemMeta = itemStack.getItemMeta();

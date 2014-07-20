@@ -46,7 +46,6 @@ public class InventorySerializer {
                     }
                 }
 
-
                 Map<Enchantment, Integer> isEnch = is.getEnchantments();
                 if (isEnch.size() > 0) {
                     for (Entry<Enchantment, Integer> ench : isEnch.entrySet()) {
