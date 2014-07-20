@@ -8,11 +8,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class VCUtils extends JavaPlugin {
 
-    public void onEnable() {
+    private static VCUtils instance;
 
+    public void onEnable() {
+        instance = this;
     }
 
     public void onDisable() {
 
+    }
+
+    public VCUtils getInstance() {
+        return instance;
     }
 }
