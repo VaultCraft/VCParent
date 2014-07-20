@@ -18,7 +18,7 @@ public class VCUtils extends JavaPlugin {
 
     }
 
-    public VCUtils getInstance() {
+    public static VCUtils getInstance() {
         return instance;
     }
 }

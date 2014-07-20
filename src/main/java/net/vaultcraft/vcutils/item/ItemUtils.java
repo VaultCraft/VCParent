@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ItemUtils {
 
-    static Plugin plugin = VCUtils.get();
+    static Plugin plugin = VCUtils.
 
     public static ItemStack setLore(ItemStack itemStack, List<String> lore) {
         ItemMeta itemMeta = itemStack.getItemMeta();
