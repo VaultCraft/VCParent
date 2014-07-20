@@ -63,35 +63,4 @@
         <name>FasterXML.com</name>
         <url>http://fasterxml.com</url>
     </organization>
-
-    <repositories>
-        <repository>
-            <id>spigotmc-snapshots</id>
-            <url>http://repo.md-5.net/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.7.9-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.12.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency> <!-- log4j is optional, but needed for compilation -->
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 </project>

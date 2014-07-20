@@ -84,7 +84,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency> <!-- log4j is optional, but needed for compilation -->
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>LATEST</version>
