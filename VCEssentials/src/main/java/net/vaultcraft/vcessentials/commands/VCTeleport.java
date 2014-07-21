@@ -45,8 +45,7 @@ public class VCTeleport extends ICommand {
                 return;
             }
             if(player2 == null) {
-                Form.at(player, Prefix.ERROR, "No such player "+args[1
-                        ]);
+                Form.at(player, Prefix.ERROR, "No such player "+args[1]);
                 return;
             }
             player1.teleport(player2);

@@ -41,6 +41,11 @@ public class VCMessage extends ICommand {
             return;
         }
 
+        if (find.equals(player)) {
+            Form.at(player, Prefix.WARNING, "Why are you trying to message yourself?");
+            return;
+        }
+
         String message = StringUtils.buildFromArray(args, 1);
 
         Form.at(player, Prefix.NOTHING, "&5&l[&7&ome &5&l-> &7&o{to}&5&l] &7{message}"
