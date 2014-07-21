@@ -40,6 +40,6 @@ public class VCPromote extends ICommand {
         }
 
         User.fromPlayer(wrapped).setGroup(select);
-        Form.at(player, Prefix.SUCCESS, "&e"+wrapped.getName()+Prefix.SUCCESS.getChatColor()+" promoted to &e"+select.g);
+        Form.at(player, Prefix.SUCCESS, "&e"+wrapped.getName()+Prefix.SUCCESS.getChatColor()+" promoted to &e"+select.getName()+Prefix.SUCCESS.getChatColor()+"!");
     }
 }
