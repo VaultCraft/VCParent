@@ -21,6 +21,11 @@ public class VCFly extends ICommand{
 
         if(args.length == 0) {
             player.setAllowFlight(!player.getAllowFlight());
+            if(player.getAllowFlight()) {
+                Form.at(player, Prefix.SUCCESS, "You can fly.");
+            } else {
+                Form.at(player, Prefix.SUCCESS, "You cannot fly.");
+            }
         }
 
         if(args.length == 0) {
@@ -30,6 +35,14 @@ public class VCFly extends ICommand{
                 return;
             }
             player1.setAllowFlight(!player1.getAllowFlight());
+
+            if(player1.getAllowFlight()) {
+                Form.at(player, Prefix.SUCCESS, player1.getName() + " can fly");
+                Form.at(player1, Prefix.SUCCESS, "You can fly.");
+            } else {
+                Form.at(player, Prefix.SUCCESS, player1.getName() + " cannot fly");
+                Form.at(player1, Prefix.SUCCESS, "You cannot fly.");
+            }
         }
     }
 }

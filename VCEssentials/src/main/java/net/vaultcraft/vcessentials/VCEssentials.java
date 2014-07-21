@@ -30,6 +30,8 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCTeleport("tp", Group.MOD, "teleport"));
         CommandManager.addCommand(new VCGamemode("gm", Group.ADMIN, "gamemode"));
         CommandManager.addCommand(new VCFly("fly", Group.MOD));
+        CommandManager.addCommand(new VCTime("time", Group.MOD));
+        CommandManager.addCommand(new VCWeather("weather", Group.MOD));
     }
 
     public void onDisable() {

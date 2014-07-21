@@ -20,7 +20,7 @@ public class VCGamemode extends ICommand{
     @Override
     public void processCommand(Player player, String[] args) {
         if(args.length == 0) {
-            Form.at(player, Prefix.ERROR, "Format: /gm <gamemode>");
+            Form.at(player, Prefix.ERROR, "Format: /gm (player) <gamemode>");
             return;
         }
 
@@ -28,21 +28,27 @@ public class VCGamemode extends ICommand{
             switch (args[0]) {
                 case "survival":
                     player.setGameMode(GameMode.SURVIVAL);
+                    Form.at(player, Prefix.SUCCESS, "You are in survival.");
                     break;
                 case "creative":
                     player.setGameMode(GameMode.CREATIVE);
+                    Form.at(player, Prefix.SUCCESS, "You are in creative.");
                     break;
                 case "adventure":
                     player.setGameMode(GameMode.ADVENTURE);
+                    Form.at(player, Prefix.SUCCESS, "You are in adventure.");
                     break;
                 case "0":
                     player.setGameMode(GameMode.SURVIVAL);
+                    Form.at(player, Prefix.SUCCESS, "You are in survival.");
                     break;
                 case "1":
                     player.setGameMode(GameMode.CREATIVE);
+                    Form.at(player, Prefix.SUCCESS, "You are in creative.");
                     break;
                 case "2":
                     player.setGameMode(GameMode.ADVENTURE);
+                    Form.at(player, Prefix.SUCCESS, "You are in adventure.");
                     break;
             }
         }
@@ -58,21 +64,33 @@ public class VCGamemode extends ICommand{
             switch (args[1]) {
                 case "survival":
                     player1.setGameMode(GameMode.SURVIVAL);
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " is in survival.");
+                    Form.at(player1, Prefix.SUCCESS, "You are in survival.");
                     break;
                 case "creative":
                     player1.setGameMode(GameMode.CREATIVE);
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " is in creative.");
+                    Form.at(player1, Prefix.SUCCESS, "You are in creative.");
                     break;
                 case "adventure":
                     player1.setGameMode(GameMode.ADVENTURE);
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " is in adventure.");
+                    Form.at(player1, Prefix.SUCCESS, "You are in adventure.");
                     break;
                 case "0":
                     player1.setGameMode(GameMode.SURVIVAL);
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " is in survival.");
+                    Form.at(player1, Prefix.SUCCESS, "You are in survival.");
                     break;
                 case "1":
                     player1.setGameMode(GameMode.CREATIVE);
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " is in creative.");
+                    Form.at(player1, Prefix.SUCCESS, "You are in creative.");
                     break;
                 case "2":
                     player1.setGameMode(GameMode.ADVENTURE);
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " is in adventure.");
+                    Form.at(player1, Prefix.SUCCESS, "You are in adventure.");
                     break;
             }
         }
