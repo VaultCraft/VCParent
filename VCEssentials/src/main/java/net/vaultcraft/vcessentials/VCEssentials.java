@@ -1,9 +1,6 @@
 package net.vaultcraft.vcessentials;
 
-import net.vaultcraft.vcessentials.commands.VCMessage;
-import net.vaultcraft.vcessentials.commands.VCPromote;
-import net.vaultcraft.vcessentials.commands.VCReply;
-import net.vaultcraft.vcessentials.commands.VCTeleport;
+import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +28,8 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCMessage("message", Group.COMMON, "msg", "tell", "whisper"));
         CommandManager.addCommand(new VCReply("reply", Group.COMMON, "r", "respond"));
         CommandManager.addCommand(new VCTeleport("tp", Group.MOD, "teleport"));
+        CommandManager.addCommand(new VCGamemode("gm", Group.ADMIN, "gamemode"));
+        CommandManager.addCommand(new VCFly("fly", Group.MOD));
     }
 
     public void onDisable() {
