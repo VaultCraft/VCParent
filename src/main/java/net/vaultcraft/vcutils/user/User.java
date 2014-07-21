@@ -16,6 +16,7 @@ public class User {
         return async_player_map.get(player);
     }
 
+    private Player conversation;
     private Group group = Group.COMMON;
     private Player player;
 
@@ -38,5 +39,13 @@ public class User {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Player modifyConversation(Player other) {
+        if (other == null)
+            return conversation;
+
+        this.conversation = other;
+        return other;
     }
 }

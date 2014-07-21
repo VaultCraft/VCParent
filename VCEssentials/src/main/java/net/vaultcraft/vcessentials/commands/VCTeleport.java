@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
  */
 public class VCTeleport extends ICommand {
 
-    public VCTeleport() {
-        super("tp", Group.MOD, "teleport");
+    public VCTeleport(String name, Group permission, String... aliases) {
+        super(name, permission, aliases);
     }
 
     @Override

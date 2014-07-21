@@ -16,8 +16,8 @@ import java.util.Arrays;
 
 public class VCPromote extends ICommand {
 
-    public VCPromote() {
-        super("promote", Group.ADMIN, "demote", "setgroup");
+    public VCPromote(String name, Group group, String... args) {
+        super(name, group, args);
     }
 
     /*

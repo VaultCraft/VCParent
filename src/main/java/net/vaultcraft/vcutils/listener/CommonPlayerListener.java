@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.listener;
 
+import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -57,5 +58,9 @@ public class CommonPlayerListener implements Listener {
         String format = chatter.getGroup().getTag();
         format = format.replace("%user%", "%1$s").replace("%message%", "%2$s");
         event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
+
+        if (chatter.getGroup().hasPermission(Group.HELPER)) {
+            event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
+        }
     }
 }
