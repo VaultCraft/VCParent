@@ -1,5 +1,7 @@
 package net.vaultcraft.vcessentials;
 
+import net.vaultcraft.vcessentials.commands.VCPromote;
+import net.vaultcraft.vcutils.command.CommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -12,6 +14,8 @@ public class VCEssentials extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+
+        initCommands();
     }
 
     public static VCEssentials getInstance() {
@@ -19,7 +23,7 @@ public class VCEssentials extends JavaPlugin {
     }
 
     private void initCommands() {
-
+        CommandManager.addCommand(new VCPromote());
     }
 
     public void onDisable() {

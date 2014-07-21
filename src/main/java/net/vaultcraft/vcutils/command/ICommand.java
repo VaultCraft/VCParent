@@ -1,6 +1,5 @@
 package net.vaultcraft.vcutils.command;
 
-import lombok.Getter;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.entity.Player;
@@ -10,11 +9,8 @@ import org.bukkit.entity.Player;
  */
 public abstract class ICommand {
 
-    @Getter
     private String name;
-    @Getter
     private Group permission;
-    @Getter
     private String[] aliases;
 
     public ICommand(String name, Group permission, String... aliases) {
@@ -29,6 +25,18 @@ public abstract class ICommand {
 
     public boolean checkPerms(User player) {
         return player.getGroup().hasPermission(permission);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Group gerPermission() {
+        return permission;
+    }
+
+    public String[] getAliases() {
+        return aliases;
     }
 
     public abstract void processCommand(Player player, String[] args);

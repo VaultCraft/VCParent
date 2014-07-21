@@ -81,20 +81,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.12.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency> <!-- log4j is optional, but needed for compilation -->
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>net.vaultcraft</groupId>
             <artifactId>VCUtils</artifactId>
             <version>1.0-SNAPSHOT</version>

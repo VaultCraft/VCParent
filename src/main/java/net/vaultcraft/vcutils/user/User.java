@@ -1,6 +1,5 @@
 package net.vaultcraft.vcutils.user;
 
-import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.ConcurrentHashMap;

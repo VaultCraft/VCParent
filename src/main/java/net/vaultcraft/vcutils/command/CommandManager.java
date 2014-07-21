@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
@@ -29,25 +30,30 @@ public class CommandManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, VCUtils.getInstance());
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPreprocessCommand(PlayerCommandPreprocessEvent event) {
-        Player user = event.getPlayer();
-        //intercept command for vanilla override
-        String command = event.getMessage().replace("/", "");
-        String[] split = command.split(" ");
-        String[] arguments = new String[split.length-1];
-        for (int x = 1; x < split.length-1; x++)
-            arguments[x-1] = split[x];
+        try {
+            Player user = event.getPlayer();
+            //intercept command for vanilla override
+            String command = event.getMessage().replace("/", "");
+            String[] split = command.split(" ");
+            String[] arguments = new String[split.length-1];
+            for (int x = 1; x < split.length; x++)
+                arguments[x-1] = split[x];
 
-        processCommand(user, command, arguments);
-        event.setCancelled(true);
+            processCommand(user, split[0], arguments);
+            event.setCancelled(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            event.setCancelled(true);
+        }
     }
 
-    public static void processCommand(Player player, String command, String[] args) {
+    private static void processCommand(Player player, String command, String[] args) {
         ICommand find = commands.get(command.toLowerCase());
 
         if (find != null) {
-            boolean canUse = find.checkPerms(User.fromPlayer(player));
+            boolean canUse = find.checkPerms(User.fromPlayer(player)) || player.isOp();
 
             if (!(canUse)) {
                 Form.at(player, Prefix.ERROR, "You do not have permission to use this command!");
@@ -65,11 +71,13 @@ public class CommandManager implements Listener {
         for (String alias : cmd.getAliases()) {
             commands.put(alias.toLowerCase(), cmd);
         }
+        commands.put(cmd.getName(), cmd);
     }
 
     public static void removeCommand(ICommand cmd) {
         for (String alias : cmd.getAliases()) {
             commands.remove(alias.toLowerCase());
         }
+        commands.remove(cmd.getName());
     }
 }

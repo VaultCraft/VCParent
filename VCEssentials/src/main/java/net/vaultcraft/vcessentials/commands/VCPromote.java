@@ -8,6 +8,8 @@ import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */

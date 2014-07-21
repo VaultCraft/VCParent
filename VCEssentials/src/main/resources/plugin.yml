@@ -1,0 +1,12 @@
+###########
+# VCEssentials
+# Commands / generic listeners for VaultCraft (July 20, 2014)
+# Authors:
+#  Connor Hollasch
+#  Nick Peterson
+###########
+name: VCEssentials
+version: 1.0
+load: POSTWORLD
+authors: [IModZombies4Fun, Tacticalsk8er]
+main: net.vaultcraft.vcessentials.VCEssentials

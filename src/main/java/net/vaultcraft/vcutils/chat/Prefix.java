@@ -1,7 +1,5 @@
 package net.vaultcraft.vcutils.chat;
 
-import lombok.Getter;
-
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */

@@ -1,5 +1,7 @@
 package net.vaultcraft.vcutils.user;
 
+import org.bukkit.Bukkit;
+
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */
