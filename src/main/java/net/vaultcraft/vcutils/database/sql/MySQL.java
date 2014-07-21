@@ -1,10 +1,12 @@
 package net.vaultcraft.vcutils.database.sql;
 
+import net.vaultcraft.vcutils.log.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MySQL {
 
-    public static volatile List<String> updateThread = new ArrayList<>();
-    private static volatile ConcurrentHashMap<String, Long> queryThread = new ConcurrentHashMap<>();
-    private static volatile ConcurrentHashMap<Long, ISqlCallback> callbacks = new ConcurrentHashMap<>();
-    private static long queryID = 0;
+    public volatile List<String> updateThread = new ArrayList<>();
+    private volatile ConcurrentHashMap<String, Long> queryThread = new ConcurrentHashMap<>();
+    private volatile ConcurrentHashMap<Long, ISqlCallback> callbacks = new ConcurrentHashMap<>();
+    private long queryID = 0;
 
+    private Plugin plugin;
     private Connection connection = null;
     private String url;
     private String database_username;
@@ -38,7 +41,8 @@ public class MySQL {
      * @param database_username A username that has access to the MySQL server and database.
      * @param database_password The password tied with the username.
      */
-    public MySQL(Plugin plugin, String host, int port, String database_name, String database_username, String database_password) {
+    public MySQL(final Plugin plugin, String host, int port, String database_name, String database_username, String database_password) {
+        this.plugin = plugin;
         this.url = "jdbc:mysql://" + host + ":" + port + "/" + database_name;
         this.database_username = database_username;
         this.database_password = database_password;
@@ -54,7 +58,7 @@ public class MySQL {
                             updateThread.remove(0);
                             ps.executeUpdate();
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            Logger.exception(plugin, e);
                         }
                     }
                 }
@@ -105,7 +109,7 @@ public class MySQL {
                 connection = DriverManager.getConnection(url, database_username, database_password);
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            Logger.exception(plugin, e);
         }
         queries++;
         return connection;
@@ -134,9 +138,15 @@ public class MySQL {
         queryTask.cancel();
     }
 
+    public static String getDate() {
+        java.util.Date date = new java.util.Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(date);
+    }
+
     public interface ISqlCallback {
         public void onSuccess(ResultSet rs);
 
-        public void onFailure(Exception e);
+        public void onFailure(SQLException e);
     }
 }
