@@ -28,16 +28,19 @@ public class VCWeather extends ICommand {
                     player.getWorld().setThundering(false);
                     player.getWorld().setStorm(false);
                     player.getWorld().setWeatherDuration(30000);
+                    Form.at(player, Prefix.SUCCESS, "Weather set to clear.");
                     break;
                 case "storm":
                     player.getWorld().setThundering(true);
                     player.getWorld().setStorm(true);
                     player.getWorld().setWeatherDuration(30000);
+                    Form.at(player, Prefix.SUCCESS, "Weather set to storm.");
                     break;
                 case "rain":
                     player.getWorld().setThundering(false);
                     player.getWorld().setStorm(true);
                     player.getWorld().setWeatherDuration(30000);
+                    Form.at(player, Prefix.SUCCESS, "Weather set to rain.");
                     break;
                 default:
                     Form.at(player, Prefix.ERROR, "Argument needs to be either rain, storm, or clear.");
@@ -48,21 +51,25 @@ public class VCWeather extends ICommand {
 
         if(args.length == 2) {
             try {
+                int time = Integer.parseInt(args[0]);
                 switch (args[0]) {
                     case "clear":
                         player.getWorld().setThundering(false);
                         player.getWorld().setStorm(false);
-                        player.getWorld().setWeatherDuration(30000);
+                        player.getWorld().setWeatherDuration(time * 20);
+                        Form.at(player, Prefix.SUCCESS, "Weather set to clear.");
                         break;
                     case "storm":
                         player.getWorld().setThundering(true);
                         player.getWorld().setStorm(true);
-                        player.getWorld().setWeatherDuration(30000);
+                        player.getWorld().setWeatherDuration(time * 20);
+                        Form.at(player, Prefix.SUCCESS, "Weather set to storm.");
                         break;
                     case "rain":
                         player.getWorld().setThundering(false);
                         player.getWorld().setStorm(true);
-                        player.getWorld().setWeatherDuration(30000);
+                        player.getWorld().setWeatherDuration(time * 20);
+                        Form.at(player, Prefix.SUCCESS, "Weather set to rain.");
                         break;
                     default:
                         Form.at(player, Prefix.ERROR, "Argument 1 needs to be either rain, storm, or clear.");
