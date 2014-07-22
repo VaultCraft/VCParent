@@ -1,6 +1,6 @@
 package net.vaultcraft.vcutils.database.sql;
 
-import net.vaultcraft.vcutils.log.Logger;
+import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;

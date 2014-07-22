@@ -5,7 +5,7 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.database.sql.MySQL;
-import net.vaultcraft.vcutils.log.Logger;
+import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
