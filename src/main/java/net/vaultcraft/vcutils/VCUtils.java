@@ -4,6 +4,7 @@ import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
+import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
@@ -29,21 +30,25 @@ public class VCUtils extends JavaPlugin {
 
         ClassConfig.loadConfig(SQLInfo.class, getConfig());
         mySQL = new MySQL(this, SQLInfo.host, SQLInfo.port, SQLInfo.database_name, SQLInfo.username, SQLInfo.password);
-        mySQL.updateThread.add("CREATE TABLE IF NOT EXISTS Commands(" +
-                "ID INT NOT NULL AUTO_INCREMENT," +
-                "PRIMARY KEY(ID)," +
+        mySQL.updateThread.add(Statements.TABLE.getSql("Commands",
                 "SenderID TINYTEXT," +
-                "SenderName CHAR(16)," +
-                "SenderGroup CHAR(30)," +
-                "Command TEXT," +
-                "Time DATETIME)");
-        mySQL.updateThread.add("CREATE TABLE IF NOT EXISTS Log(" +
-                "ID INT NOT NULL AUTO_INCREMENT," +
-                "PRIMARY KEY(ID)," +
+                        "SenderName CHAR(16)," +
+                        "SenderGroup CHAR(30)," +
+                        "Command TEXT," +
+                        "Time DATETIME"
+        ));
+        mySQL.updateThread.add(Statements.TABLE.getSql("Log",
                 "PluginName CHAR(64)," +
-                "PluginVersion CHAR(10)," +
-                "Message TEXT," +
-                "Time DATETIME)");
+                        "PluginVersion CHAR(10)," +
+                        "Message TEXT," +
+                        "Time DATETIME"
+        ));
+        mySQL.updateThread.add(Statements.TABLE.getSql("Chat",
+                "ChatterID TINYTEXT," +
+                        "ChatterName CHAR(16)," +
+                        "Message TEXT," +
+                        "Time DATETIME"
+        ));
         getServer().getPluginManager().registerEvents(new CommandManager(), this);
         initListeners();
 
