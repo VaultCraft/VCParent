@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
+import net.vaultcraft.vcutils.database.sql.MySQL;
+import net.vaultcraft.vcutils.log.Logger;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,6 +43,12 @@ public class CommandManager implements Listener {
     public void onPreprocessCommand(PlayerCommandPreprocessEvent event) {
         try {
             Player user = event.getPlayer();
+            VCUtils.getInstance().mySQL.updateThread.add("INSERT INTO Commands VALUES(default, '"
+                    + user.getUniqueId().toString() + "', '"
+                    + user.getName() + "', '"
+                    + User.fromPlayer(user).getGroup().getName() + "', '"
+                    + event.getMessage() + "', "
+                    + MySQL.getDate() + ")");
             //intercept command for vanilla override
             String command = event.getMessage().substring(1);
             for (String cmd : commandWhitelist) {
@@ -52,14 +60,14 @@ public class CommandManager implements Listener {
                 command = redirect.get(command);
 
             String[] split = command.split(" ");
-            String[] arguments = new String[split.length-1];
+            String[] arguments = new String[split.length - 1];
             for (int x = 1; x < split.length; x++)
-                arguments[x-1] = split[x];
+                arguments[x - 1] = split[x];
 
             processCommand(user, split[0], arguments);
             event.setCancelled(true);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.exception(VCUtils.getInstance(), ex);
             event.setCancelled(true);
         }
     }
