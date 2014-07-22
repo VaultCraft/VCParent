@@ -1,7 +1,10 @@
 package net.vaultcraft.vcessentials.file;
 
+import net.minecraft.util.com.google.gson.Gson;
+import net.minecraft.util.com.google.gson.GsonBuilder;
 import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.protection.Area;
+import net.vaultcraft.vcutils.protection.FlagType;
 import net.vaultcraft.vcutils.protection.ProtectedArea;
 import net.vaultcraft.vcutils.protection.ProtectionManager;
 import org.bukkit.Bukkit;
@@ -9,7 +12,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -55,6 +57,9 @@ public class ProtectionFile {
         while (regions.hasNext()) {
             JSONObject obj = (JSONObject)regions.next();
             String name = obj.get("name").toString();
+            if (name.equals("global")) {
+
+            }
 
             World world = Bukkit.getWorld(obj.get("world").toString());
             int xMin = Integer.valueOf(obj.get("xMin").toString());
@@ -67,7 +72,20 @@ public class ProtectionFile {
 
             Location min = new Location(world, xMin, yMin, zMin);
             Location max = new Location(world, xMax, yMax, zMax);
-            ProtectionManager.getInstance().addToProtection(name, new ProtectedArea(new Area(min, max)));
+            ProtectedArea area = new ProtectedArea(new Area(min, max));
+
+            if (obj.containsKey("flags")) {
+                JSONArray flags = (JSONArray)obj.get("flags");
+                Iterator iFlag = flags.iterator();
+                while (iFlag.hasNext()) {
+                    String flag = (String)iFlag.next();
+                    FlagType ft = FlagType.fromString(flag.split(":")[0]);
+                    boolean value = Boolean.valueOf(flag.split(":")[1]);
+                    area.addToProtection(ft, value);
+                }
+            }
+
+            ProtectionManager.getInstance().addToProtection(name, area);
         }
     }
 
@@ -75,7 +93,7 @@ public class ProtectionFile {
         return file;
     }
 
-    public void saveAll() {
+    public void saveAll() throws ParseException {
         try {
             new PrintWriter(file).close();
         } catch (FileNotFoundException e) {
@@ -86,6 +104,7 @@ public class ProtectionFile {
         JSONArray regions = new JSONArray();
 
         HashMap<String, ProtectedArea> pr = ProtectionManager.getInstance().getRegions();
+        Bukkit.broadcastMessage(pr.toString());
         for (String key : pr.keySet()) {
             ProtectedArea area = pr.get(key);
 
@@ -114,11 +133,16 @@ public class ProtectionFile {
 
             regions.add(rObj);
         }
+        obj.put("regions", regions);
+        JSONParser parser = new JSONParser();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        String jsonString = gson.toJson(parser.parse(obj.toJSONString()));
 
         FileWriter out = null;
         try {
             out = new FileWriter(file);
-            out.write(obj.toJSONString());
+            out.write(jsonString);
             out.flush();
             out.close();
         } catch (IOException e) {

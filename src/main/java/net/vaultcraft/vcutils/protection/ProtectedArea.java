@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class ProtectedArea {
 
     private Area area;
-    private HashMap<Class<? extends Event>, Boolean> protection = new HashMap<>();
+    private HashMap<FlagType, Boolean> protection = new HashMap<>();
     private Group membership = Group.DEVELOPER;
 
     public ProtectedArea(Area area) {
@@ -31,8 +31,8 @@ public class ProtectedArea {
         return area;
     }
 
-    public void addToProtection(Class<? extends Event> clazz, boolean cancel) {
-        this.protection.put(clazz, cancel);
+    public void addToProtection(FlagType type, boolean cancel) {
+        this.protection.put(type, cancel);
     }
 
     public boolean doCancel(Class<? extends Event> event) {

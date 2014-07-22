@@ -11,6 +11,7 @@ import net.vaultcraft.vcutils.protection.ProtectionManager;
 import net.vaultcraft.vcutils.string.StringUtils;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.entity.Player;
+import org.json.simple.parser.ParseException;
 
 /**
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
@@ -25,6 +26,7 @@ public class VCProtection extends ICommand {
         subCmds.put("add <name>", "Create a region with current selection.");
         subCmds.put("remove <name>", "Remove the given region.");
         subCmds.put("flag <name> <flag> <value>", "Flag the given region");
+        subCmds.put("check", "Gather region info for current region");
     }
 
     public void processCommand(Player player, String[] args) {
@@ -57,6 +59,13 @@ public class VCProtection extends ICommand {
                 removeRegion(player, fixedArgs);
                 break;
             }
+            case "scan":
+            case "current":
+            case "info":
+            case "check": {
+                checkRegion(player, fixedArgs);
+                break;
+            }
             default: {
                 Form.at(player, Prefix.ERROR, "No such sub command! Type /protect for help");
                 return;
@@ -78,7 +87,11 @@ public class VCProtection extends ICommand {
 
         ProtectedArea pa = new ProtectedArea(create);
         ProtectionManager.getInstance().addToProtection(args[0], pa);
-        ProtectionFile.getInstance().saveAll();
+        try {
+            ProtectionFile.getInstance().saveAll();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Form.at(player, Prefix.SUCCESS, "Region: &e" + args[0] + Prefix.SUCCESS.getChatColor() + " created!");
     }
 
@@ -87,6 +100,10 @@ public class VCProtection extends ICommand {
     }
 
     private void removeRegion(Player player, String[] args) {
+
+    }
+
+    private void checkRegion(Player player, String[] args) {
 
     }
 }

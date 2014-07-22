@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
@@ -17,13 +18,14 @@ import java.io.IOException;
 public class VCEssentials extends JavaPlugin {
 
     private static VCEssentials instance;
-    private MySQL mySQL = VCUtils.getInstance().mySQL;
+    private MySQL mySQL;
 
     public void onEnable() {
         instance = this;
 
         ProtectionFile.getInstance();
         initCommands();
+        mySQL = VCUtils.getInstance().mySQL;
         mySQL.updateThread.add("CREATE TABLE IF NOT EXISTS Bans(" +
                 "ID INT NOT NULL AUTO_INCREMENT," +
                 "PRIMARY KEY(ID)," +
@@ -81,7 +83,7 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCHeal("heal", Group.ADMIN, "h", "feed"));
 
         //protection
-        CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region"));
+        CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
 
         //redirects
         CommandManager.addRedirect("gms", "gamemode 0");
@@ -93,6 +95,10 @@ public class VCEssentials extends JavaPlugin {
     }
 
     public void onDisable() {
-        ProtectionFile.getInstance().saveAll();
+        try {
+            ProtectionFile.getInstance().saveAll();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

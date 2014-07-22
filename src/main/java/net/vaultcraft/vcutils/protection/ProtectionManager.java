@@ -18,6 +18,10 @@ public class ProtectionManager {
         return (instance == null ? (instance = new ProtectionManager()) : instance);
     }
 
+    public ProtectionManager() {
+        protect.put("global", new ProtectedArea(new Area(null, null)));
+    }
+
     public ProtectedArea getArea(String name) {
         return protect.get(name.toLowerCase());
     }
