@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.commands;
 
+import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
@@ -69,6 +70,7 @@ public class VCProtection extends ICommand {
         ProtectedArea pa = new ProtectedArea(create);
         ProtectionManager.getInstance().addToProtection(args[0], pa);
         Form.at(player, Prefix.SUCCESS, "Region: &e"+args[0]+Prefix.SUCCESS.getChatColor()+" created!");
+        ProtectionFile.getInstance().saveAll();
     }
 
     private void flagRegion(Player player, String[] args) {

@@ -67,7 +67,8 @@ public class CommandManager implements Listener {
             processCommand(user, split[0], arguments);
             event.setCancelled(true);
         } catch (Exception ex) {
-            Logger.exception(VCUtils.getInstance(), ex);
+            Logger.error(VCUtils.getInstance(), "Could not run PlayerCommandPreprocessEvent! Stack trace below...");
+            ex.printStackTrace();
             event.setCancelled(true);
         }
     }

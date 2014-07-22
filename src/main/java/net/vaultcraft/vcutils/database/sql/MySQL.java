@@ -58,7 +58,8 @@ public class MySQL {
                             updateThread.remove(0);
                             ps.executeUpdate();
                         } catch (SQLException e) {
-                            Logger.exception(plugin, e);
+                            Logger.error(plugin, "Error preparing statement! Stack trace below...");
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -109,7 +110,8 @@ public class MySQL {
                 connection = DriverManager.getConnection(url, database_username, database_password);
             }
         } catch (SQLException | ClassNotFoundException e) {
-            Logger.exception(plugin, e);
+            Logger.error(plugin, "Error connecting to MySQL! Stack trace below...");
+            e.printStackTrace();
         }
         queries++;
         return connection;
