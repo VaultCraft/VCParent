@@ -20,7 +20,7 @@ public class Logger {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
         VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Log",
-                pluginName + "', '"
+                "'" + pluginName + "', '"
                         + pluginVersion + "', '"
                         + message + "', "
                         + MySQL.getDate()
@@ -33,7 +33,7 @@ public class Logger {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
         VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Log",
-                pluginName + "', '"
+                "'" + pluginName + "', '"
                         + pluginVersion + "', '"
                         + e.getMessage() + "', "
                         + MySQL.getDate()
@@ -52,7 +52,7 @@ public class Logger {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
         VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Log",
-                pluginName + "', '"
+                "'" + pluginName + "', '"
                         + pluginVersion + "', '(WARNING)"
                         + message + "', "
                         + MySQL.getDate()

@@ -27,33 +27,31 @@ public class VCEssentials extends JavaPlugin {
         mySQL = VCUtils.getInstance().mySQL;
         mySQL.updateThread.add(Statements.TABLE.getSql("Bans",
                 "BannedID TINYTEXT," +
-                        "BannedName CHAR(16)," +
-                        "BannerID TINYTEXT" +
-                        "BannerName CHAR(16)," +
+                        "BannedName CHAR(16) NOT NULL," +
+                        "BannerID TINYTEXT NOT NULL," +
+                        "BannerName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
-                        "Time DATETIME," +
+                        "Time DATETIME NOT NULL," +
                         "Temp DATETIME," +
-                        "Unbanned BIT(1)"
+                        "Unbanned BOOL NOT NULL"
         ));
         mySQL.updateThread.add(Statements.TABLE.getSql("Kicks",
-                "ID INT NOT NULL AUTO_INCREMENT," +
-                        "PRIMARY KEY(ID)," +
-                        "KickedID TINYTEXT," +
-                        "KickedName CHAR(16)," +
-                        "KickerID TINYTEXT," +
-                        "KickerName CHAR(16)," +
+                "KickedID TINYTEXT NOT NULL," +
+                        "KickedName CHAR(16) NOT NULL," +
+                        "KickerID TINYTEXT NOT NULL," +
+                        "KickerName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
-                        "Time DATETIME"
+                        "Time DATETIME NOT NULL"
         ));
         mySQL.updateThread.add(Statements.TABLE.getSql("Mutes",
-                "MutedID TINYTEXT," +
+                "MutedID TINYTEXT NOT NULL," +
                         "MutedName CHAR(16)," +
-                        "MuterID TINYTEXT," +
-                        "MuterName CHAR(16)," +
+                        "MuterID TINYTEXT NOT NULL," +
+                        "MuterName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
-                        "Time DATETIME," +
+                        "Time DATETIME NOT NULL," +
                         "Temp DATETIME," +
-                        "Unmuted BIT(1)"
+                        "Unmuted BOOL NOT NULL"
         ));
     }
 
@@ -71,7 +69,11 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCGive("give", Group.ADMIN, "g"));
         CommandManager.addCommand(new VCTime("time", Group.MOD));
         CommandManager.addCommand(new VCWeather("weather", Group.MOD));
-        CommandManager.addCommand(new VCHeal("heal", Group.ADMIN, "h", "feed"));
+        CommandManager.addCommand(new VCHeal("heal", Group.ADMIN, "h"));
+        CommandManager.addCommand(new VCFeed("feed", Group.ADMIN));
+        CommandManager.addCommand(new VCGod(this, "god", Group.ADMIN, "godmode"));
+        CommandManager.addCommand(new VCKick("kick", Group.MOD));
+        CommandManager.addCommand(new VCMute(this, "mute", Group.ADMIN));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));

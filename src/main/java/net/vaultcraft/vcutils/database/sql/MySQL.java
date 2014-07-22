@@ -44,6 +44,8 @@ public class MySQL {
         this.url = "jdbc:mysql://" + host + ":" + port + "/" + database_name;
         this.database_username = database_username;
         this.database_password = database_password;
+        updateTask.start();
+        queryTask.start();
     }
 
     /**
@@ -89,6 +91,8 @@ public class MySQL {
     public void close() throws SQLException {
         if (connection != null)
             connection.close();
+        updateTask.interrupt();
+        queryTask.interrupt();
         updateThread.clear();
         queryThread.clear();
         callbacks.clear();

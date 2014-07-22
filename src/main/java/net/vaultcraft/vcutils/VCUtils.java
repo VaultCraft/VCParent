@@ -31,23 +31,23 @@ public class VCUtils extends JavaPlugin {
         ClassConfig.loadConfig(SQLInfo.class, getConfig());
         mySQL = new MySQL(this, SQLInfo.host, SQLInfo.port, SQLInfo.database_name, SQLInfo.username, SQLInfo.password);
         mySQL.updateThread.add(Statements.TABLE.getSql("Commands",
-                "SenderID TINYTEXT," +
-                        "SenderName CHAR(16)," +
-                        "SenderGroup CHAR(30)," +
-                        "Command TEXT," +
-                        "Time DATETIME"
+                "SenderID TINYTEXT NOT NULL," +
+                        "SenderName CHAR(16) NOT NULL," +
+                        "SenderGroup CHAR(30) NOT NULL," +
+                        "Command TEXT NOT NULL," +
+                        "Time DATETIME NOT NULL"
         ));
         mySQL.updateThread.add(Statements.TABLE.getSql("Log",
-                "PluginName CHAR(64)," +
-                        "PluginVersion CHAR(10)," +
-                        "Message TEXT," +
-                        "Time DATETIME"
+                "PluginName CHAR(64) NOT NULL," +
+                        "PluginVersion CHAR(10) NOT NULL," +
+                        "Message TEXT NOT NULL," +
+                        "Time DATETIME NOT NULL"
         ));
         mySQL.updateThread.add(Statements.TABLE.getSql("Chat",
-                "ChatterID TINYTEXT," +
-                        "ChatterName CHAR(16)," +
-                        "Message TEXT," +
-                        "Time DATETIME"
+                "ChatterID TINYTEXT NOT NULL," +
+                        "ChatterName CHAR(16) NOT NULL," +
+                        "Message TEXT NOT NULL," +
+                        "Time DATETIME NOT NULL"
         ));
         getServer().getPluginManager().registerEvents(new CommandManager(), this);
         initListeners();

@@ -7,7 +7,10 @@ package net.vaultcraft.vcutils.database.sql;
 public enum Statements {
 
     TABLE("CREATE TABLE IF NOT EXISTS ?(ID INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(ID), ?)", 2),
-    INSERT("INSERT INTO ? VALUES(default, ?)", 2);
+    INSERT("INSERT INTO ? VALUES(default, ?)", 2),
+    UPDATE("UPDATE ? SET ? WHERE ?", 3),
+    QUERYALL("SELECT * FROM ?", 1),
+    QUERY("SELECT * FROM ? WHERE ?", 2);
 
     private String sql;
     private int argsAmount;

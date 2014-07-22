@@ -1,6 +1,7 @@
 package net.vaultcraft.vcutils.listener;
 
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
@@ -63,6 +64,10 @@ public class CommonPlayerListener implements Listener {
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
         }
 
-        VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql(""));
+        VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Chat",
+                "'" + chatter.getPlayer().getUniqueId().toString() + "', '" +
+                        chatter.getPlayer().getName() + "', '" +
+                        event.getMessage() + "', " +
+                        MySQL.getDate()));
     }
 }
