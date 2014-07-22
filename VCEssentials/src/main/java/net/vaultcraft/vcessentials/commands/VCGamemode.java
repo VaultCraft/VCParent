@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by tacticalsk8er on 7/20/2014.
  */
-public class VCGamemode extends ICommand{
+public class VCGamemode extends ICommand {
 
     public VCGamemode(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
@@ -19,12 +19,12 @@ public class VCGamemode extends ICommand{
 
     @Override
     public void processCommand(Player player, String[] args) {
-        if(args.length == 0) {
+        if (args.length == 0) {
             Form.at(player, Prefix.ERROR, "Format: /gm (player) <gamemode>");
             return;
         }
 
-        if(args.length == 1) {
+        if (args.length == 1) {
             switch (args[0]) {
                 case "survival":
                     player.setGameMode(GameMode.SURVIVAL);
@@ -53,10 +53,10 @@ public class VCGamemode extends ICommand{
             }
         }
 
-        if(args.length == 2) {
+        if (args.length == 2) {
             Player player1 = Bukkit.getPlayer(args[0]);
 
-            if(player1 == null) {
+            if (player1 == null) {
                 Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
                 return;
             }

@@ -36,7 +36,7 @@ public class VCGive extends ICommand {
         }
 
         if (find.getInventory().firstEmpty() == -1) {
-            Form.at(player, Prefix.ERROR, "&e"+find.getName()+Prefix.ERROR.getChatColor()+" has no room in his/her inventory!");
+            Form.at(player, Prefix.ERROR, "&e" + find.getName() + Prefix.ERROR.getChatColor() + " has no room in his/her inventory!");
             return;
         }
 
@@ -44,13 +44,13 @@ public class VCGive extends ICommand {
         try {
             id = Integer.parseInt(args[1]);
         } catch (NumberFormatException err) {
-            Form.at(player, Prefix.ERROR, args[1]+" is not a valid number!");
+            Form.at(player, Prefix.ERROR, args[1] + " is not a valid number!");
             return;
         }
 
         ItemStack build = null;
         try {
-            String parse = "id:"+id+" "+(args.length >= 3 ? StringUtils.buildFromArray(args, 2) : "");
+            String parse = "id:" + id + " " + (args.length >= 3 ? StringUtils.buildFromArray(args, 2) : "");
             build = ItemParser.fromString(parse);
         } catch (Exception ex) {
             Form.at(player, Prefix.ERROR, "Could not parse item stack!");
@@ -59,7 +59,7 @@ public class VCGive extends ICommand {
 
         find.getInventory().addItem(build);
         if (!find.equals(player))
-            Form.at(find, "&e"+player.getName()+Prefix.VAULT_CRAFT.getChatColor()+" gave you a(n) &e"+build.getType().toString().toLowerCase()+Prefix.VAULT_CRAFT.getChatColor()+"!");
-        Form.at(player, "You gave &e"+find.getName()+ Prefix.VAULT_CRAFT.getChatColor()+" a(n) &e"+build.getType().toString().toLowerCase()+Prefix.VAULT_CRAFT.getChatColor()+"!");
+            Form.at(find, "&e" + player.getName() + Prefix.VAULT_CRAFT.getChatColor() + " gave you a(n) &e" + build.getType().toString().toLowerCase() + Prefix.VAULT_CRAFT.getChatColor() + "!");
+        Form.at(player, "You gave &e" + find.getName() + Prefix.VAULT_CRAFT.getChatColor() + " a(n) &e" + build.getType().toString().toLowerCase() + Prefix.VAULT_CRAFT.getChatColor() + "!");
     }
 }

@@ -8,8 +8,6 @@ import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */
@@ -42,6 +40,6 @@ public class VCPromote extends ICommand {
         }
 
         User.fromPlayer(wrapped).setGroup(select);
-        Form.at(player, Prefix.SUCCESS, "&e"+wrapped.getName()+Prefix.SUCCESS.getChatColor()+" promoted to &e"+select.getName()+Prefix.SUCCESS.getChatColor()+"!");
+        Form.at(player, Prefix.SUCCESS, "&e" + wrapped.getName() + Prefix.SUCCESS.getChatColor() + " promoted to &e" + select.getName() + Prefix.SUCCESS.getChatColor() + "!");
     }
 }

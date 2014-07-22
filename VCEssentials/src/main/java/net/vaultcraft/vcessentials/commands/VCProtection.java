@@ -40,14 +40,23 @@ public class VCProtection extends ICommand {
             case "create":
             case "new":
             case "a":
-            case "add": { addRegion(player, fixedArgs); break; }
+            case "add": {
+                addRegion(player, fixedArgs);
+                break;
+            }
             case "f":
-            case "flag": { flagRegion(player, fixedArgs); break; }
+            case "flag": {
+                flagRegion(player, fixedArgs);
+                break;
+            }
             case "rem":
             case "rm":
             case "delete":
             case "r":
-            case "remove": { removeRegion(player, fixedArgs); break; }
+            case "remove": {
+                removeRegion(player, fixedArgs);
+                break;
+            }
             default: {
                 Form.at(player, Prefix.ERROR, "No such sub command! Type /protect for help");
                 return;
@@ -69,8 +78,8 @@ public class VCProtection extends ICommand {
 
         ProtectedArea pa = new ProtectedArea(create);
         ProtectionManager.getInstance().addToProtection(args[0], pa);
-        Form.at(player, Prefix.SUCCESS, "Region: &e"+args[0]+Prefix.SUCCESS.getChatColor()+" created!");
         ProtectionFile.getInstance().saveAll();
+        Form.at(player, Prefix.SUCCESS, "Region: &e" + args[0] + Prefix.SUCCESS.getChatColor() + " created!");
     }
 
     private void flagRegion(Player player, String[] args) {

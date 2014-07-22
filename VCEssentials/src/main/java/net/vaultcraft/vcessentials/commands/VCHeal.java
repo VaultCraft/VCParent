@@ -18,7 +18,7 @@ public class VCHeal extends ICommand {
 
     @Override
     public void processCommand(Player player, String[] args) {
-        if(args.length == 0) {
+        if (args.length == 0) {
             player.setHealth(20d);
             player.setFoodLevel(20);
             player.setSaturation(12.8f);
@@ -26,9 +26,9 @@ public class VCHeal extends ICommand {
             return;
         }
 
-        if(args.length == 1) {
+        if (args.length == 1) {
             Player player1 = Bukkit.getPlayer(args[0]);
-            if(player1 == null) {
+            if (player1 == null) {
                 Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
                 return;
             }
