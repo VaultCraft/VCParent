@@ -1,7 +1,5 @@
 package net.vaultcraft.vcessentials.file;
 
-import net.minecraft.util.com.google.gson.Gson;
-import net.minecraft.util.com.google.gson.GsonBuilder;
 import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.protection.Area;
 import net.vaultcraft.vcutils.protection.flag.FlagType;
@@ -10,6 +8,8 @@ import net.vaultcraft.vcutils.protection.ProtectionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

@@ -11,13 +11,10 @@ import net.vaultcraft.vcutils.protection.ProtectionManager;
 import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.string.StringUtils;
 import net.vaultcraft.vcutils.user.Group;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.json.simple.parser.ParseException;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 
 /**

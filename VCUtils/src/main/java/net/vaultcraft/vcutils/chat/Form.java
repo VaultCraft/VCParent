@@ -27,4 +27,6 @@ public class Form {
             at(player, Prefix.NOTHING, "&c/"+command.getName()+" "+m+" &e- &7"+value);
         }
     }
+
+    public static void OIJFEO() {}
 }
