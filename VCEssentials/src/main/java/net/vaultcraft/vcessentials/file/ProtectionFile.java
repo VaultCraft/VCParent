@@ -4,7 +4,7 @@ import net.minecraft.util.com.google.gson.Gson;
 import net.minecraft.util.com.google.gson.GsonBuilder;
 import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.protection.Area;
-import net.vaultcraft.vcutils.protection.FlagType;
+import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.protection.ProtectedArea;
 import net.vaultcraft.vcutils.protection.ProtectionManager;
 import org.bukkit.Bukkit;
@@ -57,21 +57,21 @@ public class ProtectionFile {
         while (regions.hasNext()) {
             JSONObject obj = (JSONObject)regions.next();
             String name = obj.get("name").toString();
-            if (name.equals("global")) {
+            Location min = null;
+            Location max = null;
+            if (!(name.equals("global"))) {
+                World world = Bukkit.getWorld(obj.get("world").toString());
+                int xMin = Integer.valueOf(obj.get("xMin").toString());
+                int yMin = Integer.valueOf(obj.get("yMin").toString());
+                int zMin = Integer.valueOf(obj.get("zMin").toString());
 
+                int xMax = Integer.valueOf(obj.get("xMax").toString());
+                int yMax = Integer.valueOf(obj.get("yMax").toString());
+                int zMax = Integer.valueOf(obj.get("zMax").toString());
+
+                min = new Location(world, xMin, yMin, zMin);
+                max = new Location(world, xMax, yMax, zMax);
             }
-
-            World world = Bukkit.getWorld(obj.get("world").toString());
-            int xMin = Integer.valueOf(obj.get("xMin").toString());
-            int yMin = Integer.valueOf(obj.get("yMin").toString());
-            int zMin = Integer.valueOf(obj.get("zMin").toString());
-
-            int xMax = Integer.valueOf(obj.get("xMax").toString());
-            int yMax = Integer.valueOf(obj.get("yMax").toString());
-            int zMax = Integer.valueOf(obj.get("zMax").toString());
-
-            Location min = new Location(world, xMin, yMin, zMin);
-            Location max = new Location(world, xMax, yMax, zMax);
             ProtectedArea area = new ProtectedArea(new Area(min, max));
 
             if (obj.containsKey("flags")) {
@@ -98,33 +98,40 @@ public class ProtectionFile {
         JSONArray regions = new JSONArray();
 
         HashMap<String, ProtectedArea> pr = ProtectionManager.getInstance().getRegions();
-        Bukkit.broadcastMessage(pr.toString());
         for (String key : pr.keySet()) {
             ProtectedArea area = pr.get(key);
 
             JSONObject rObj = new JSONObject();
             rObj.put("name", key);
-            rObj.put("world", area.getArea().getMax().getWorld().getName());
+            JSONArray arr = new JSONArray();
+            for (FlagType t : area.getProtection().keySet()) {
+                boolean value = area.getProtection().get(t);
+                arr.add(t.getAliases()[0]+":"+value);
+            }
+            rObj.put("flags", arr);
 
-            Location min = area.getArea().getMin();
-            Location max = area.getArea().getMax();
+            if (area.getArea().getMax() != null) {
+                rObj.put("world", area.getArea().getMax().getWorld().getName());
 
-            int xMin = min.getBlockX();
-            int yMin = min.getBlockY();
-            int zMin = min.getBlockZ();
+                Location min = area.getArea().getMin();
+                Location max = area.getArea().getMax();
 
-            int xMax = max.getBlockX();
-            int yMax = max.getBlockY();
-            int zMax = max.getBlockZ();
+                int xMin = min.getBlockX();
+                int yMin = min.getBlockY();
+                int zMin = min.getBlockZ();
 
-            rObj.put("xMin", xMin);
-            rObj.put("yMin", yMin);
-            rObj.put("zMin", zMin);
+                int xMax = max.getBlockX();
+                int yMax = max.getBlockY();
+                int zMax = max.getBlockZ();
 
-            rObj.put("xMax", xMax);
-            rObj.put("yMax", yMax);
-            rObj.put("zMax", zMax);
+                rObj.put("xMin", xMin);
+                rObj.put("yMin", yMin);
+                rObj.put("zMin", zMin);
 
+                rObj.put("xMax", xMax);
+                rObj.put("yMax", yMax);
+                rObj.put("zMax", zMax);
+            }
             regions.add(rObj);
         }
         obj.put("regions", regions);

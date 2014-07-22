@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.protection;
 
+import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.event.Event;
 
@@ -14,13 +15,14 @@ public class ProtectedArea {
     private Area area;
     private HashMap<FlagType, Boolean> protection = new HashMap<>();
     private Group membership = Group.DEVELOPER;
+    private int priority = 0;
 
     public ProtectedArea(Area area) {
         this.area = area;
     }
 
     public void setGroupMembership(Group other) {
-        this.membership = other;
+        membership = other;
     }
 
     public Group getMembership() {
@@ -32,10 +34,25 @@ public class ProtectedArea {
     }
 
     public void addToProtection(FlagType type, boolean cancel) {
-        this.protection.put(type, cancel);
+        if (protection.containsKey(type))
+            protection.remove(type);
+        
+        protection.put(type, cancel);
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 
     public boolean doCancel(Class<? extends Event> event) {
         return (protection.containsKey(event) ? protection.get(event) : false);
+    }
+
+    public HashMap<FlagType, Boolean> getProtection() {
+        return protection;
     }
 }

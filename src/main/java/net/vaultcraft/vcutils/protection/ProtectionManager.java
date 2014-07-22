@@ -1,7 +1,14 @@
 package net.vaultcraft.vcutils.protection;
 
+import com.google.common.collect.Lists;
+import net.vaultcraft.vcutils.protection.flag.FlagResult;
+import net.vaultcraft.vcutils.protection.flag.FlagType;
+import net.vaultcraft.vcutils.user.Group;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -19,7 +26,9 @@ public class ProtectionManager {
     }
 
     public ProtectionManager() {
-        protect.put("global", new ProtectedArea(new Area(null, null)));
+        ProtectedArea area = new ProtectedArea(new Area(null, null));
+        area.setPriority(-1);
+        protect.put("global", area);
     }
 
     public ProtectedArea getArea(String name) {
@@ -34,15 +43,39 @@ public class ProtectionManager {
         this.protect.remove(name);
     }
 
-    public ProtectedArea fromLocation(Location loc) {
-        for (ProtectedArea area : protect.values()) {
-            if (area.getArea().isInArea(loc))
-                return area;
-        }
-        return null;
-    }
-
     public HashMap<String, ProtectedArea> getRegions() {
         return protect;
+    }
+
+    public Collection<ProtectedArea> fromLocation(Location location) {
+        Collection<ProtectedArea> coll = Lists.newArrayList();
+        for (ProtectedArea areas : protect.values()) {
+            if (areas.getArea().isInArea(location))
+                coll.add(areas);
+        }
+        return coll;
+    }
+
+    public FlagResult getState(FlagType flag, Player player, Location loc) {
+        Collection<ProtectedArea> within = fromLocation(loc);
+        boolean cancel = false;
+        ProtectedArea highestPriority = null;
+        for (ProtectedArea w : within) {
+            if (!(w.getProtection().containsKey(flag)))
+                continue;
+
+            if (highestPriority == null) {
+                highestPriority = w;
+                cancel = highestPriority.getProtection().get(flag);
+                continue;
+            }
+
+            if (highestPriority.getPriority() < w.getPriority())
+                highestPriority = w;
+
+            cancel = highestPriority.getProtection().get(flag);
+        }
+
+        return new FlagResult((highestPriority == null ? Group.COMMON : highestPriority.getMembership()), cancel);
     }
 }

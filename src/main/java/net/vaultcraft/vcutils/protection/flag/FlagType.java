@@ -1,4 +1,4 @@
-package net.vaultcraft.vcutils.protection;
+package net.vaultcraft.vcutils.protection.flag;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public enum FlagType {
 
-    NO_BLOCK_BREAK(BlockBreakEvent.class, "blockbreak", "break", "breakblock", "destroy"),
-    NO_BLOCK_PLACE(BlockPlaceEvent.class, "blockplace", "place", "placeblock", "construct"),
+    BLOCK_BREAK(BlockBreakEvent.class, "blockbreak", "break", "breakblock", "destroy"),
+    BLOCK_PLACE(BlockPlaceEvent.class, "blockplace", "place", "placeblock", "construct"),
     BLOCK_FORM(BlockFormEvent.class, "blockform", "form", "formblock"),
     BLOCK_FROM_TO(BlockFromToEvent.class, "blockfromto", "fromto"),
     BLOCK_PHYSICS(BlockPhysicsEvent.class, "blockphysics", "physicsblock", "physics"),
