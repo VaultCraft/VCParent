@@ -17,6 +17,7 @@ public class User {
     }
 
     private Player conversation;
+    private boolean editMode;
     private Group group = Group.COMMON;
     private Player player;
 
@@ -47,5 +48,13 @@ public class User {
 
         this.conversation = other;
         return other;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
     }
 }

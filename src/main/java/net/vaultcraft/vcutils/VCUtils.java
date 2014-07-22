@@ -2,6 +2,7 @@ package net.vaultcraft.vcutils;
 
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
+import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,6 +37,7 @@ public class VCUtils extends JavaPlugin {
 
     public void initListeners() {
         Bukkit.getPluginManager().registerEvents(new CommonPlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ProtectionListener(), this);
     }
 
     public static VCUtils getInstance() {

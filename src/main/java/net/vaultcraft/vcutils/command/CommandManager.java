@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.command;
 
+import com.google.common.collect.Lists;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
@@ -10,8 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.plugin.Plugin;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
@@ -21,6 +25,9 @@ public class CommandManager implements Listener {
 
     public static CommandManager instance;
     private static HashMap<String, ICommand> commands = new HashMap<>();
+    private static HashMap<String, String> redirect = new HashMap<>();
+
+    private static List<String> commandWhitelist = Lists.newArrayList();
 
     public static CommandManager getInstance() {
         return instance == null ? new CommandManager() : instance;
@@ -35,7 +42,15 @@ public class CommandManager implements Listener {
         try {
             Player user = event.getPlayer();
             //intercept command for vanilla override
-            String command = event.getMessage().replace("/", "");
+            String command = event.getMessage().substring(1);
+            for (String cmd : commandWhitelist) {
+                if (command.startsWith(cmd))
+                    return;
+            }
+
+            if (redirect.containsKey(command))
+                command = redirect.get(command);
+
             String[] split = command.split(" ");
             String[] arguments = new String[split.length-1];
             for (int x = 1; x < split.length; x++)
@@ -79,5 +94,21 @@ public class CommandManager implements Listener {
             commands.remove(alias.toLowerCase());
         }
         commands.remove(cmd.getName());
+    }
+
+    public static void addRedirect(String from, String to) {
+        redirect.put(from, to);
+    }
+
+    public static void removeRedirect(String from) {
+        redirect.remove(from);
+    }
+
+    public static void addPluginWhitelist(String cmd) {
+        commandWhitelist.add(cmd);
+    }
+
+    public static void removePluginWhitelist(String cmd) {
+        commandWhitelist.remove(cmd);
     }
 }

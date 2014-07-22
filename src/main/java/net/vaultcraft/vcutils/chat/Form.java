@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.chat;
 
+import net.vaultcraft.vcutils.command.ICommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -19,11 +20,11 @@ public class Form {
         at(player, Prefix.VAULT_CRAFT, message);
     }
 
-    public static String at(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
-    public static String at(Prefix prefix, String message) {
-        return ChatColor.translateAlternateColorCodes('&', prefix.getPrefix()+message+prefix.getSuffix());
+    public static void atHelp(Player player, ICommand command) {
+        at(player, "Help for - \""+command.getName()+"\"");
+        for (String m : command.getHelp().keySet()) {
+            String value = command.getHelp().get(m);
+            at(player, Prefix.NOTHING, "&c/"+command.getName()+" "+m+" &e- &7"+value);
+        }
     }
 }
