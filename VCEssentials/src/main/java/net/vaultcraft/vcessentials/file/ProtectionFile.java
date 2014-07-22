@@ -94,12 +94,6 @@ public class ProtectionFile {
     }
 
     public void saveAll() throws ParseException {
-        try {
-            new PrintWriter(file).close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
         JSONObject obj = new JSONObject();
         JSONArray regions = new JSONArray();
 

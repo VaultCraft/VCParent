@@ -17,6 +17,9 @@ public class Area {
     }
 
     public boolean isInArea(Location position) {
+        if (min == null && max == null)
+            return true;
+
         if (!(position.getWorld().equals(min.getWorld())))
             return false;
 

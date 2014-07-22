@@ -22,62 +22,34 @@ public class VCWeather extends ICommand {
             return;
         }
 
-        if (args.length == 1) {
-            switch (args[0]) {
-                case "clear":
-                    player.getWorld().setThundering(false);
-                    player.getWorld().setStorm(false);
-                    player.getWorld().setWeatherDuration(30000);
-                    Form.at(player, Prefix.SUCCESS, "Weather set to clear.");
-                    break;
-                case "storm":
-                    player.getWorld().setThundering(true);
-                    player.getWorld().setStorm(true);
-                    player.getWorld().setWeatherDuration(30000);
-                    Form.at(player, Prefix.SUCCESS, "Weather set to storm.");
-                    break;
-                case "rain":
-                    player.getWorld().setThundering(false);
-                    player.getWorld().setStorm(true);
-                    player.getWorld().setWeatherDuration(30000);
-                    Form.at(player, Prefix.SUCCESS, "Weather set to rain.");
-                    break;
-                default:
-                    Form.at(player, Prefix.ERROR, "Argument needs to be either rain, storm, or clear.");
-                    break;
-            }
-            return;
-        }
+        int time = 20;
+        try {
+            time = (args.length >= 2 ? time*Integer.parseInt(args[1]) : time*1500);
+        } catch (NumberFormatException ex) {}
 
-        if (args.length == 2) {
-            try {
-                int time = Integer.parseInt(args[0]);
-                switch (args[0]) {
-                    case "clear":
-                        player.getWorld().setThundering(false);
-                        player.getWorld().setStorm(false);
-                        player.getWorld().setWeatherDuration(time * 20);
-                        Form.at(player, Prefix.SUCCESS, "Weather set to clear.");
-                        break;
-                    case "storm":
-                        player.getWorld().setThundering(true);
-                        player.getWorld().setStorm(true);
-                        player.getWorld().setWeatherDuration(time * 20);
-                        Form.at(player, Prefix.SUCCESS, "Weather set to storm.");
-                        break;
-                    case "rain":
-                        player.getWorld().setThundering(false);
-                        player.getWorld().setStorm(true);
-                        player.getWorld().setWeatherDuration(time * 20);
-                        Form.at(player, Prefix.SUCCESS, "Weather set to rain.");
-                        break;
-                    default:
-                        Form.at(player, Prefix.ERROR, "Argument 1 needs to be either rain, storm, or clear.");
-                        break;
-                }
-            } catch (NumberFormatException e) {
-                Form.at(player, Prefix.ERROR, "Argument 2 needs to be an integer.");
-            }
+        switch (args[0]) {
+            case "clear":
+                player.getWorld().setThundering(false);
+                player.getWorld().setStorm(false);
+                player.getWorld().setWeatherDuration(time);
+                Form.at(player, Prefix.SUCCESS, "Weather set to clear.");
+                break;
+            case "storm":
+                player.getWorld().setThundering(true);
+                player.getWorld().setStorm(true);
+                player.getWorld().setWeatherDuration(time);
+                Form.at(player, Prefix.SUCCESS, "Weather set to storm.");
+                break;
+            case "rain":
+                player.getWorld().setThundering(false);
+                player.getWorld().setStorm(true);
+                player.getWorld().setWeatherDuration(time);
+                Form.at(player, Prefix.SUCCESS, "Weather set to rain.");
+                break;
+            default:
+                Form.at(player, Prefix.ERROR, "Argument needs to be either rain, storm, or clear.");
+                break;
         }
+        return;
     }
 }
