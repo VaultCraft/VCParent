@@ -137,6 +137,9 @@ public class MySQL {
             connection.close();
         updateTask.cancel();
         queryTask.cancel();
+        updateThread.clear();
+        queryThread.clear();
+        callbacks.clear();
     }
 
     public static String getDate() {

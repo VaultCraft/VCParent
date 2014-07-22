@@ -6,10 +6,13 @@ import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
+import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
 
 /**
  * Created by Connor on 7/19/14. Designed for the VCUtils project.
@@ -50,6 +53,11 @@ public class VCUtils extends JavaPlugin {
     }
 
     public void onDisable() {
+        try {
+            mySQL.close();
+        } catch (SQLException e) {
+            Logger.error(this, e);
+        }
         ClassConfig.updateConfig(SQLInfo.class, getConfig());
         saveConfig();
     }

@@ -25,7 +25,7 @@ public class VCWeather extends ICommand {
         int time = 20;
         try {
             time = (args.length >= 2 ? time*Integer.parseInt(args[1]) : time*1500);
-        } catch (NumberFormatException ex) {}
+        } catch (NumberFormatException ignored) {}
 
         switch (args[0]) {
             case "clear":
@@ -50,6 +50,5 @@ public class VCWeather extends ICommand {
                 Form.at(player, Prefix.ERROR, "Argument needs to be either rain, storm, or clear.");
                 break;
         }
-        return;
     }
 }
