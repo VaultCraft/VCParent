@@ -8,60 +8,29 @@ import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.User;
 import net.vaultcraft.vcutils.util.DateUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Created by Nick on 7/21/2014.
  */
 public class VCMute extends ICommand implements Listener {
 
-    private HashMap<UUID, Date> mutes = new HashMap<>();
     private Plugin plugin;
 
     public VCMute(final Plugin plugin, String name, Group permission, String... aliases) {
         super(name, permission, aliases);
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                VCUtils.getInstance().mySQL.addQuery(Statements.QUERYALL.getSql("Mutes"), new MySQL.ISqlCallback() {
-                    @Override
-                    public void onSuccess(ResultSet rs) {
-                        try {
-                            while (rs.next()) {
-                                if (!rs.getBoolean("Unmuted")) {
-                                    UUID name = UUID.fromString(rs.getString("MutedID"));
-                                    Date date = rs.getDate("Temp");
-                                    mutes.put(name, date);
-                                }
-                            }
-                        } catch (SQLException e) {
-                            Logger.error(plugin, e);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(SQLException e) {
-                        Logger.error(plugin, e);
-                    }
-                });
-            }
-        });
     }
 
     @Override
@@ -72,15 +41,12 @@ public class VCMute extends ICommand implements Listener {
         }
 
         if (args.length == 1) {
-            OfflinePlayer player1 = Bukkit.getPlayer(args[0]);
+            Player player1 = Bukkit.getPlayer(args[0]);
             if (player1 == null) {
-                player1 = Bukkit.getOfflinePlayer(args[0]);
-                if (player1 == null) {
-                    Form.at(player, Prefix.ERROR, "Player: " + args[0] + " has never joined the server.");
-                    return;
-                }
+                Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
+                return;
             }
-            if (mute(player1, player, null, null)) {
+            if (mute(User.fromPlayer(player1), player, null, null)) {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
             } else {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
@@ -88,13 +54,10 @@ public class VCMute extends ICommand implements Listener {
         }
 
         if (args.length > 1) {
-            OfflinePlayer player1 = Bukkit.getPlayer(args[0]);
+            Player player1 = Bukkit.getPlayer(args[0]);
             if (player1 == null) {
-                player1 = Bukkit.getOfflinePlayer(args[0]);
-                if (player1 == null) {
-                    Form.at(player, Prefix.ERROR, "Player: " + args[0] + " has never joined the server.");
-                    return;
-                }
+                Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
+                return;
             }
 
             StringBuilder reason = new StringBuilder();
@@ -119,19 +82,21 @@ public class VCMute extends ICommand implements Listener {
                     reason.append(" ");
             }
 
-            mute(player1, player, reason.toString(), temp);
+            mute(User.fromPlayer(player1), player, reason.toString(), temp);
         }
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (mutes.containsKey(e.getPlayer().getUniqueId())) {
-            if (mutes.get(e.getPlayer().getUniqueId()) == null) {
+        User user = User.fromPlayer(e.getPlayer());
+
+        if (user.isMuted()) {
+            if (user.getTempMute() == null) {
                 e.setCancelled(true);
             } else {
                 Date now = new Date();
-                if (now.after(mutes.get(e.getPlayer().getUniqueId()))) {
-                    unmute(e.getPlayer());
+                if (now.after(user.getTempMute())) {
+                    user.setMuted(false, null);
                 } else {
                     e.setCancelled(true);
                 }
@@ -139,26 +104,21 @@ public class VCMute extends ICommand implements Listener {
         }
     }
 
-    private void unmute(OfflinePlayer player) {
-        VCUtils.getInstance().mySQL.updateThread.add(Statements.UPDATE.getSql("Mutes", "Unmuted=1", "MutedID='" + player.getUniqueId().toString() + "' AND Unmuted=0"));
-        mutes.remove(player.getUniqueId());
-    }
-
-    private boolean mute(OfflinePlayer mutted, Player mutter, String reason, Date temp) {
-        if (mutes.containsKey(mutted.getUniqueId())) {
-            unmute(mutted);
+    private boolean mute(User muted, Player mutter, String reason, Date temp) {
+        if (muted.isMuted()) {
+            muted.setMuted(false, null);
             return false;
         } else {
-            mutes.put(mutted.getUniqueId(), temp);
+            muted.setMuted(true, temp);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Mutes",
-                    "'" + mutted.getUniqueId().toString() + "', '" +
-                            mutted.getName() + "', '" +
+                    "'" + muted.getPlayer().getUniqueId().toString() + "', '" +
+                            muted.getPlayer().getName() + "', '" +
                             mutter.getUniqueId().toString() + "', '" +
                             mutter.getName() + "', '" +
                             reason + "', " +
                             MySQL.getDate() + ", " +
-                            sdf.format(temp) + ", 0"
+                            sdf.format(temp)
             ));
             return true;
         }

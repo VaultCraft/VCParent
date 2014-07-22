@@ -2,6 +2,7 @@ package net.vaultcraft.vcutils.user;
 
 import org.bukkit.entity.Player;
 
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -20,6 +21,11 @@ public class User {
     private boolean editMode;
     private Group group = Group.COMMON;
     private Player player;
+
+    private boolean banned = false;
+    private Date tempBan = null;
+    private boolean muted = false;
+    private Date tempMute = null;
 
     public User(Player player) {
         this.player = player;
@@ -56,5 +62,31 @@ public class User {
 
     public boolean isEditMode() {
         return editMode;
+    }
+
+    public void setBanned(boolean banned, Date tempBan) {
+        this.banned = banned;
+        this.tempBan = tempBan;
+    }
+
+    public void setMuted(boolean muted, Date tempMute) {
+        this.muted = muted;
+        this.tempMute = tempMute;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public boolean isMuted() {
+        return muted;
+    }
+
+    public Date getTempBan() {
+        return tempBan;
+    }
+
+    public Date getTempMute() {
+        return tempMute;
     }
 }

@@ -32,8 +32,7 @@ public class VCEssentials extends JavaPlugin {
                         "BannerName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
                         "Time DATETIME NOT NULL," +
-                        "Temp DATETIME," +
-                        "Unbanned BOOL NOT NULL"
+                        "Temp DATETIME,"
         ));
         mySQL.updateThread.add(Statements.TABLE.getSql("Kicks",
                 "KickedID TINYTEXT NOT NULL," +
@@ -50,8 +49,7 @@ public class VCEssentials extends JavaPlugin {
                         "MuterName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
                         "Time DATETIME NOT NULL," +
-                        "Temp DATETIME," +
-                        "Unmuted BOOL NOT NULL"
+                        "Temp DATETIME,"
         ));
     }
 
