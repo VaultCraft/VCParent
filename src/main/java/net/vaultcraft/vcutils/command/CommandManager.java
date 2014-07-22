@@ -13,9 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,7 +65,7 @@ public class CommandManager implements Listener {
             processCommand(user, split[0], arguments);
             event.setCancelled(true);
         } catch (Exception ex) {
-            Logger.error(VCUtils.getInstance(), "Could not run PlayerCommandPreprocessEvent! Stack trace below...");
+            Logger.error(VCUtils.getInstance(), ex);
             ex.printStackTrace();
             event.setCancelled(true);
         }

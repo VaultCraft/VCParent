@@ -51,6 +51,7 @@ public class VCUtils extends JavaPlugin {
 
     public void onDisable() {
         ClassConfig.updateConfig(SQLInfo.class, getConfig());
+        saveConfig();
     }
 
     public void initListeners() {
