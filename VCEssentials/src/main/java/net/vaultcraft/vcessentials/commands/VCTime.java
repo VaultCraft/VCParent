@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by tacticalsk8er on 7/20/2014.
  */
-public class VCTime extends ICommand{
+public class VCTime extends ICommand {
 
     public VCTime(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
@@ -17,18 +17,18 @@ public class VCTime extends ICommand{
 
     @Override
     public void processCommand(Player player, String[] args) {
-        if(args.length == 0) {
+        if (args.length == 0) {
             Form.at(player, Prefix.ERROR, "Format: /time <ticks/day/night>");
             return;
         }
 
-        if(args[0].equalsIgnoreCase("day")) {
+        if (args[0].equalsIgnoreCase("day")) {
             player.getWorld().setTime(6000);
             Form.at(player, Prefix.SUCCESS, "Time is set to day.");
             return;
         }
 
-        if(args[0].equalsIgnoreCase("night")) {
+        if (args[0].equalsIgnoreCase("night")) {
             player.getWorld().setTime(18000);
             Form.at(player, Prefix.SUCCESS, "Time is set to night.");
             return;

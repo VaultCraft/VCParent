@@ -29,8 +29,8 @@ public class VCGod extends ICommand implements Listener {
 
     @Override
     public void processCommand(Player player, String[] args) {
-        if(args.length == 0) {
-            if(godMode.contains(player.getName())) {
+        if (args.length == 0) {
+            if (godMode.contains(player.getName())) {
                 godMode.remove(player.getName());
                 Form.at(player, Prefix.SUCCESS, "God enabled.");
             } else {
@@ -40,14 +40,14 @@ public class VCGod extends ICommand implements Listener {
             return;
         }
 
-        if(args.length == 1) {
+        if (args.length == 1) {
             Player player1 = Bukkit.getPlayer(args[0]);
-            if(player1 == null) {
+            if (player1 == null) {
                 Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
                 return;
             }
 
-            if(godMode.contains(player1.getName())) {
+            if (godMode.contains(player1.getName())) {
                 godMode.remove(player1.getName());
                 Form.at(player, Prefix.SUCCESS, "God enabled for " + player1.getName() + ".");
                 Form.at(player1, Prefix.SUCCESS, "God enabled.");
@@ -61,8 +61,8 @@ public class VCGod extends ICommand implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if(e.getEntity() instanceof Player) {
-            if(godMode.contains(((Player) e.getEntity()).getName())) {
+        if (e.getEntity() instanceof Player) {
+            if (godMode.contains(((Player) e.getEntity()).getName())) {
                 e.setCancelled(true);
             }
         }
@@ -70,7 +70,7 @@ public class VCGod extends ICommand implements Listener {
 
     @EventHandler
     public void onHunger(FoodLevelChangeEvent e) {
-        if(godMode.contains(e.getEntity().getName())) {
+        if (godMode.contains(e.getEntity().getName())) {
             e.setCancelled(true);
         }
     }

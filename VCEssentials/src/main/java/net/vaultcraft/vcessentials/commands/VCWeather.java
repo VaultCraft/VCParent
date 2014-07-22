@@ -17,12 +17,12 @@ public class VCWeather extends ICommand {
 
     @Override
     public void processCommand(Player player, String[] args) {
-        if(args.length == 0) {
+        if (args.length == 0) {
             Form.at(player, Prefix.ERROR, "Format: /weather <rain/storm/clear> (seconds)");
             return;
         }
 
-        if(args.length == 1) {
+        if (args.length == 1) {
             switch (args[0]) {
                 case "clear":
                     player.getWorld().setThundering(false);
@@ -49,7 +49,7 @@ public class VCWeather extends ICommand {
             return;
         }
 
-        if(args.length == 2) {
+        if (args.length == 2) {
             try {
                 int time = Integer.parseInt(args[0]);
                 switch (args[0]) {
