@@ -21,8 +21,8 @@ public enum FlagType {
     BLOCK_PHYSICS(BlockPhysicsEvent.class, "blockphysics", "physicsblock", "physics"),
     LEAF_DECAY(LeavesDecayEvent.class, "leafdecay", "decayleaf"),
     PLAYER_DAMAGE(EntityDamageEvent.class, "playerdamage", "damage", "damageplayer", "invincible"),
+    ENTITY_DAMAGE(EntityDamageEvent.class, "entitydamage"),
     PVP(EntityDamageByEntityEvent.class, "pvp", "entitydamagebyentity", "playervsplayer"),
-    PICKUP_ITEM(PlayerPickupItemEvent.class, "pickupitem", "playerpickupitem", "itempickup"),
     CHAT(AsyncPlayerChatEvent.class, "playerchat", "chat", "chatplayer", "talk"),
     ITEM_DROP(PlayerDropItemEvent.class, "dropitem", "itemdrop", "playerdropitem");
 

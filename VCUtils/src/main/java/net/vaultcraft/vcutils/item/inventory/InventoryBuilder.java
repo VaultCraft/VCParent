@@ -1,4 +1,4 @@
-package net.vaultcraft.vcutils.item;
+package net.vaultcraft.vcutils.item.inventory;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -37,6 +37,10 @@ public class InventoryBuilder {
 
         shapes.put(key, value);
         return this;
+    }
+
+    public ItemStack getCharacter(char key) {
+        return shapes.get(key);
     }
 
     public static InventoryBuilder builder() {

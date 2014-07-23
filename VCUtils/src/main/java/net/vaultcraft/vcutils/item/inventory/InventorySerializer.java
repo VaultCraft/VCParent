@@ -1,4 +1,4 @@
-package net.vaultcraft.vcutils.item;
+package net.vaultcraft.vcutils.item.inventory;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

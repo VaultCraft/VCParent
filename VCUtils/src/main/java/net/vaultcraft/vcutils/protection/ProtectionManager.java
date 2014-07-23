@@ -56,7 +56,7 @@ public class ProtectionManager {
         return coll;
     }
 
-    public FlagResult getState(FlagType flag, Player player, Location loc) {
+    public FlagResult getState(FlagType flag, Location loc) {
         Collection<ProtectedArea> within = fromLocation(loc);
         boolean cancel = false;
         ProtectedArea highestPriority = null;

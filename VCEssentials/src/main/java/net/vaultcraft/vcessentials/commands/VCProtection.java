@@ -115,7 +115,7 @@ public class VCProtection extends ICommand {
         }
 
         area.setPriority(priority);
-        Form.at(player, Prefix.SUCCESS, "You changed &e"+args[0]+"'s "+Prefix.SUCCESS.getChatColor()+" priority to &e&n"+priority+"&r"+Prefix.SUCCESS.getChatColor()+"!");
+        Form.at(player, Prefix.SUCCESS, "You changed &e"+args[0]+"'s"+Prefix.SUCCESS.getChatColor()+" priority to &e&n"+priority+"&r"+Prefix.SUCCESS.getChatColor()+"!");
         saveAll();
     }
 
@@ -160,7 +160,7 @@ public class VCProtection extends ICommand {
         }
 
         if (args.length == 1) {
-            Form.at(player, Prefix.ERROR, "Please specify a region!");
+            Form.at(player, Prefix.ERROR, "Please specify a flag!");
             return;
         }
 
@@ -169,7 +169,7 @@ public class VCProtection extends ICommand {
             Form.at(player, Prefix.ERROR, "No such flag! Here are a list of valid flags...");
             String all = "&c";
             for (FlagType x : FlagType.values()) {
-                all+=(x.getAliases()[1]+", ");
+                all+=(x.getAliases()[0]+", ");
             }
             all = all.substring(0, all.length()-2);
             Form.at(player, Prefix.NOTHING, all);
