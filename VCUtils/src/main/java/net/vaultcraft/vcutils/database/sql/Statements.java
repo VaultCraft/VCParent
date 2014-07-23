@@ -1,9 +1,6 @@
 package net.vaultcraft.vcutils.database.sql;
 
 
-import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.logging.Logger;
-
 import java.util.regex.Matcher;
 
 /**
@@ -28,10 +25,9 @@ public enum Statements {
     public String getSql(String... args) {
         String statement = sql;
         int amount = args.length <= argsAmount ? args.length : argsAmount;
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             statement = statement.replaceFirst("\\?", Matcher.quoteReplacement(args[i]));
         }
-        Logger.debug(VCUtils.getInstance(), statement);
         return statement;
     }
 

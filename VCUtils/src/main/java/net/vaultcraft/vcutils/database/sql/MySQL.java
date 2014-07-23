@@ -146,7 +146,6 @@ public class MySQL {
                 } catch (InterruptedException ignored) {
                 }
                 if (updateThread.size() > 0) {
-                    Logger.debug(plugin, "Updating Database");
                     for(String s: new ArrayList<>(updateThread)) {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(s);

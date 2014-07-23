@@ -3,7 +3,6 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -57,7 +56,6 @@ public class User {
 
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
-        Logger.debug(VCUtils.getInstance(), user.getGroup().getPermLevel() + "");
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
