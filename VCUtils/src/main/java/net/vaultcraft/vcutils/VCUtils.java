@@ -10,6 +10,7 @@ import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
+import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -81,6 +82,7 @@ public class VCUtils extends JavaPlugin {
             Logger.error(this, e);
         }
 
+        User.disable();
         mongoDB.close();
 
         ClassConfig.updateConfig(SQLInfo.class, getConfig());

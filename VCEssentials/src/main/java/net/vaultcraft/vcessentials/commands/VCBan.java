@@ -12,10 +12,7 @@ import net.vaultcraft.vcutils.user.User;
 import net.vaultcraft.vcutils.util.DateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
@@ -93,25 +90,8 @@ public class VCBan extends ICommand implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onJoin(PlayerJoinEvent e) {
-        User user = User.fromPlayer(e.getPlayer());
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
-        if (user.isBanned()) {
-            if (user.getTempBan() != null) {
-                if (new Date().after(user.getTempBan())) {
-                    user.setBanned(false, null);
-                    return;
-                }
-                e.getPlayer().kickPlayer("You are banned! You can join on " + sdf.format(user.getTempBan()));
-            } else {
-                e.getPlayer().kickPlayer("You are banned!");
-            }
-        }
-    }
-
     private boolean ban(User banned, Player banner, String reason, Date temp) {
-        if (banned.isMuted()) {
+        if (banned.isBanned()) {
             banned.setBanned(false, null);
             return false;
         } else {

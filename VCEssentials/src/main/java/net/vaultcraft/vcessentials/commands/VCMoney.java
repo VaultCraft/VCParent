@@ -23,7 +23,7 @@ public class VCMoney extends ICommand{
             return;
         }
 
-        if(args.length == 1) {
+        if(args.length >= 1) {
 
             switch (args[0]) {
                 case "pay":
@@ -86,7 +86,7 @@ public class VCMoney extends ICommand{
                     }
 
                     if(User.fromPlayer(player1).getMoney() < -amount) {
-                        amount = User.fromPlayer(player1).getMoney();
+                        amount = -User.fromPlayer(player1).getMoney();
                     }
 
                     User.fromPlayer(player1).addMoney(amount);

@@ -23,7 +23,7 @@ public class VCToken extends ICommand {
             return;
         }
 
-        if(args.length == 1) {
+        if(args.length >= 1) {
 
             switch (args[0]) {
                 case "pay":
@@ -86,7 +86,7 @@ public class VCToken extends ICommand {
                     }
 
                     if(User.fromPlayer(player1).getTokens() < -amount) {
-                        amount = User.fromPlayer(player1).getTokens();
+                        amount = -User.fromPlayer(player1).getTokens();
                     }
 
                     User.fromPlayer(player1).addTokens(amount);
