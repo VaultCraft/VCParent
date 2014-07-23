@@ -29,9 +29,9 @@ public class VCProtection extends ICommand {
         //init subcommands for help
         subCmds.put("add <name>", "Create a region with current selection.");
         subCmds.put("remove <name>", "Remove the given region.");
-        subCmds.put("flag <name> <flag> <value>", "Flag the given region");
-        subCmds.put("setpriority <name> <priority>", "Set the regions priority");
-        subCmds.put("check", "Gather region info for current region");
+        subCmds.put("flag <name> <flag> <value>", "Flag the given region.");
+        subCmds.put("setpriority <name> <priority>", "Set the regions priority.");
+        subCmds.put("check", "Gather region info for current region.");
     }
 
     public void processCommand(Player player, String[] args) {
@@ -44,6 +44,10 @@ public class VCProtection extends ICommand {
         String[] fixedArgs = StringUtils.buildFromArray(args, 1).split(" ");
 
         switch (args[0].toLowerCase()) {
+            case "help": {
+                Form.atHelp(player, this);
+                break;
+            }
             case "create":
             case "new":
             case "a":

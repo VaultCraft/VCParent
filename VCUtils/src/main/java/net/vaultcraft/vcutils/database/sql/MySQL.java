@@ -57,6 +57,7 @@ public class MySQL {
                 if (connection != null) {
                     connection.close();
                 }
+
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, database_username, database_password);
                 queries = 0;
@@ -67,7 +68,6 @@ public class MySQL {
             }
         } catch (SQLException | ClassNotFoundException e) {
             Logger.error(plugin, e);
-            e.printStackTrace();
         }
         queries++;
         return connection;
@@ -118,7 +118,7 @@ public class MySQL {
                     Thread.sleep(250);
                 } catch (InterruptedException ignored) {
                 }
-                if (queryThread.size() < 0) {
+                if (queryThread.size() > 0) {
                     for (Map.Entry entry : new ConcurrentHashMap<>(queryThread).entrySet()) {
                         String sql = (String) entry.getKey();
                         long id = (long) entry.getValue();
@@ -128,10 +128,10 @@ public class MySQL {
                             callbacks.get(id).onSuccess(rs);
                         } catch (SQLException e) {
                             callbacks.get(id).onFailure(e);
+                        } finally {
+                            queryThread.remove(sql);
+                            callbacks.remove(id);
                         }
-
-                        queryThread.remove(sql);
-                        callbacks.remove(id);
                     }
                 }
             }
@@ -146,13 +146,16 @@ public class MySQL {
                     Thread.sleep(250);
                 } catch (InterruptedException ignored) {
                 }
-                if (updateThread.size() < 0) {
-                    try {
-                        PreparedStatement ps = getConnection().prepareStatement(updateThread.get(0));
-                        updateThread.remove(0);
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        Logger.error(plugin, e);
+                if (updateThread.size() > 0) {
+                    for(String s: new ArrayList<>(updateThread)) {
+                        try {
+                            PreparedStatement ps = getConnection().prepareStatement(s);
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            Logger.error(plugin, e);
+                        } finally {
+                            updateThread.remove(s);
+                        }
                     }
                 }
             }

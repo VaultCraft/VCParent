@@ -83,6 +83,7 @@
             <artifactId>VCUtils</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
+            <systemPath>${project.basedir}/lib/VCUtils.jar</systemPath>
         </dependency>
 
         <dependency>

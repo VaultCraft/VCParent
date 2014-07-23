@@ -24,7 +24,7 @@ public class VCEssentials extends JavaPlugin {
 
         ProtectionFile.getInstance();
         initCommands();
-        mySQL = VCUtils.getInstance().mySQL;
+        mySQL = VCUtils.getInstance().getMySQL();
         mySQL.updateThread.add(Statements.TABLE.getSql("Bans",
                 "BannedID TINYTEXT," +
                         "BannedName CHAR(16) NOT NULL," +
@@ -32,7 +32,7 @@ public class VCEssentials extends JavaPlugin {
                         "BannerName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
                         "Time DATETIME NOT NULL," +
-                        "Temp DATETIME,"
+                        "Temp DATETIME"
         ));
         mySQL.updateThread.add(Statements.TABLE.getSql("Kicks",
                 "KickedID TINYTEXT NOT NULL," +
@@ -49,7 +49,7 @@ public class VCEssentials extends JavaPlugin {
                         "MuterName CHAR(16) NOT NULL," +
                         "Reason TEXT," +
                         "Time DATETIME NOT NULL," +
-                        "Temp DATETIME,"
+                        "Temp DATETIME"
         ));
     }
 
@@ -72,6 +72,9 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCGod(this, "god", Group.ADMIN, "godmode"));
         CommandManager.addCommand(new VCKick("kick", Group.MOD));
         CommandManager.addCommand(new VCMute(this, "mute", Group.ADMIN));
+        CommandManager.addCommand(new VCBan(this, "ban", Group.ADMIN));
+        CommandManager.addCommand(new VCMoney("money", Group.COMMON, "bal", "balance"));
+        CommandManager.addCommand(new VCToken("tokens", Group.COMMON));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
@@ -93,5 +96,9 @@ public class VCEssentials extends JavaPlugin {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public MySQL getMySQL() {
+        return mySQL;
     }
 }

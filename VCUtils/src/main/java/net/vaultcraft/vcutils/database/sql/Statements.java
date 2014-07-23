@@ -1,12 +1,14 @@
 package net.vaultcraft.vcutils.database.sql;
 
 
+import java.util.regex.Matcher;
+
 /**
  * Created by tacticalsk8er on 7/21/2014.
  */
 public enum Statements {
 
-    TABLE("CREATE TABLE IF NOT EXISTS ?(ID INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(ID), ?)", 2),
+    TABLE("CREATE TABLE IF NOT EXISTS ?(ID INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(ID), ?) DEFAULT CHARSET=utf32", 2),
     INSERT("INSERT INTO ? VALUES(default, ?)", 2),
     UPDATE("UPDATE ? SET ? WHERE ?", 3),
     QUERYALL("SELECT * FROM ?", 1),
@@ -21,11 +23,12 @@ public enum Statements {
     }
 
     public String getSql(String... args) {
+        String statement = sql;
         int amount = args.length <= argsAmount ? args.length : argsAmount;
-        for(int i = 0; i < amount; i++) {
-            sql = sql.replaceFirst("\\?", args[i]);
+        for (int i = 0; i < amount; i++) {
+            statement = statement.replaceFirst("\\?", Matcher.quoteReplacement(args[i]));
         }
-        return sql;
+        return statement;
     }
 
     public String getRawSql() {

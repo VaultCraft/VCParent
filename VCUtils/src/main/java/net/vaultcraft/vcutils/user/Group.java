@@ -62,4 +62,17 @@ public enum Group {
         String format = toString();
         return format.substring(0, 1)+format.toString().substring(1).toLowerCase();
     }
+
+    public int getPermLevel() {
+        return permLevel;
+    }
+
+    public static Group fromPermLevel(int permLevel) {
+        for(Group g: values()) {
+            if(g.getPermLevel() == permLevel)
+                return g;
+        }
+
+        return null;
+    }
 }

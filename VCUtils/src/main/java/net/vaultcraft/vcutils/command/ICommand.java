@@ -16,6 +16,8 @@ public abstract class ICommand {
     private Group permission;
     private String[] aliases;
     protected Map<String, String> subCmds = new HashMap<>();
+    protected Map<String, Group> groupPerms = new HashMap<>();
+    protected boolean display_group;
 
     public ICommand(String name, Group permission, String... aliases) {
         this.name = name;
@@ -48,4 +50,8 @@ public abstract class ICommand {
     public Map<String, String> getHelp() {
         return subCmds;
     }
+
+    public Map<String, Group> getGroupPerms() { return groupPerms; }
+
+    public boolean isDisplayingGroup() { return display_group; }
 }

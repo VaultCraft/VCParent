@@ -64,10 +64,11 @@ public class CommonPlayerListener implements Listener {
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
         }
 
-        VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Chat",
+        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Chat",
                 "'" + chatter.getPlayer().getUniqueId().toString() + "', '" +
                         chatter.getPlayer().getName() + "', '" +
-                        event.getMessage() + "', " +
-                        MySQL.getDate()));
+                        event.getMessage() + "', '" +
+                        MySQL.getDate() + "'"
+        ));
     }
 }

@@ -2,17 +2,21 @@ package net.vaultcraft.vcutils;
 
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
+import net.vaultcraft.vcutils.database.mongo.MongoDB;
+import net.vaultcraft.vcutils.database.mongo.MongoInfo;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
+import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 
 /**
@@ -22,13 +26,27 @@ import java.sql.SQLException;
 public class VCUtils extends JavaPlugin {
 
     private static VCUtils instance;
-    public MySQL mySQL;
+    private MySQL mySQL;
+    private MongoDB mongoDB;
 
+    @ClassConfig.Config(path = "ServerName")
+    public static String serverName = "Lobby";
 
     public void onEnable() {
         instance = this;
 
         ClassConfig.loadConfig(SQLInfo.class, getConfig());
+        ClassConfig.loadConfig(MongoInfo.class, getConfig());
+        ClassConfig.updateConfig(SQLInfo.class, getConfig());
+        ClassConfig.updateConfig(MongoInfo.class, getConfig());
+        saveConfig();
+
+        try {
+            mongoDB = new MongoDB(MongoInfo.host, MongoInfo.port);
+        } catch (UnknownHostException e) {
+            Logger.error(this, e);
+        }
+
         mySQL = new MySQL(this, SQLInfo.host, SQLInfo.port, SQLInfo.database_name, SQLInfo.username, SQLInfo.password);
         mySQL.updateThread.add(Statements.TABLE.getSql("Commands",
                 "SenderID TINYTEXT NOT NULL," +
@@ -63,7 +81,12 @@ public class VCUtils extends JavaPlugin {
         } catch (SQLException e) {
             Logger.error(this, e);
         }
+
+        User.disable();
+        mongoDB.close();
+
         ClassConfig.updateConfig(SQLInfo.class, getConfig());
+        ClassConfig.updateConfig(MongoInfo.class, getConfig());
         saveConfig();
     }
 
@@ -74,5 +97,13 @@ public class VCUtils extends JavaPlugin {
 
     public static VCUtils getInstance() {
         return instance;
+    }
+
+    public MySQL getMySQL() {
+        return mySQL;
+    }
+
+    public MongoDB getMongoDB() {
+        return mongoDB;
     }
 }
