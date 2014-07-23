@@ -19,11 +19,11 @@ public class Logger {
     public static void log(Plugin plugin, String message) {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
-        VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Log",
+        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
                 "'" + pluginName + "', '"
                         + pluginVersion + "', '"
-                        + message + "', "
-                        + MySQL.getDate()
+                        + message + "', '"
+                        + MySQL.getDate() + "'"
         ));
 
         System.out.println(ansi_yellow + "(" + plugin.getName() + ") " + ansi_reset + message + ansi_reset);
@@ -32,11 +32,15 @@ public class Logger {
     public static void error(Plugin plugin, Exception e) {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
-        VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Log",
+        StringBuilder stackTrace = new StringBuilder();
+        for(StackTraceElement stackTraceElement: e.getStackTrace()) {
+            stackTrace.append(stackTraceElement.toString()).append("\n");
+        }
+        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
                 "'" + pluginName + "', '"
                         + pluginVersion + "', '"
-                        + e.getMessage() + "', "
-                        + MySQL.getDate()
+                        + e.getMessage() + stackTrace.toString() + "', '"
+                        + MySQL.getDate() + "'"
         ));
 
         System.out.println(ansi_red + "(ERROR) " + ansi_reset + "[" + plugin.getName() + "] " + "Error preparing statement! Stack trace below..." + ansi_reset);
@@ -51,11 +55,11 @@ public class Logger {
     public static void warning(Plugin plugin, String message) {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
-        VCUtils.getInstance().mySQL.updateThread.add(Statements.INSERT.getSql("Log",
+        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
                 "'" + pluginName + "', '"
                         + pluginVersion + "', '(WARNING)"
-                        + message + "', "
-                        + MySQL.getDate()
+                        + message + "', '"
+                        + MySQL.getDate() + "'"
         ));
         System.out.println(ansi_yellow + "(WARNING) " + ansi_reset + "[" + plugin.getName() + "] " + message + ansi_reset);
     }

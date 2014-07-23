@@ -1,10 +1,11 @@
 package net.vaultcraft.vcessentials.commands;
 
-import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.database.sql.MySQL;
+import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,13 +34,13 @@ public class VCKick extends ICommand {
                 return;
             }
             player1.kickPlayer("You have been kicked!");
-            VCUtils.getInstance().mySQL.updateThread.add("INSERT INTO Kicks VALUES(default, '" +
-                    player1.getUniqueId().toString() + "', '" +
-                    player1.getName() + "', '" +
-                    player.getUniqueId().toString() + "', '" +
-                    player.getName() + "', " +
-                    "NULL, " +
-                    MySQL.getDate() + ")");
+            VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Kicks",
+                    "'" + player1.getUniqueId().toString() + "', '" +
+                            player1.getName() + "', '" +
+                            player.getUniqueId().toString() + "', '" +
+                            player.getName() + "', '', '" +
+                            MySQL.getDate() + "'"
+            ));
             return;
         }
 
@@ -58,13 +59,15 @@ public class VCKick extends ICommand {
                     reason.append(args[i]).append(" ");
             }
             player1.kickPlayer("You have been kicked for: " + reason.toString());
-            VCUtils.getInstance().mySQL.updateThread.add("INSERT INTO Kicks VALUES(default, '" +
-                    player1.getUniqueId().toString() + "', '" +
-                    player1.getName() + "', '" +
-                    player.getUniqueId().toString() + "', '" +
-                    player.getName() + "', '" +
-                    reason.toString() + "', " +
-                    MySQL.getDate() + ")");
+            VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Kicks",
+                    "'" + player1.getUniqueId().toString() + "', '" +
+                            player1.getName() + "', '" +
+                            player.getUniqueId().toString() + "', '" +
+                            player.getName() + "', '" +
+                            reason.toString() + "', '" +
+                            MySQL.getDate() + "'"
+            ));
+            Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " has been kicked.");
         }
     }
 }

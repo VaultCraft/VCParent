@@ -42,16 +42,26 @@ public class MongoDB {
         return client.getDB(dbName);
     }
 
+    public void insert(DB db, String collectionName, DBObject dbObject) {
+        DBCollection dbCollection = db.getCollection(collectionName);
+        dbCollection.insert(dbObject);
+    }
+
+    public void insert(String dbName, String collectionName, DBObject dbObject) {
+        DB db = getDB(dbName);
+        insert(db, collectionName, dbObject);
+    }
+
     /**
      * Inserts a BasicDBObject into a DBCollection.
      *
      * @param db             DB object to modify.
      * @param collectionName Name of "table" in SQL terms.
-     * @param dbObject       Object to insert. In SQL terms inserting a "row" into a "table" (collection).
+     * @param from       Object to update. In SQL terms updating a "row" in a "table" (collection).
      */
-    public void update(DB db, String collectionName, BasicDBObject dbObject) {
+    public void update(DB db, String collectionName, DBObject from, DBObject to) {
         DBCollection dbCollection = db.getCollection(collectionName);
-        dbCollection.insert(dbObject);
+        dbCollection.update(from, to);
     }
 
     /**
@@ -59,11 +69,11 @@ public class MongoDB {
      *
      * @param dbName         The name of the database you want to modify.
      * @param collectionName Name of "table" in SQL terms.
-     * @param dbObject       Object to insert. In SQL terms inserting a "row" into a "table" (collection).
+     * @param from       Object to insert. In SQL terms updating a "row" in a "table" (collection).
      */
-    public void update(String dbName, String collectionName, BasicDBObject dbObject) {
+    public void update(String dbName, String collectionName, DBObject from, DBObject to) {
         DB db = getDB(dbName);
-        update(db, collectionName, dbObject);
+        update(db, collectionName, from, to);
     }
 
     /**

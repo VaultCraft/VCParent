@@ -13,21 +13,22 @@ import net.vaultcraft.vcutils.util.DateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Nick on 7/21/2014.
+ * Created by tacticalsk8er on 7/22/2014.
  */
-public class VCMute extends ICommand implements Listener {
+public class VCBan extends ICommand implements Listener {
 
     private Plugin plugin;
 
-    public VCMute(final Plugin plugin, String name, Group permission, String... aliases) {
+    public VCBan(Plugin plugin, String name, Group permission, String... aliases) {
         super(name, permission, aliases);
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -36,7 +37,7 @@ public class VCMute extends ICommand implements Listener {
     @Override
     public void processCommand(Player player, String[] args) {
         if (args.length == 0) {
-            Form.at(player, Prefix.ERROR, "Format: /mute <player> (Time:time) (reason)");
+            Form.at(player, Prefix.ERROR, "Format: /ban <player> (Time:time) (reason)");
             return;
         }
 
@@ -46,10 +47,11 @@ public class VCMute extends ICommand implements Listener {
                 Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
                 return;
             }
-            if (mute(User.fromPlayer(player1), player, "", null)) {
-                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
+            if (ban(User.fromPlayer(player1), player, "", null)) {
+                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is banned.");
+                player1.kickPlayer("You have been banned!");
             } else {
-                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
+                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unbanned.");
             }
         }
 
@@ -82,54 +84,54 @@ public class VCMute extends ICommand implements Listener {
                     reason.append(" ");
             }
 
-            if (mute(User.fromPlayer(player1), player, reason.toString(), temp)) {
-                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
+            if (ban(User.fromPlayer(player1), player, reason.toString(), temp)) {
+                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is banned.");
+                player1.kickPlayer("You have been banned for: " + reason.toString());
             } else {
-                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
+                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unbanned.");
             }
         }
     }
 
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onJoin(PlayerJoinEvent e) {
         User user = User.fromPlayer(e.getPlayer());
-
-        if (user.isMuted()) {
-            if (user.getTempMute() == null) {
-                e.setCancelled(true);
-            } else {
-                Date now = new Date();
-                if (now.after(user.getTempMute())) {
-                    user.setMuted(false, null);
-                } else {
-                    e.setCancelled(true);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+        if (user.isBanned()) {
+            if (user.getTempBan() != null) {
+                if (new Date().after(user.getTempBan())) {
+                    user.setBanned(false, null);
+                    return;
                 }
+                e.getPlayer().kickPlayer("You are banned! You can join on " + sdf.format(user.getTempBan()));
+            } else {
+                e.getPlayer().kickPlayer("You are banned!");
             }
         }
     }
 
-    private boolean mute(User muted, Player mutter, String reason, Date temp) {
-        if (muted.isMuted()) {
-            muted.setMuted(false, null);
+    private boolean ban(User banned, Player banner, String reason, Date temp) {
+        if (banned.isMuted()) {
+            banned.setBanned(false, null);
             return false;
         } else {
-            muted.setMuted(true, temp);
+            banned.setBanned(true, temp);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if(temp == null) {
-                VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Mutes",
-                        "'" + muted.getPlayer().getUniqueId().toString() + "', '" +
-                                muted.getPlayer().getName() + "', '" +
-                                mutter.getUniqueId().toString() + "', '" +
-                                mutter.getName() + "', '" +
+            if (temp == null) {
+                VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Bans",
+                        "'" + banned.getPlayer().getUniqueId().toString() + "', '" +
+                                banned.getPlayer().getName() + "', '" +
+                                banner.getUniqueId().toString() + "', '" +
+                                banner.getName() + "', '" +
                                 reason + "', '" +
                                 MySQL.getDate() + "', NULL"
                 ));
             } else {
-                VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Mutes",
-                        "'" + muted.getPlayer().getUniqueId().toString() + "', '" +
-                                muted.getPlayer().getName() + "', '" +
-                                mutter.getUniqueId().toString() + "', '" +
-                                mutter.getName() + "', '" +
+                VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Bans",
+                        "'" + banned.getPlayer().getUniqueId().toString() + "', '" +
+                                banned.getPlayer().getName() + "', '" +
+                                banner.getUniqueId().toString() + "', '" +
+                                banner.getName() + "', '" +
                                 reason + "', '" +
                                 MySQL.getDate() + "', '" +
                                 sdf.format(temp) + "'"

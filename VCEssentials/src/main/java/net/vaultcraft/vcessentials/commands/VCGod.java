@@ -32,10 +32,10 @@ public class VCGod extends ICommand implements Listener {
         if (args.length == 0) {
             if (godMode.contains(player.getName())) {
                 godMode.remove(player.getName());
-                Form.at(player, Prefix.SUCCESS, "God enabled.");
+                Form.at(player, Prefix.SUCCESS, "God disabled.");
             } else {
                 godMode.add(player.getName());
-                Form.at(player, Prefix.SUCCESS, "God disabled.");
+                Form.at(player, Prefix.SUCCESS, "God enabled.");
             }
             return;
         }
@@ -49,12 +49,12 @@ public class VCGod extends ICommand implements Listener {
 
             if (godMode.contains(player1.getName())) {
                 godMode.remove(player1.getName());
-                Form.at(player, Prefix.SUCCESS, "God enabled for " + player1.getName() + ".");
-                Form.at(player1, Prefix.SUCCESS, "God enabled.");
-            } else {
-                godMode.add(player1.getName());
                 Form.at(player, Prefix.SUCCESS, "God disabled for " + player1.getName() + ".");
                 Form.at(player1, Prefix.SUCCESS, "God disabled.");
+            } else {
+                godMode.add(player1.getName());
+                Form.at(player, Prefix.SUCCESS, "God enabled for " + player1.getName() + ".");
+                Form.at(player1, Prefix.SUCCESS, "God enabled.");
             }
         }
     }

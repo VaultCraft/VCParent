@@ -1,6 +1,11 @@
 package net.vaultcraft.vcutils.database.sql;
 
 
+import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.logging.Logger;
+
+import java.util.regex.Matcher;
+
 /**
  * Created by tacticalsk8er on 7/21/2014.
  */
@@ -21,11 +26,13 @@ public enum Statements {
     }
 
     public String getSql(String... args) {
+        String statement = sql;
         int amount = args.length <= argsAmount ? args.length : argsAmount;
         for(int i = 0; i < amount; i++) {
-            sql = sql.replaceFirst("\\?", args[i]);
+            statement = statement.replaceFirst("\\?", Matcher.quoteReplacement(args[i]));
         }
-        return sql;
+        Logger.debug(VCUtils.getInstance(), statement);
+        return statement;
     }
 
     public String getRawSql() {
