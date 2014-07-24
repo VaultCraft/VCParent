@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.database.mongo.MongoInfo;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sql.Statements;
+import net.vaultcraft.vcutils.item.inventory.InventoryListener;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
@@ -93,6 +94,7 @@ public class VCUtils extends JavaPlugin {
     public void initListeners() {
         Bukkit.getPluginManager().registerEvents(new CommonPlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new ProtectionListener(), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
     }
 
     public static VCUtils getInstance() {

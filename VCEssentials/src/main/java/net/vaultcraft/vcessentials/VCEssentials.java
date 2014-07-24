@@ -1,6 +1,7 @@
 package net.vaultcraft.vcessentials;
 
 import net.vaultcraft.vcessentials.commands.*;
+import net.vaultcraft.vcessentials.echest.EChestMaster;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.command.CommandManager;
@@ -8,7 +9,6 @@ import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.parser.ParseException;
 
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
@@ -22,7 +22,7 @@ public class VCEssentials extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        ProtectionFile.getInstance();
+        ProtectionFile.getInstance().load();
         initCommands();
         mySQL = VCUtils.getInstance().getMySQL();
         mySQL.updateThread.add(Statements.TABLE.getSql("Bans",
@@ -51,6 +51,8 @@ public class VCEssentials extends JavaPlugin {
                         "Time DATETIME NOT NULL," +
                         "Temp DATETIME"
         ));
+
+        new EChestMaster();
     }
 
     public static VCEssentials getInstance() {
@@ -91,11 +93,7 @@ public class VCEssentials extends JavaPlugin {
     }
 
     public void onDisable() {
-        try {
-            ProtectionFile.getInstance().saveAll();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        ProtectionFile.getInstance().save();
     }
 
     public MySQL getMySQL() {

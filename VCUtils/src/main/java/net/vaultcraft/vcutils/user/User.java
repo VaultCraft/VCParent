@@ -38,45 +38,43 @@ public class User {
     public User(final Player player) {
         this.player = player;
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
-                    @Override
-                    public void run() {
-                        DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
-                        if (dbObject != null) {
-                            group = Group.fromPermLevel((Integer) dbObject.get("Group"));
-                            banned = (Boolean) dbObject.get("Banned");
-                            tempBan = (Date) dbObject.get("TempBan");
-                            muted = (Boolean) dbObject.get("Muted");
-                            tempMute = (Date) dbObject.get("TempMute");
-                            money = (Integer) dbObject.get(VCUtils.serverName + "-Money");
-                            tokens = (Integer) dbObject.get("Tokens");
+            @Override
+            public void run() {
+                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+                if (dbObject != null) {
+                    group = Group.fromPermLevel((Integer) dbObject.get("Group"));
+                    banned = (Boolean) dbObject.get("Banned");
+                    tempBan = (Date) dbObject.get("TempBan");
+                    muted = (Boolean) dbObject.get("Muted");
+                    tempMute = (Date) dbObject.get("TempMute");
+                    money = (Integer) dbObject.get(VCUtils.serverName + "-Money");
+                    tokens = (Integer) dbObject.get("Tokens");
 
-                            //Check if banned
-                            Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
-                                            if (banned) {
-                                                if (tempBan != null) {
-                                                    Date now = new Date();
-                                                    if (now.after(tempBan)) {
-                                                        setBanned(false, null);
-                                                        return;
-                                                    }
-                                                    player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
-                                                } else {
-                                                    player.kickPlayer("You are banned!");
-                                                }
-                                            }
-                                        }
-
+                    //Check if banned
+                    Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
+                        @Override
+                        public void run() {
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+                            if (banned) {
+                                if (tempBan != null) {
+                                    Date now = new Date();
+                                    if (now.after(tempBan)) {
+                                        setBanned(false, null);
+                                        return;
                                     }
-                            );
+                                    player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
+                                    return;
+                                } else {
+                                    player.kickPlayer("You are banned!");
+                                    return;
+                                }
+                            }
+                            async_player_map.put(player, User.this);
                         }
-                    }
-
+                    });
                 }
-        );
-        async_player_map.put(player, this);
+            }
+        });
     }
 
     public static void remove(final Player player) {

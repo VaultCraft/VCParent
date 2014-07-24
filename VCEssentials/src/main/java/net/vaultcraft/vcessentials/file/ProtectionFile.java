@@ -1,6 +1,7 @@
 package net.vaultcraft.vcessentials.file;
 
 import net.vaultcraft.vcessentials.VCEssentials;
+import net.vaultcraft.vcutils.file.FileController;
 import net.vaultcraft.vcutils.protection.Area;
 import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.protection.ProtectedArea;
@@ -23,7 +24,7 @@ import java.util.Iterator;
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
  */
 
-public class ProtectionFile {
+public class ProtectionFile implements FileController{
 
     private static ProtectionFile instance;
 
@@ -38,7 +39,12 @@ public class ProtectionFile {
 
     private static File file = new File(VCEssentials.getInstance().getDataFolder().getAbsolutePath(), "protection.json");
 
-    public ProtectionFile() throws IOException, ParseException {
+    public File getFile() {
+        return file;
+    }
+
+    @Override
+    public void load() {
         if (file == null)
             file = new File(VCEssentials.getInstance().getDataFolder().getAbsolutePath(), "protection.json");
         if (!(VCEssentials.getInstance().getDataFolder().exists()))
@@ -47,7 +53,14 @@ public class ProtectionFile {
             VCEssentials.getInstance().saveResource("protection.json", false);
 
         JSONParser parser = new JSONParser();
-        JSONObject data = (JSONObject) parser.parse(new FileReader(file));
+        JSONObject data = null;
+        try {
+            data = (JSONObject) parser.parse(new FileReader(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (data.isEmpty())
             return;
 
@@ -89,65 +102,63 @@ public class ProtectionFile {
         }
     }
 
-    public File getFile() {
-        return file;
-    }
-
-    public void saveAll() throws ParseException {
-        JSONObject obj = new JSONObject();
-        JSONArray regions = new JSONArray();
-
-        HashMap<String, ProtectedArea> pr = ProtectionManager.getInstance().getRegions();
-        for (String key : pr.keySet()) {
-            ProtectedArea area = pr.get(key);
-
-            JSONObject rObj = new JSONObject();
-            rObj.put("name", key);
-            JSONArray arr = new JSONArray();
-            for (FlagType t : area.getProtection().keySet()) {
-                boolean value = area.getProtection().get(t);
-                arr.add(t.getAliases()[0]+":"+value);
-            }
-            rObj.put("flags", arr);
-
-            if (area.getArea().getMax() != null) {
-                rObj.put("world", area.getArea().getMax().getWorld().getName());
-
-                Location min = area.getArea().getMin();
-                Location max = area.getArea().getMax();
-
-                int xMin = min.getBlockX();
-                int yMin = min.getBlockY();
-                int zMin = min.getBlockZ();
-
-                int xMax = max.getBlockX();
-                int yMax = max.getBlockY();
-                int zMax = max.getBlockZ();
-
-                rObj.put("xMin", xMin);
-                rObj.put("yMin", yMin);
-                rObj.put("zMin", zMin);
-
-                rObj.put("xMax", xMax);
-                rObj.put("yMax", yMax);
-                rObj.put("zMax", zMax);
-            }
-            regions.add(rObj);
-        }
-        obj.put("regions", regions);
-        JSONParser parser = new JSONParser();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        String jsonString = gson.toJson(parser.parse(obj.toJSONString()));
-
-        FileWriter out = null;
+    @Override
+    public void save() {
         try {
+            JSONObject obj = new JSONObject();
+            JSONArray regions = new JSONArray();
+
+            HashMap<String, ProtectedArea> pr = ProtectionManager.getInstance().getRegions();
+            for (String key : pr.keySet()) {
+                ProtectedArea area = pr.get(key);
+
+                JSONObject rObj = new JSONObject();
+                rObj.put("name", key);
+                JSONArray arr = new JSONArray();
+                for (FlagType t : area.getProtection().keySet()) {
+                    boolean value = area.getProtection().get(t);
+                    arr.add(t.getAliases()[0]+":"+value);
+                }
+                rObj.put("flags", arr);
+
+                if (area.getArea().getMax() != null) {
+                    rObj.put("world", area.getArea().getMax().getWorld().getName());
+
+                    Location min = area.getArea().getMin();
+                    Location max = area.getArea().getMax();
+
+                    int xMin = min.getBlockX();
+                    int yMin = min.getBlockY();
+                    int zMin = min.getBlockZ();
+
+                    int xMax = max.getBlockX();
+                    int yMax = max.getBlockY();
+                    int zMax = max.getBlockZ();
+
+                    rObj.put("xMin", xMin);
+                    rObj.put("yMin", yMin);
+                    rObj.put("zMin", zMin);
+
+                    rObj.put("xMax", xMax);
+                    rObj.put("yMax", yMax);
+                    rObj.put("zMax", zMax);
+                }
+                regions.add(rObj);
+            }
+            obj.put("regions", regions);
+            JSONParser parser = new JSONParser();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            String jsonString = gson.toJson(parser.parse(obj.toJSONString()));
+
+            FileWriter out = null;
             out = new FileWriter(file);
             out.write(jsonString);
             out.flush();
             out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (Exception err) {
+            err.printStackTrace();
         }
     }
 }

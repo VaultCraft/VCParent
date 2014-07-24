@@ -1,6 +1,7 @@
 package net.vaultcraft.vcutils.item.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -47,8 +48,8 @@ public class InventoryBuilder {
         return new InventoryBuilder();
     }
 
-    public Inventory build() {
-        Inventory inv = Bukkit.createInventory(null, chars.size());
+    public Inventory build(String name) {
+        Inventory inv = Bukkit.createInventory(null, chars.size(), ChatColor.translateAlternateColorCodes('&', name));
         for (Slot key : chars.keySet()) {
             char value = chars.get(key);
             ItemStack set = shapes.get(value);
