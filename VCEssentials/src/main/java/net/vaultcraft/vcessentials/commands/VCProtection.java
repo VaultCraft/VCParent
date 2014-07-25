@@ -142,11 +142,6 @@ public class VCProtection extends ICommand {
 
         ProtectedArea pa = new ProtectedArea(create);
         ProtectionManager.getInstance().addToProtection(args[0], pa);
-        try {
-            ProtectionFile.getInstance().saveAll();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         Form.at(player, Prefix.SUCCESS, "Region: &e" + args[0] + Prefix.SUCCESS.getChatColor() + " created!");
         saveAll();
     }
@@ -220,11 +215,7 @@ public class VCProtection extends ICommand {
     }
 
     private void saveAll() {
-        try {
-            ProtectionFile.getInstance().saveAll();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        ProtectionFile.getInstance().save();
     }
 
     private void checkRegion(Player player, String[] args) {

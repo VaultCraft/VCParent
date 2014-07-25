@@ -2,11 +2,11 @@ package net.vaultcraft.vcutils.protection.flag;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 
 /**
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
@@ -24,7 +24,8 @@ public enum FlagType {
     ENTITY_DAMAGE(EntityDamageEvent.class, "entitydamage"),
     PVP(EntityDamageByEntityEvent.class, "pvp", "entitydamagebyentity", "playervsplayer"),
     CHAT(AsyncPlayerChatEvent.class, "playerchat", "chat", "chatplayer", "talk"),
-    ITEM_DROP(PlayerDropItemEvent.class, "dropitem", "itemdrop", "playerdropitem");
+    ITEM_DROP(PlayerDropItemEvent.class, "dropitem", "itemdrop", "playerdropitem"),
+    CREATURE_SPAWN(CreatureSpawnEvent.class, "entityspawn", "mobspawn", "mobspawning");
 
     private String[] aliases;
 

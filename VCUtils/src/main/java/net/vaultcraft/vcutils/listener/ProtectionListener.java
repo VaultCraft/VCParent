@@ -11,10 +11,12 @@ import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -147,5 +149,12 @@ public class ProtectionListener implements Listener {
             Form.at(player, Prefix.ERROR, "You cannot drop items here!");
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onEntitySpawn(CreatureSpawnEvent event) {
+        LivingEntity ent = event.getEntity();
+
+        event.setCancelled(willCancel(FlagType.CREATURE_SPAWN, ent.getLocation()));
     }
 }

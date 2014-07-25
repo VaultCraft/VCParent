@@ -49,7 +49,12 @@ public class InventoryBuilder {
     }
 
     public Inventory build(String name) {
-        Inventory inv = Bukkit.createInventory(null, chars.size(), ChatColor.translateAlternateColorCodes('&', name));
+        Inventory inv = null;
+        if (name == null)
+            inv = Bukkit.createInventory(null, chars.size());
+        else
+            inv = Bukkit.createInventory(null, chars.size(), ChatColor.translateAlternateColorCodes('&', name));
+
         for (Slot key : chars.keySet()) {
             char value = chars.get(key);
             ItemStack set = shapes.get(value);

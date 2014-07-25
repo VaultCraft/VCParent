@@ -11,3 +11,5 @@ load: POSTWORLD
 authors: [IModZombies4Fun, Tacticalsk8er]
 softdepend: [VCUtils]
 main: net.vaultcraft.vcessentials.VCEssentials
+commands:
+  promote: {}

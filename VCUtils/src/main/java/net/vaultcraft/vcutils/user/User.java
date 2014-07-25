@@ -3,11 +3,13 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.user.localdata.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class User {
 
-    private static volatile ConcurrentHashMap<Player, User> async_player_map = new ConcurrentHashMap<>();
+    public static volatile ConcurrentHashMap<Player, User> async_player_map = new ConcurrentHashMap<>();
 
     public static User fromPlayer(Player player) {
         return async_player_map.get(player);
@@ -26,6 +28,8 @@ public class User {
     private boolean editMode;
     private Group group = Group.COMMON;
     private Player player;
+    private boolean isChatVisible = true;
+    private boolean isPrivateMessaging = true;
 
     private boolean banned = false;
     private Date tempBan = null;
@@ -35,11 +39,15 @@ public class User {
     private int money = 0;
     private int tokens = 0;
 
+    private static HashMap<String, String> userdata = new HashMap<>();
+
     public User(final Player player) {
         this.player = player;
+        async_player_map.put(player, User.this);
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
+                DataManager.populateUserdata(User.this);
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
                 if (dbObject != null) {
                     group = Group.fromPermLevel((Integer) dbObject.get("Group"));
@@ -56,6 +64,7 @@ public class User {
                         public void run() {
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
                             if (banned) {
+                                async_player_map.remove(player, User.this);
                                 if (tempBan != null) {
                                     Date now = new Date();
                                     if (now.after(tempBan)) {
@@ -69,12 +78,42 @@ public class User {
                                     return;
                                 }
                             }
-                            async_player_map.put(player, User.this);
                         }
                     });
                 }
             }
         });
+    }
+
+    public void addUserdata(String key, String value) {
+        if (userdata.containsKey(key))
+            userdata.remove(key);
+
+        userdata.put(key, value);
+    }
+
+    public String getUserdata(String key) {
+        return userdata.get(key);
+    }
+
+    public void setChatVisible(boolean visible) {
+        this.isChatVisible = visible;
+    }
+
+    public boolean isChatVisible() {
+        return isChatVisible;
+    }
+
+    public void setPrivateMessaging(boolean messaging) {
+        this.isPrivateMessaging = messaging;
+    }
+
+    public boolean isPrivateMessaging() {
+        return isPrivateMessaging;
+    }
+
+    public HashMap<String, String> getAllUserdata() {
+        return userdata;
     }
 
     public static void remove(final Player player) {
@@ -103,6 +142,7 @@ public class User {
 
     public static void disable() {
         for (User user : async_player_map.values()) {
+            DataManager.saveUserdata(user.getAllUserdata(), user.getPlayer().getUniqueId());
             BasicDBObject dbObject = new BasicDBObject();
             dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("Group", user.getGroup().getPermLevel());

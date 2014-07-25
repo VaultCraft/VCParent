@@ -44,6 +44,11 @@ public class VCMessage extends ICommand {
             return;
         }
 
+        if (!User.fromPlayer(find).isPrivateMessaging()) {
+            Form.at(player, Prefix.WARNING, "You cannot messages this player as they are not private messaging!");
+            return;
+        }
+
         String message = StringUtils.buildFromArray(args, 1);
 
         Form.at(player, Prefix.NOTHING, "&5&l[&7&ome &5&l-> &7&o{to}&5&l] &7{message}"

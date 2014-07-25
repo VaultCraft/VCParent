@@ -8,6 +8,8 @@ import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -98,5 +100,10 @@ public class VCEssentials extends JavaPlugin {
 
     public MySQL getMySQL() {
         return mySQL;
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        //console commands
+        return true;
     }
 }
