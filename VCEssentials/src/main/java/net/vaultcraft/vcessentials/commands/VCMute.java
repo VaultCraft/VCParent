@@ -121,7 +121,7 @@ public class VCMute extends ICommand implements Listener {
                                 muted.getPlayer().getName() + "', '" +
                                 mutter.getUniqueId().toString() + "', '" +
                                 mutter.getName() + "', '" +
-                                reason + "', '" +
+                                Statements.makeSqlSafe(reason) + "', '" +
                                 MySQL.getDate() + "', NULL"
                 ));
             } else {
@@ -130,7 +130,7 @@ public class VCMute extends ICommand implements Listener {
                                 muted.getPlayer().getName() + "', '" +
                                 mutter.getUniqueId().toString() + "', '" +
                                 mutter.getName() + "', '" +
-                                reason + "', '" +
+                                Statements.makeSqlSafe(reason) + "', '" +
                                 MySQL.getDate() + "', '" +
                                 sdf.format(temp) + "'"
                 ));

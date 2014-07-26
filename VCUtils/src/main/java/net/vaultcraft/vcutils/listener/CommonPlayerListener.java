@@ -7,8 +7,6 @@ import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
-import net.vaultcraft.vcutils.user.localdata.DataManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,7 +54,6 @@ public class CommonPlayerListener implements Listener {
         final HashMap<String, String> data = User.fromPlayer(event.getPlayer()).getAllUserdata();
         final UUID pUUID = event.getPlayer().getUniqueId();
 
-        Bukkit.getScheduler().scheduleAsyncDelayedTask(VCUtils.getInstance(), new Runnable() { public void run() { DataManager.saveUserdata(data, pUUID); } });
         User.remove(event.getPlayer());
     }
 
@@ -78,7 +75,7 @@ public class CommonPlayerListener implements Listener {
         VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Chat",
                 "'" + chatter.getPlayer().getUniqueId().toString() + "', '" +
                         chatter.getPlayer().getName() + "', '" +
-                        event.getMessage() + "', '" +
+                        Statements.makeSqlSafe(event.getMessage()) + "', '" +
                         MySQL.getDate() + "'"
         ));
 

@@ -20,9 +20,9 @@ public class Logger {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
         VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                "'" + pluginName + "', '"
+                "'" + Statements.makeSqlSafe(pluginName) + "', '"
                         + pluginVersion + "', '"
-                        + message + "', '"
+                        + Statements.makeSqlSafe(message) + "', '"
                         + MySQL.getDate() + "'"
         ));
 
@@ -32,14 +32,10 @@ public class Logger {
     public static void error(Plugin plugin, Exception e) {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
-        StringBuilder stackTrace = new StringBuilder();
-        for(StackTraceElement stackTraceElement: e.getStackTrace()) {
-            stackTrace.append(stackTraceElement.toString()).append("\n");
-        }
         VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                "'" + pluginName + "', '"
+                "'" + Statements.makeSqlSafe(pluginName) + "', '"
                         + pluginVersion + "', '"
-                        + e.getMessage() + stackTrace.toString() + "', '"
+                        + Statements.makeSqlSafe(e.toString()) + "', '"
                         + MySQL.getDate() + "'"
         ));
 
@@ -56,9 +52,9 @@ public class Logger {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
         VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                "'" + pluginName + "', '"
+                "'" + Statements.makeSqlSafe(pluginName) + "', '"
                         + pluginVersion + "', '(WARNING)"
-                        + message + "', '"
+                        + Statements.makeSqlSafe(message) + "', '"
                         + MySQL.getDate() + "'"
         ));
         System.out.println(ansi_yellow + "(WARNING) " + ansi_reset + "[" + plugin.getName() + "] " + message + ansi_reset);

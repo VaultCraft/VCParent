@@ -103,7 +103,7 @@ public class VCBan extends ICommand implements Listener {
                                 banned.getPlayer().getName() + "', '" +
                                 banner.getUniqueId().toString() + "', '" +
                                 banner.getName() + "', '" +
-                                reason + "', '" +
+                                Statements.makeSqlSafe(reason) + "', '" +
                                 MySQL.getDate() + "', NULL"
                 ));
             } else {
@@ -112,7 +112,7 @@ public class VCBan extends ICommand implements Listener {
                                 banned.getPlayer().getName() + "', '" +
                                 banner.getUniqueId().toString() + "', '" +
                                 banner.getName() + "', '" +
-                                reason + "', '" +
+                                Statements.makeSqlSafe(reason) + "', '" +
                                 MySQL.getDate() + "', '" +
                                 sdf.format(temp) + "'"
                 ));

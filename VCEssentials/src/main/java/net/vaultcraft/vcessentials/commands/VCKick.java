@@ -64,7 +64,7 @@ public class VCKick extends ICommand {
                             player1.getName() + "', '" +
                             player.getUniqueId().toString() + "', '" +
                             player.getName() + "', '" +
-                            reason.toString() + "', '" +
+                            Statements.makeSqlSafe(reason.toString()) + "', '" +
                             MySQL.getDate() + "'"
             ));
             Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " has been kicked.");
