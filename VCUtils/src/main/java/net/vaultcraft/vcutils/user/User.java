@@ -39,7 +39,7 @@ public class User {
     private int money = 0;
     private int tokens = 0;
 
-    private static HashMap<String, String> userdata = new HashMap<>();
+    private HashMap<String, String> userdata = new HashMap<>();
 
     public User(final Player player) {
         this.player = player;

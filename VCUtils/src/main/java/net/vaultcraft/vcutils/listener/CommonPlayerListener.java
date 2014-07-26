@@ -82,10 +82,8 @@ public class CommonPlayerListener implements Listener {
                         MySQL.getDate() + "'"
         ));
 
-        if (chatter.getGroup().hasPermission(Group.HELPER)) {
+        if (chatter.getGroup().hasPermission(Group.HELPER))
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
-            return;
-        }
 
         //hide for invis players
         if (!chatter.isChatVisible()) {
@@ -95,7 +93,7 @@ public class CommonPlayerListener implements Listener {
 
         Set<Player> received = event.getRecipients();
         for (Player player : User.async_player_map.keySet()) {
-            if (User.fromPlayer(player).isChatVisible())
+            if (User.fromPlayer(player).isChatVisible() || User.fromPlayer(player).getGroup().hasPermission(Group.HELPER))
                 continue;
 
             received.remove(player);

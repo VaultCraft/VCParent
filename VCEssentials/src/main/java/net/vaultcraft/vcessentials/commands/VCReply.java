@@ -25,6 +25,11 @@ public class VCReply extends ICommand {
             return;
         }
 
+        if (!(User.fromPlayer(player).isPrivateMessaging())) {
+            Form.at(player, Prefix.WARNING, "You cannot private message until you enable private messaging!");
+            return;
+        }
+
         User user = User.fromPlayer(player);
         if (user.modifyConversation(null) == null) {
             Form.at(player, Prefix.ERROR, "You are not chatting with anyone!");

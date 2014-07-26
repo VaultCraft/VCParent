@@ -33,6 +33,11 @@ public class VCMessage extends ICommand {
             return;
         }
 
+        if (!(User.fromPlayer(player).isPrivateMessaging())) {
+            Form.at(player, Prefix.WARNING, "You cannot private message until you enable private messaging!");
+            return;
+        }
+
         Player find = Bukkit.getPlayer(args[0]);
         if (find == null) {
             Form.at(player, Prefix.ERROR, "No such player! Format: /msg <user> <message>");
