@@ -78,7 +78,7 @@ public class CommonPlayerListener implements Listener {
         VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Chat",
                 "'" + chatter.getPlayer().getUniqueId().toString() + "', '" +
                         chatter.getPlayer().getName() + "', '" +
-                        event.getMessage() + "', '" +
+                        Statements.makeSqlSafe(event.getMessage()) + "', '" +
                         MySQL.getDate() + "'"
         ));
 

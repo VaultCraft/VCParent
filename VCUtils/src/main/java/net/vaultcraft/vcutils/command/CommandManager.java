@@ -46,7 +46,7 @@ public class CommandManager implements Listener {
                     "'" + user.getUniqueId().toString() + "', '"
                             + user.getName() + "', '"
                             + User.fromPlayer(user).getGroup().getName() + "', '"
-                            + event.getMessage() + "', '"
+                            + Statements.makeSqlSafe(event.getMessage()) + "', '"
                             + MySQL.getDate() + "'"
             ));
             //intercept command for vanilla override

@@ -3,13 +3,13 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.user.localdata.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -39,7 +39,8 @@ public class User {
     private int money = 0;
     private int tokens = 0;
 
-    private static HashMap<String, String> userdata = new HashMap<>();
+    private HashMap<String, String> globalUserdata = new HashMap<>();
+    private HashMap<String, String> userdata = new HashMap<>();
 
     public User(final Player player) {
         this.player = player;
@@ -47,7 +48,6 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                DataManager.populateUserdata(User.this);
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
                 if (dbObject != null) {
                     group = Group.fromPermLevel((Integer) dbObject.get("Group"));
@@ -57,7 +57,8 @@ public class User {
                     tempMute = (Date) dbObject.get("TempMute");
                     money = (Integer) dbObject.get(VCUtils.serverName + "-Money");
                     tokens = (Integer) dbObject.get("Tokens");
-
+                    userdata = parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+                    globalUserdata = parseData((String) dbObject.get("Global-UserData"));
                     //Check if banned
                     Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
                         @Override
@@ -72,10 +73,8 @@ public class User {
                                         return;
                                     }
                                     player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
-                                    return;
                                 } else {
                                     player.kickPlayer("You are banned!");
-                                    return;
                                 }
                             }
                         }
@@ -92,8 +91,19 @@ public class User {
         userdata.put(key, value);
     }
 
+    public void addGlobalUserdata(String key, String value) {
+        if (userdata.containsKey(key))
+            userdata.remove(key);
+
+        userdata.put(key, value);
+    }
+
     public String getUserdata(String key) {
         return userdata.get(key);
+    }
+
+    public String getGlobalUserdata(String key) {
+        return globalUserdata.get(key);
     }
 
     public void setChatVisible(boolean visible) {
@@ -116,6 +126,10 @@ public class User {
         return userdata;
     }
 
+    public HashMap<String, String> getAllGlobalUserdata() {
+        return globalUserdata;
+    }
+
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
@@ -130,6 +144,8 @@ public class User {
                 dbObject.put("TempMute", user.getTempMute());
                 dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
                 dbObject.put("Tokens", user.getTokens());
+                dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.userdata));
+                dbObject.put("Global-UserData", dataToString(user.globalUserdata));
                 DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
                 if (dbObject1 == null)
                     VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
@@ -142,7 +158,7 @@ public class User {
 
     public static void disable() {
         for (User user : async_player_map.values()) {
-            DataManager.saveUserdata(user.getAllUserdata(), user.getPlayer().getUniqueId());
+
             BasicDBObject dbObject = new BasicDBObject();
             dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("Group", user.getGroup().getPermLevel());
@@ -152,6 +168,8 @@ public class User {
             dbObject.put("TempMute", user.getTempMute());
             dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
             dbObject.put("Tokens", user.getTokens());
+            dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.userdata));
+            dbObject.put("Global-UserData", dataToString(user.globalUserdata));
             DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
             if (dbObject1 == null)
                 VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
@@ -236,5 +254,27 @@ public class User {
 
     public void addTokens(int addTo) {
         tokens += addTo;
+    }
+
+    private static String dataToString(HashMap<String, String> userdata) {
+        StringBuilder sb = new StringBuilder();
+        int counter = 0;
+        for (Map.Entry entry : userdata.entrySet()) {
+            sb.append(entry.getKey()).append(":").append(entry.getValue());
+            if (userdata.size() - 1 != counter)
+                sb.append(",");
+            counter++;
+        }
+        return sb.toString();
+    }
+
+    private static HashMap<String, String> parseData(String data) {
+        HashMap<String, String> userdata = new HashMap<>();
+        String[] parts = data.split(",");
+        for (String s : parts) {
+            String[] entry = s.split(":");
+            userdata.put(entry[0], entry[1]);
+        }
+        return userdata;
     }
 }

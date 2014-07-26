@@ -34,4 +34,8 @@ public enum Statements {
     public String getRawSql() {
         return sql;
     }
+
+    public static String makeSqlSafe(String s) {
+        return s.replaceAll("'", "\\'");
+    }
 }
