@@ -50,15 +50,15 @@ public class User {
             public void run() {
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
                 if (dbObject != null) {
-                    group = Group.fromPermLevel((Integer) dbObject.get("Group"));
-                    banned = (Boolean) dbObject.get("Banned");
+                    group = dbObject.get("Group") == null ? Group.COMMON : Group.fromPermLevel((Integer) dbObject.get("Group"));
+                    banned = (Boolean) dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
-                    muted = (Boolean) dbObject.get("Muted");
+                    muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
                     tempMute = (Date) dbObject.get("TempMute");
-                    money = (Integer) dbObject.get(VCUtils.serverName + "-Money");
-                    tokens = (Integer) dbObject.get("Tokens");
-                    userdata = parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
-                    globalUserdata = parseData((String) dbObject.get("Global-UserData"));
+                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : (Integer) dbObject.get(VCUtils.serverName + "-Money");
+                    tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
+                    userdata = parseData((String) dbObject.get(VCUtils.serverName + "-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+                    globalUserdata = parseData((String) dbObject.get("Global-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
                     //Check if banned
                     Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
                         @Override
