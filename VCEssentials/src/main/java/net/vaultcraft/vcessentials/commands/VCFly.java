@@ -31,7 +31,7 @@ public class VCFly extends ICommand {
         if (args.length == 0) {
             Player player1 = Bukkit.getPlayer(args[0]);
             if (player1 == null) {
-                Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
+                Form.at(player, Prefix.ERROR, "No such player");
                 return;
             }
             player1.setAllowFlight(!player1.getAllowFlight());
