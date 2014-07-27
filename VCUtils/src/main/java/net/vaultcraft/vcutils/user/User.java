@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -30,13 +31,14 @@ public class User {
     private Player player;
     private boolean isChatVisible = true;
     private boolean isPrivateMessaging = true;
+    private VCScoreboard scoreboard;
 
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
     private Date tempMute = null;
 
-    private int money = 0;
+    private double money = 0;
     private int tokens = 0;
 
     private HashMap<String, String> globalUserdata = new HashMap<>();
@@ -51,11 +53,11 @@ public class User {
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
                 if (dbObject != null) {
                     group = dbObject.get("Group") == null ? Group.COMMON : Group.fromPermLevel((Integer) dbObject.get("Group"));
-                    banned = (Boolean) dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
+                    banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
                     tempMute = (Date) dbObject.get("TempMute");
-                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : (Integer) dbObject.get(VCUtils.serverName + "-Money");
+                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : (Double) dbObject.get(VCUtils.serverName + "-Money");
                     tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
                     userdata = parseData((String) dbObject.get(VCUtils.serverName + "-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
                     globalUserdata = parseData((String) dbObject.get("Global-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
@@ -135,6 +137,7 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
+                user.getScoreboard().remove();
                 BasicDBObject dbObject = new BasicDBObject();
                 dbObject.put("UUID", player.getUniqueId().toString());
                 dbObject.put("Group", user.getGroup().getPermLevel());
@@ -158,7 +161,7 @@ public class User {
 
     public static void disable() {
         for (User user : async_player_map.values()) {
-
+            user.getScoreboard().remove();
             BasicDBObject dbObject = new BasicDBObject();
             dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("Group", user.getGroup().getPermLevel());
@@ -232,7 +235,7 @@ public class User {
         return tempMute;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
@@ -240,7 +243,7 @@ public class User {
         return tokens;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
@@ -248,12 +251,20 @@ public class User {
         this.tokens = tokens;
     }
 
-    public void addMoney(int addTo) {
+    public void addMoney(double addTo) {
         money += addTo;
     }
 
     public void addTokens(int addTo) {
         tokens += addTo;
+    }
+
+    public VCScoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    public void setScoreboard(VCScoreboard scoreboard) {
+        this.scoreboard = scoreboard;
     }
 
     private static String dataToString(HashMap<String, String> userdata) {
@@ -269,6 +280,8 @@ public class User {
     }
 
     private static HashMap<String, String> parseData(String data) {
+        if(!data.contains(","))
+            return new HashMap<>();
         HashMap<String, String> userdata = new HashMap<>();
         String[] parts = data.split(",");
         for (String s : parts) {

@@ -42,7 +42,7 @@ public class VCMoney extends ICommand{
                     }
 
                     Player player1 = Bukkit.getPlayer(args[1]);
-                    int amount;
+                    double amount;
                     try {
                         amount = Integer.parseInt(args[2]);
                     } catch (NumberFormatException e) {
