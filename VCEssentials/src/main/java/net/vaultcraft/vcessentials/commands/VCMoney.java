@@ -42,7 +42,7 @@ public class VCMoney extends ICommand{
                     }
 
                     Player player1 = Bukkit.getPlayer(args[1]);
-                    int amount;
+                    double amount;
                     try {
                         amount = Integer.parseInt(args[2]);
                     } catch (NumberFormatException e) {
@@ -55,8 +55,8 @@ public class VCMoney extends ICommand{
                         return;
                     }
 
-                    if(player1 == null) {
-                        Form.at(player, Prefix.ERROR, "Player: " + args[1] + " is not online.");
+                    if (player1 == null) {
+                        Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
 
@@ -89,8 +89,8 @@ public class VCMoney extends ICommand{
                         return;
                     }
 
-                    if(player1 == null) {
-                        Form.at(player, Prefix.ERROR, "Player: " + args[1] + " is not online.");
+                    if (player1 == null) {
+                        Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
 
@@ -120,8 +120,8 @@ public class VCMoney extends ICommand{
                         return;
                     }
 
-                    if(player1 == null) {
-                        Form.at(player, Prefix.ERROR, "Player: " + args[1] + " is not online.");
+                    if (player1 == null) {
+                        Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
 
@@ -135,8 +135,8 @@ public class VCMoney extends ICommand{
                     break;
                 default:
                     player1 = Bukkit.getPlayer(args[1]);
-                    if(player1 == null) {
-                        Form.at(player, Prefix.ERROR, "Player: " + args[1] + " is not online.");
+                    if (player1 == null) {
+                        Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
                     Form.at(player, Prefix.VAULT_CRAFT,  player1.getName() + " has &a$" + User.fromPlayer(player1).getMoney() + ".");

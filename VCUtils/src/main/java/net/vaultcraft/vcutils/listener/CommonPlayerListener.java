@@ -19,9 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
@@ -50,9 +48,6 @@ public class CommonPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-
-        final HashMap<String, String> data = User.fromPlayer(event.getPlayer()).getAllUserdata();
-        final UUID pUUID = event.getPlayer().getUniqueId();
 
         User.remove(event.getPlayer());
     }

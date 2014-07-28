@@ -27,7 +27,7 @@ public class VCFeed extends ICommand {
         if (args.length == 1) {
             Player player1 = Bukkit.getPlayer(args[0]);
             if (player1 == null) {
-                Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not online.");
+                Form.at(player, Prefix.ERROR, "No such player");
                 return;
             }
 

@@ -79,6 +79,8 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCBan(this, "ban", Group.ADMIN));
         CommandManager.addCommand(new VCMoney("money", Group.COMMON, "bal", "balance"));
         CommandManager.addCommand(new VCToken("tokens", Group.COMMON));
+        CommandManager.addCommand(new VCTeleportHere("tphere", Group.MOD, "teleporthere"));
+        CommandManager.addCommand(new VCSpeed("speed", Group.ADMIN));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));

@@ -84,10 +84,6 @@ public class VCUtils extends JavaPlugin {
 
         User.disable();
         mongoDB.close();
-
-        ClassConfig.updateConfig(SQLInfo.class, getConfig());
-        ClassConfig.updateConfig(MongoInfo.class, getConfig());
-        saveConfig();
     }
 
     public void initListeners() {
