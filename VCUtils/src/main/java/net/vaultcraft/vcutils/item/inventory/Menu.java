@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class Menu {
 
-    private Menu parent;
-    private HashMap<String, Menu> children = new HashMap<>();
+    private Menu parent; public void setParent(Menu inv) {this.parent = inv;}
+    private HashMap<String, Menu> children = new HashMap<>(); public void addChild(String title, Menu menu) { this.children.put(title, menu); }
     private Inventory actual;
 
     public Menu(Inventory actual) {
@@ -23,6 +23,10 @@ public class Menu {
             return children.get(node);
 
         return null;
+    }
+
+    public Menu getChild(String title) {
+        return children.get(title);
     }
 
     public Menu openParent() {

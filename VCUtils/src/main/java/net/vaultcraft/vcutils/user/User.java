@@ -99,9 +99,6 @@ public class User {
     }
 
     public String getUserdata(String key) {
-        if (!(userdata.containsKey(key)))
-            return "";
-
         return userdata.get(key);
     }
 
@@ -273,6 +270,9 @@ public class User {
 
     private static HashMap<String, String> parseData(String data) {
         HashMap<String, String> userdata = new HashMap<>();
+        if (!(data.contains(",")))
+            return userdata;
+
         String[] parts = data.split(",");
         for (String s : parts) {
             String[] entry = s.split(":");
