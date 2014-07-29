@@ -31,7 +31,7 @@ public class User {
     private Player player;
     private boolean isChatVisible = true;
     private boolean isPrivateMessaging = true;
-    private VCScoreboard scoreboard;
+    private VCScoreboard scoreboard = null;
 
     private boolean banned = false;
     private Date tempBan = null;
@@ -137,7 +137,8 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                user.getScoreboard().remove();
+                if(user.getScoreboard() != null)
+                    user.getScoreboard().remove();
                 BasicDBObject dbObject = new BasicDBObject();
                 dbObject.put("UUID", player.getUniqueId().toString());
                 dbObject.put("Group", user.getGroup().getPermLevel());
@@ -161,7 +162,8 @@ public class User {
 
     public static void disable() {
         for (User user : async_player_map.values()) {
-            user.getScoreboard().remove();
+            if(user.getScoreboard() != null)
+                user.getScoreboard().remove();
             BasicDBObject dbObject = new BasicDBObject();
             dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("Group", user.getGroup().getPermLevel());

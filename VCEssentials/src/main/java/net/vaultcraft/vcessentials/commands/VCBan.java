@@ -62,8 +62,8 @@ public class VCBan extends ICommand implements Listener {
             StringBuilder reason = new StringBuilder();
             Date temp = null;
 
-            if (args[1].contains("Time:")) {
-                String time = args[1].replace("Time:", "");
+            if (args[1].contains("Time:") || args[1].contains("time:") || args[1].contains("T:") || args[1].contains("t:")) {
+                String time = args[1].replace("Time:", "").replace("time:", "").replace("T:", "").replace("t:", "");
                 try {
                     temp = new Date(DateUtil.parseDateDiff(time, true));
                 } catch (Exception e) {

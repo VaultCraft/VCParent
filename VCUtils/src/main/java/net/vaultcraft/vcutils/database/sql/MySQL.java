@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.database.sql;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.plugin.Plugin;
 
@@ -26,6 +27,7 @@ public class MySQL {
     private String database_username;
     private String database_password;
     private int queries = 0;
+    private boolean enabled = true;
 
     private UpdateThread updateTask = new UpdateThread();
     private QueryThread queryTask = new QueryThread();
@@ -68,6 +70,7 @@ public class MySQL {
             }
         } catch (SQLException | ClassNotFoundException e) {
             Logger.error(plugin, e);
+            enabled = false;
         }
         queries++;
         return connection;
@@ -119,6 +122,10 @@ public class MySQL {
                 } catch (InterruptedException ignored) {
                 }
                 if (queryThread.size() > 0) {
+                    if(!enabled) {
+                        queryThread.clear();
+                        continue;
+                    }
                     for (Map.Entry entry : new ConcurrentHashMap<>(queryThread).entrySet()) {
                         String sql = (String) entry.getKey();
                         long id = (long) entry.getValue();
@@ -126,6 +133,8 @@ public class MySQL {
                             PreparedStatement ps = getConnection().prepareStatement(sql);
                             ResultSet rs = ps.executeQuery();
                             callbacks.get(id).onSuccess(rs);
+                        } catch (MySQLSyntaxErrorException e) {
+                            e.printStackTrace();
                         } catch (SQLException e) {
                             callbacks.get(id).onFailure(e);
                         } finally {
@@ -147,10 +156,16 @@ public class MySQL {
                 } catch (InterruptedException ignored) {
                 }
                 if (updateThread.size() > 0) {
+                    if(!enabled) {
+                        queryThread.clear();
+                        continue;
+                    }
                     for(String s: new ArrayList<>(updateThread)) {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(s);
                             ps.executeUpdate();
+                        } catch (MySQLSyntaxErrorException e) {
+                            e.printStackTrace();
                         } catch (SQLException e) {
                             Logger.error(plugin, e);
                         } finally {
