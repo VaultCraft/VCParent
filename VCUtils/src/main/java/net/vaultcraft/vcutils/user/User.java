@@ -57,7 +57,11 @@ public class User {
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
                     tempMute = (Date) dbObject.get("TempMute");
-                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : (Double) dbObject.get(VCUtils.serverName + "-Money");
+
+                    Object o = dbObject.get(VCUtils.serverName+"-Money");
+                    double value = (o instanceof Double ? (Double) o : (Integer) o);
+
+                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
                     tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
                     userdata = parseData((String) dbObject.get(VCUtils.serverName + "-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
                     globalUserdata = parseData((String) dbObject.get("Global-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
