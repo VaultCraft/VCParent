@@ -5,6 +5,8 @@ import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */
@@ -35,5 +37,11 @@ public class Form {
             String value = command.getHelp().get(m);
             at(player, Prefix.NOTHING, "&c/"+command.getName()+" "+m+" &e- &7"+value);
         }
+    }
+
+    private static DecimalFormat $form = new DecimalFormat("#,#00.0");
+
+    public static String at(double value) {
+        return $form.format(value);
     }
 }
