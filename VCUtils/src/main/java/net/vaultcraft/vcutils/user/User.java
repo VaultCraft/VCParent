@@ -67,7 +67,6 @@ public class User {
                     globalUserdata = (String) dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
                     //Check if banned
                     Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
-                        @Override
                         public void run() {
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
                             if (banned) {
