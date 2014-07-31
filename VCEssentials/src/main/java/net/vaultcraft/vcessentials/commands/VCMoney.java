@@ -134,7 +134,7 @@ public class VCMoney extends ICommand{
                     Form.at(player, Prefix.SUCCESS, player1.getName() + " now has $" + User.fromPlayer(player1).getMoney() + ".");
                     break;
                 default:
-                    player1 = Bukkit.getPlayer(args[1]);
+                    player1 = Bukkit.getPlayer(args[0]);
                     if (player1 == null) {
                         Form.at(player, Prefix.ERROR, "No such player");
                         return;
