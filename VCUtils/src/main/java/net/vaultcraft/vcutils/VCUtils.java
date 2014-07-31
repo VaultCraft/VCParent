@@ -37,8 +37,10 @@ public class VCUtils extends JavaPlugin {
 
         ClassConfig.loadConfig(SQLInfo.class, getConfig());
         ClassConfig.loadConfig(MongoInfo.class, getConfig());
+        ClassConfig.loadConfig(VCUtils.class, getConfig());
         ClassConfig.updateConfig(SQLInfo.class, getConfig());
         ClassConfig.updateConfig(MongoInfo.class, getConfig());
+        ClassConfig.updateConfig(VCUtils.class, getConfig());
         saveConfig();
 
         try {
