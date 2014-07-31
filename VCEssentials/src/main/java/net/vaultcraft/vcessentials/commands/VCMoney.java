@@ -44,7 +44,7 @@ public class VCMoney extends ICommand{
                     Player player1 = Bukkit.getPlayer(args[1]);
                     double amount;
                     try {
-                        amount = Integer.parseInt(args[2]);
+                        amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Form.at(player, Prefix.ERROR, "Argument 3 needs to be a integer.");
                         return;
@@ -83,7 +83,7 @@ public class VCMoney extends ICommand{
 
                     player1 = Bukkit.getPlayer(args[1]);
                     try {
-                        amount = Integer.parseInt(args[2]);
+                        amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Form.at(player, Prefix.ERROR, "Argument 3 needs to be a integer.");
                         return;
@@ -114,7 +114,7 @@ public class VCMoney extends ICommand{
 
                     player1 = Bukkit.getPlayer(args[1]);
                     try {
-                        amount = Integer.parseInt(args[2]);
+                        amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Form.at(player, Prefix.ERROR, "Argument 3 needs to be a integer.");
                         return;

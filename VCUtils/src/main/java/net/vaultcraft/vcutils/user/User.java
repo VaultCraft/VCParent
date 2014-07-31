@@ -59,7 +59,7 @@ public class User {
                     tempMute = (Date) dbObject.get("TempMute");
 
                     Object o = dbObject.get(VCUtils.serverName+"-Money");
-                    double value = (o instanceof Double ? (Double) o : (Integer) o);
+                    double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
 
                     money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
                     tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");

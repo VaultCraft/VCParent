@@ -17,7 +17,6 @@ public class VCGamemode extends ICommand {
         super(name, permission, aliases);
     }
 
-    @Override
     public void processCommand(Player player, String[] args) {
         if (args.length == 0) {
             Form.at(player, Prefix.ERROR, "Format: /gm (player) <gamemode>");

@@ -4,12 +4,18 @@ import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.echest.EChestMaster;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
+import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -107,6 +113,30 @@ public class VCEssentials extends JavaPlugin {
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         //console commands
+        switch (cmd.getName().toLowerCase()) {
+            case "promote": {
+                if (args.length < 2) {
+                    Logger.log(this, "Format: /setgroup <user> <rank>");
+                    return true;
+                }
+
+                Player wrapped = Bukkit.getPlayer(args[0]);
+                if (wrapped == null) {
+                    Logger.log(this, "No such player! Format: /setgroup <user> <rank>");
+                    return true;
+                }
+
+                Group select = Group.fromString(args[1]);
+                if (select == null) {
+                    Logger.log(this, "No such group! Format: /setgroup <user> <rank>");
+                    return true;
+                }
+
+                User.fromPlayer(wrapped).setGroup(select);
+                Logger.log(this, wrapped.getName() + " promoted to " + select.getName());
+                break;
+            }
+        }
         return true;
     }
 }
