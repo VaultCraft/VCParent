@@ -21,19 +21,19 @@ import org.bukkit.inventory.meta.FireworkMeta;
  * @author codename_B
  */
 public class FireworkEffectPlayer {
-    
+
     /*
      * Example use:
-     * 
+     *
      * public class FireWorkPlugin implements Listener {
-     * 
+     *
      * FireworkEffectPlayer fplayer = new FireworkEffectPlayer();
-     * 
+     *
      * @EventHandler
      * public void onPlayerLogin(PlayerLoginEvent event) {
      *   fplayer.playFirework(event.getPlayer().getWorld(), event.getPlayer.getLocation(), Util.getRandomFireworkEffect());
      * }
-     * 
+     *
      * }
      */
 
@@ -51,7 +51,7 @@ public class FireworkEffectPlayer {
      */
     public static void playFirework(World world, Location loc, FireworkEffect fe) throws Exception {
         // Bukkity load (CraftFirework)
-        Firework fw = (Firework) world.spawn(loc, Firework.class);
+        final Firework fw = (Firework) world.spawn(loc, Firework.class);
         // the net.minecraft.server.World
         Object nms_world = null;
         Object nms_firework = null;
