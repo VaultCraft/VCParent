@@ -63,8 +63,8 @@ public class User {
 
                     money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
                     tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
-                    userdata = parseData((String) dbObject.get(VCUtils.serverName + "-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
-                    globalUserdata = parseData((String) dbObject.get("Global-UserData")) == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
+                    userdata = (String) dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+                    globalUserdata = (String) dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
                     //Check if banned
                     Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
                         @Override
