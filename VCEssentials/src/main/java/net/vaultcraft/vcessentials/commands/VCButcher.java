@@ -22,6 +22,9 @@ public class VCButcher extends ICommand {
         if(args.length == 0) {
             List<Entity> entities = player.getNearbyEntities(50, 50, 50);
             for(Entity entity : entities) {
+                if (entity instanceof Player)
+                    continue;
+
                 entity.remove();
             }
             Form.at(player, Prefix.SUCCESS, entities.size() + " entities were removed.");
@@ -38,6 +41,9 @@ public class VCButcher extends ICommand {
 
         List<Entity> entities = player.getNearbyEntities(range, range, range);
         for(Entity entity : entities) {
+            if (entity instanceof Player)
+                continue;
+
             entity.remove();
         }
         Form.at(player, Prefix.SUCCESS, entities.size() + " entities were removed.");

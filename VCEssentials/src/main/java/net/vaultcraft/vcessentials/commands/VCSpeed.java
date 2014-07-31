@@ -24,19 +24,24 @@ public class VCSpeed extends ICommand {
         float speed;
 
         try {
-            speed = Float.parseFloat(args[1]);
+            speed = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            Form.at(player, Prefix.ERROR, "Argument 2 needs to be a integer.");
+            Form.at(player, Prefix.ERROR, "Argument 2 needs to be an integer.");
+            return;
+        }
+
+        if (speed < 0 || speed > 10.0) {
+            Form.at(player, Prefix.ERROR, "Speed must be between 1 and 10!");
             return;
         }
 
         switch (args[0]) {
             case "fly":
-                player.setFlySpeed(speed);
+                player.setFlySpeed(speed/10f);
                 Form.at(player, Prefix.SUCCESS, "Fly speed: " + speed);
                 break;
             case "walk":
-                player.setWalkSpeed(speed);
+                player.setWalkSpeed(speed/10f);
                 Form.at(player, Prefix.SUCCESS, "Walk speed: " + speed);
                 break;
             default:
