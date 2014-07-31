@@ -5,8 +5,9 @@ package net.vaultcraft.vcutils.user;
  */
 public enum Group {
 
-    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 15, false),
-    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 14, false),
+    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 16, false),
+    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 15, false),
+    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 14, false),
     ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 13, false),
     MOD("&f/&3&lMOD&f/ &7%user%&3: &f%message%", 12, false),
     HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 11, false),
@@ -39,7 +40,7 @@ public enum Group {
         int level = other.permLevel;
         boolean donor = other.isDonorRank;
 
-        if (this.equals(Group.OWNER) || this.equals(Group.DEVELOPER))
+        if (this.getPermLevel() >= 13)
             return true;
 
         if (donor) {
