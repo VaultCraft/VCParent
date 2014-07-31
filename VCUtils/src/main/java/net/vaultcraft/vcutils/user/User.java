@@ -1,6 +1,6 @@
 package net.vaultcraft.vcutils.user;
 
-import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
@@ -143,7 +143,7 @@ public class User {
             public void run() {
                 if(user.getScoreboard() != null)
                     user.getScoreboard().remove();
-                BasicDBObject dbObject = new BasicDBObject();
+                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString()) == null ? new BasicDBList() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
                 dbObject.put("UUID", player.getUniqueId().toString());
                 dbObject.put("Group", user.getGroup().getPermLevel());
                 dbObject.put("Banned", user.isBanned());
@@ -168,7 +168,7 @@ public class User {
         for (User user : async_player_map.values()) {
             if(user.getScoreboard() != null)
                 user.getScoreboard().remove();
-            BasicDBObject dbObject = new BasicDBObject();
+            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBList() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("Group", user.getGroup().getPermLevel());
             dbObject.put("Banned", user.isBanned());
