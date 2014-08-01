@@ -63,8 +63,8 @@ public class User {
 
                     money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
                     tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
-                    userdata = (String) dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
-                    globalUserdata = (String) dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
+                    userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+                    globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
                     //Check if banned
                     Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
                         public void run() {
@@ -285,16 +285,18 @@ public class User {
     }
 
     private static HashMap<String, String> parseData(String data) {
-        if(!data.contains(","))
-            return new HashMap<>();
         HashMap<String, String> userdata = new HashMap<>();
-        if (!(data.contains(",")))
+        if (!(data.contains(":")))
             return userdata;
-
-        String[] parts = data.split(",");
-        for (String s : parts) {
-            String[] entry = s.split(":");
-            userdata.put(entry[0], entry[1]);
+        if(data.contains(",")) {
+            String[] parts = data.split(",");
+            for (String s : parts) {
+                String[] entry = s.split(":");
+                userdata.put(entry[0], entry[1]);
+            }
+        } else {
+            String[] parts = data.split(":");
+            userdata.put(parts[0], parts[1]);
         }
         return userdata;
     }

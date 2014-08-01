@@ -48,6 +48,7 @@ public class Form {
     private static DecimalFormat $intForm = new DecimalFormat("#,###");
 
     public static String at(int value) {
+        $intForm.setMaximumFractionDigits(0);
         return $intForm.format(value);
     }
 }
