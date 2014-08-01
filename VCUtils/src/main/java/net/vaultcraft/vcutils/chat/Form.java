@@ -39,7 +39,7 @@ public class Form {
         }
     }
 
-    private static DecimalFormat $form = new DecimalFormat("#,#00.0");
+    private static DecimalFormat $form = new DecimalFormat("#,##0.0");
 
     public static String at(double value) {
         return $form.format(value);
