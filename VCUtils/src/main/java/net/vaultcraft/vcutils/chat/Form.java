@@ -44,4 +44,10 @@ public class Form {
     public static String at(double value) {
         return $form.format(value);
     }
+
+    private static DecimalFormat $intForm = new DecimalFormat("#,###");
+
+    public static String at(int value) {
+        return $intForm.format(value);
+    }
 }
