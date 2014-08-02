@@ -2,18 +2,17 @@ package net.vaultcraft.vcutils.listener;
 
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
-import net.vaultcraft.vcutils.protection.ProtectedArea;
 import net.vaultcraft.vcutils.protection.ProtectionManager;
 import net.vaultcraft.vcutils.protection.flag.FlagResult;
 import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -21,8 +20,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-
-import java.util.Collection;
 
 /**
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
@@ -64,7 +61,7 @@ public class ProtectionListener implements Listener {
     //      EVENTS                                       //
     ///////////////////////////////////////////////////////
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Location broken = event.getBlock().getLocation();
@@ -72,7 +69,7 @@ public class ProtectionListener implements Listener {
         event.setCancelled(willCancel(FlagType.BLOCK_BREAK, player, broken));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Location broken = event.getBlock().getLocation();
@@ -80,35 +77,35 @@ public class ProtectionListener implements Listener {
         event.setCancelled(willCancel(FlagType.BLOCK_PLACE, player, broken));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onBlockForm(BlockFormEvent event) {
         Block block = event.getBlock();
 
         event.setCancelled(willCancel(FlagType.BLOCK_FORM, block.getLocation()));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onBlockFromTo(BlockFromToEvent event) {
         Block block = event.getBlock();
 
         event.setCancelled(willCancel(FlagType.BLOCK_FROM_TO, block.getLocation()));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onBlockPhysics(BlockPhysicsEvent event) {
         Block block = event.getBlock();
 
         event.setCancelled(willCancel(FlagType.BLOCK_PHYSICS, block.getLocation()));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onLeafDecay(LeavesDecayEvent event) {
         Block block = event.getBlock();
 
         event.setCancelled(willCancel(FlagType.LEAF_DECAY, block.getLocation()));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             event.setCancelled(willCancel(FlagType.ENTITY_DAMAGE, event.getEntity().getLocation()));
@@ -118,7 +115,7 @@ public class ProtectionListener implements Listener {
         event.setCancelled(willCancel(FlagType.PLAYER_DAMAGE, event.getEntity().getLocation()));
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onPlayerPvP(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             boolean will = willCancel(FlagType.PVP, event.getEntity().getLocation());
@@ -129,7 +126,7 @@ public class ProtectionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
@@ -140,7 +137,7 @@ public class ProtectionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
 
@@ -151,7 +148,7 @@ public class ProtectionListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOW)
     public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity ent = event.getEntity();
 
