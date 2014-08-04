@@ -5,6 +5,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
@@ -25,7 +26,8 @@ public enum FlagType {
     PVP(EntityDamageByEntityEvent.class, "pvp", "entitydamagebyentity", "playervsplayer"),
     CHAT(AsyncPlayerChatEvent.class, "playerchat", "chat", "chatplayer", "talk"),
     ITEM_DROP(PlayerDropItemEvent.class, "dropitem", "itemdrop", "playerdropitem"),
-    CREATURE_SPAWN(CreatureSpawnEvent.class, "entityspawn", "mobspawn", "mobspawning");
+    CREATURE_SPAWN(CreatureSpawnEvent.class, "entityspawn", "mobspawn", "mobspawning"),
+    HUNGER(FoodLevelChangeEvent.class, "food", "hunger", "foodchange");
 
     private String[] aliases;
 

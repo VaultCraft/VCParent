@@ -69,19 +69,24 @@ public class User {
                     Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
                         public void run() {
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+                            UserLoadedEvent event = new UserLoadedEvent(User.this);
                             if (banned) {
                                 async_player_map.remove(player, User.this);
                                 if (tempBan != null) {
                                     Date now = new Date();
                                     if (now.after(tempBan)) {
                                         setBanned(false, null);
+                                        Bukkit.getServer().getPluginManager().callEvent(event);
                                         return;
                                     }
                                     player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
+                                    return;
                                 } else {
                                     player.kickPlayer("You are banned!");
+                                    return;
                                 }
                             }
+                            Bukkit.getServer().getPluginManager().callEvent(event);
                         }
                     });
                 }

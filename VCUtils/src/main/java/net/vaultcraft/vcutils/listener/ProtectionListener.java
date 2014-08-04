@@ -18,6 +18,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
@@ -154,4 +155,12 @@ public class ProtectionListener implements Listener {
 
         event.setCancelled(willCancel(FlagType.CREATURE_SPAWN, ent.getLocation()));
     }
+
+    @EventHandler (priority = EventPriority.LOW)
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        Player player = (Player) event.getEntity();
+
+        event.setCancelled(willCancel(FlagType.HUNGER, player, player.getLocation()));
+    }
+
 }
