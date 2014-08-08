@@ -160,7 +160,6 @@ public class ProtectionListener implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         Player player = (Player) event.getEntity();
 
-        event.setCancelled(willCancel(FlagType.HUNGER, player, player.getLocation()));
+        event.setCancelled(willCancel(FlagType.HUNGER, player.getLocation()));
     }
-
 }

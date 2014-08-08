@@ -10,7 +10,6 @@ public enum TimeUnit {
     MINUTES(1200),
     HOURS(72000);
 
-
     private int modifier;
 
     private TimeUnit(int modifier) {
