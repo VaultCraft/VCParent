@@ -7,9 +7,11 @@ import net.vaultcraft.vcutils.database.mongo.MongoInfo;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sql.Statements;
+import net.vaultcraft.vcutils.file.FileController;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
+import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -72,6 +74,9 @@ public class VCUtils extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CommandManager(), this);
         initListeners();
 
+        FileController fc = new SignLoader();
+        fc.load();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             CommonPlayerListener.getInstance().onPlayerJoin(new PlayerJoinEvent(player, null));
         }
@@ -86,6 +91,8 @@ public class VCUtils extends JavaPlugin {
 
         User.disable();
         mongoDB.close();
+
+        SignLoader.getInstance().save();
     }
 
     public void initListeners() {
