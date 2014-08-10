@@ -122,7 +122,7 @@ public class MySQL {
                 } catch (InterruptedException ignored) {
                 }
                 if (queryThread.size() > 0) {
-                    if(!enabled) {
+                    if (!enabled) {
                         queryThread.clear();
                         continue;
                     }
@@ -134,7 +134,9 @@ public class MySQL {
                             ResultSet rs = ps.executeQuery();
                             callbacks.get(id).onSuccess(rs);
                         } catch (MySQLSyntaxErrorException e) {
+                            System.out.println("SQL Statement: " + sql);
                             e.printStackTrace();
+                            break;
                         } catch (SQLException e) {
                             callbacks.get(id).onFailure(e);
                         } finally {
@@ -156,16 +158,18 @@ public class MySQL {
                 } catch (InterruptedException ignored) {
                 }
                 if (updateThread.size() > 0) {
-                    if(!enabled) {
+                    if (!enabled) {
                         queryThread.clear();
                         continue;
                     }
-                    for(String s: new ArrayList<>(updateThread)) {
+                    for (String s : new ArrayList<>(updateThread)) {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(s);
                             ps.executeUpdate();
                         } catch (MySQLSyntaxErrorException e) {
+                            System.out.println("SQL Statement: " + s);
                             e.printStackTrace();
+                            break;
                         } catch (SQLException e) {
                             Logger.error(plugin, e);
                         } finally {

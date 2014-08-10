@@ -76,7 +76,7 @@ public class User {
                                     Date now = new Date();
                                     if (now.after(tempBan)) {
                                         setBanned(false, null);
-                                        Bukkit.getServer().getPluginManager().callEvent(event);
+                                        Bukkit.getPluginManager().callEvent(event);
                                         return;
                                     }
                                     player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
@@ -86,7 +86,15 @@ public class User {
                                     return;
                                 }
                             }
-                            Bukkit.getServer().getPluginManager().callEvent(event);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                    });
+                } else {
+                    Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
+                        @Override
+                        public void run() {
+                            UserLoadedEvent event = new UserLoadedEvent(User.this);
+                            VCUtils.getInstance().getServer().getPluginManager().callEvent(event);
                         }
                     });
                 }
