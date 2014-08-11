@@ -29,8 +29,8 @@ public class MySQL {
     protected int queries = 0;
     protected boolean enabled = true;
 
-    private UpdateThread updateTask = new UpdateThread();
-    private QueryThread queryTask = new QueryThread();
+    protected UpdateThread updateTask = new UpdateThread();
+    protected QueryThread queryTask = new QueryThread();
 
     /**
      * Provides as a connection to a MySQL database, and gives access to easy methods to modify that database.
@@ -119,7 +119,7 @@ public class MySQL {
         public void onFailure(SQLException e);
     }
 
-    private class QueryThread extends Thread {
+    protected class QueryThread extends Thread {
         @Override
         public void run() {
             while (true) {
@@ -155,7 +155,7 @@ public class MySQL {
         }
     }
 
-    private class UpdateThread extends Thread {
+    protected class UpdateThread extends Thread {
         @Override
         public void run() {
             while (true) {
