@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils;
 
+import com.avaje.ebean.config.dbplatform.SqlLimiter;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
 import net.vaultcraft.vcutils.database.mongo.MongoDB;
@@ -89,6 +90,7 @@ public class VCUtils extends JavaPlugin {
     public void onDisable() {
         try {
             mySQL.close();
+            sqlite.close();
         } catch (SQLException e) {
             Logger.error(this, e);
         }
