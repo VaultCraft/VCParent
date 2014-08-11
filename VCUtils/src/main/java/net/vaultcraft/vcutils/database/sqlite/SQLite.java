@@ -24,6 +24,9 @@ public class SQLite extends MySQL {
     public SQLite(final Plugin plugin, String database) {
         this.url = "jdbc:sqlite:" + database;
         this.plugin = plugin;
+        updateTask.start();
+        queryTask.start();
+
     }
 
     @Override
