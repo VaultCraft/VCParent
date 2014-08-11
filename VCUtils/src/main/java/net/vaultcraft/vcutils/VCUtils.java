@@ -89,6 +89,7 @@ public class VCUtils extends JavaPlugin {
     public void onDisable() {
         try {
             mySQL.close();
+            sqlite.close();
         } catch (SQLException e) {
             Logger.error(this, e);
         }
