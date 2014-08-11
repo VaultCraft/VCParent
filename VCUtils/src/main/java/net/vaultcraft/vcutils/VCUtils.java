@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.database.mongo.MongoInfo;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sql.Statements;
+import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.file.FileController;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
@@ -30,6 +31,7 @@ public class VCUtils extends JavaPlugin {
     private static VCUtils instance;
     private MySQL mySQL;
     private MongoDB mongoDB;
+    private SQLite sqlite;
 
     @ClassConfig.Config(path = "ServerName")
     public static String serverName = "Lobby";
@@ -50,6 +52,8 @@ public class VCUtils extends JavaPlugin {
         } catch (UnknownHostException e) {
             Logger.error(this, e);
         }
+
+        sqlite = new SQLite(this, this.getDataFolder()+"/sqlite.db"); // TODO un-hardcode this.
 
         mySQL = new MySQL(this, SQLInfo.host, SQLInfo.port, SQLInfo.database_name, SQLInfo.username, SQLInfo.password);
         mySQL.updateThread.add(Statements.TABLE.getSql("Commands",
@@ -111,4 +115,6 @@ public class VCUtils extends JavaPlugin {
     public MongoDB getMongoDB() {
         return mongoDB;
     }
+
+    public SQLite getSqlite() { return sqlite;}
 }
