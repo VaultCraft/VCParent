@@ -9,6 +9,7 @@ import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
+import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
@@ -26,6 +27,7 @@ public class VCEssentials extends JavaPlugin {
 
     private static VCEssentials instance;
     private MySQL mySQL;
+    private SQLite sqlite;
 
     public void onEnable() {
         instance = this;
@@ -59,6 +61,11 @@ public class VCEssentials extends JavaPlugin {
                         "Time DATETIME NOT NULL," +
                         "Temp DATETIME"
         ));
+
+        sqlite = VCUtils.getInstance().getSqlite();
+        sqlite.updateThread.add(Statements.TABLE.getSql("UserData",
+                "User TEXT, " +
+                    "UserJSON TEXT"));
 
         new EChestMaster();
     }
@@ -112,6 +119,8 @@ public class VCEssentials extends JavaPlugin {
     public MySQL getMySQL() {
         return mySQL;
     }
+
+    public SQLite getSqlite() { return sqlite; }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         //console commands

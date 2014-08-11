@@ -21,13 +21,13 @@ public class MySQL {
     private volatile ConcurrentHashMap<Long, ISqlCallback> callbacks = new ConcurrentHashMap<>();
     private long queryID = 0;
 
-    private Plugin plugin;
-    private Connection connection = null;
-    private String url;
+    protected Plugin plugin;
+    protected Connection connection = null;
+    protected String url;
     private String database_username;
     private String database_password;
-    private int queries = 0;
-    private boolean enabled = true;
+    protected int queries = 0;
+    protected boolean enabled = true;
 
     private UpdateThread updateTask = new UpdateThread();
     private QueryThread queryTask = new QueryThread();
@@ -48,6 +48,12 @@ public class MySQL {
         this.database_password = database_password;
         updateTask.start();
         queryTask.start();
+    }
+
+    /**
+     * Default constructor for SQLite
+     */
+    public MySQL() {
     }
 
     /**
