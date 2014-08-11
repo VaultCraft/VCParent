@@ -1,5 +1,7 @@
 package net.vaultcraft.vcutils.sign;
 
+import net.vaultcraft.vcutils.VCUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -14,21 +16,21 @@ import java.util.List;
 
 public class SignManager {
 
-    private static HashMap<String, List<Sign>> signs = new HashMap<>();
+    private static HashMap<String, List<Location>> signs = new HashMap<>();
 
-    public static void addSign(Sign sign, String meta) {
+    public static void addSign(Location sign, String meta) {
         if (signs.containsKey(meta)) {
-            List<Sign> all = signs.remove(meta);
+            List<Location> all = signs.remove(meta);
             all.add(sign);
             signs.put(meta, all);
         } else {
-            List<Sign> l = new ArrayList<>();
+            List<Location> l = new ArrayList<>();
             l.add(sign);
             signs.put(meta, l);
         }
     }
 
-    public static List<Sign> fromMeta(String meta) {
+    public static List<Location> fromMeta(String meta) {
         return signs.get(meta);
     }
 
@@ -36,12 +38,34 @@ public class SignManager {
         updateSign(signs.get(meta), text);
     }
 
-    public static void updateSign(List<Sign> signs, String... text) {
-        for (Sign sign : signs) {
+    public static boolean remove(Location location) {
+        String key = "";
+        for (String k : signs.keySet()) {
+            List<Location> v = signs.get(k);
+            if (v.contains(location))
+                key = k;
+        }
+
+        if (key.equals(""))
+            return false;
+
+        signs.remove(key);
+        return true;
+    }
+
+    public static boolean remove(String key) {
+        return (signs.remove(key) != null);
+    }
+
+    public static void updateSign(List<Location> signs, String... text) {
+        for (Location loc : signs) {
+            if (!(loc.getBlock().getState() instanceof Sign))
+                return;
+
+            final Sign sign = (Sign)loc.getBlock().getState();
             if (sign == null)
                 return;
 
-            Location loc = sign.getLocation();
             if (!loc.getChunk().isLoaded())
                 loc.getChunk().load();
 
@@ -51,11 +75,16 @@ public class SignManager {
                 x++;
             }
 
-            sign.update();
+            Runnable run = new Runnable() {
+                public void run() {
+                    sign.update(true);
+                }
+            };
+            Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), run, 10);
         }
     }
 
-    public static HashMap<String, List<Sign>> all() {
+    public static HashMap<String, List<Location>> all() {
         return signs;
     }
 }

@@ -161,5 +161,7 @@ public class ProtectionListener implements Listener {
         Player player = (Player) event.getEntity();
 
         event.setCancelled(willCancel(FlagType.HUNGER, player.getLocation()));
+        if (event.isCancelled())
+            player.setSaturation(4.0f);
     }
 }

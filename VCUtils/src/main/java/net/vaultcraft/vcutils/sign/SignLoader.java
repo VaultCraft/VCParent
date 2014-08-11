@@ -86,7 +86,7 @@ public class SignLoader implements FileController {
                 }
                 sign.update();
 
-                SignManager.addSign(sign, obj.get("meta").toString());
+                SignManager.addSign(sign.getLocation(), obj.get("meta").toString());
             }
         }
     }
@@ -97,15 +97,19 @@ public class SignLoader implements FileController {
             JSONObject obj = new JSONObject();
             JSONArray signs = new JSONArray();
 
-            HashMap<String, List<Sign>> all = SignManager.all();
+            HashMap<String, List<Location>> all = SignManager.all();
             for (String key : all.keySet()) {
-                List<Sign> values = all.get(key);
-                for (Sign value : values) {
+                List<Location> values = all.get(key);
+                for (Location value : values) {
+                    if (!(value.getBlock().getState() instanceof Sign))
+                        continue;
+                    Sign sign = (Sign)value.getBlock().getState();
+
                     JSONObject sObj = new JSONObject();
                     sObj.put("meta", key);
                     String text = "";
                     int pos = 0;
-                    for (String line : value.getLines()) {
+                    for (String line : sign.getLines()) {
                         if (pos++ >= 4)
                             text+=line;
                         else
@@ -113,11 +117,10 @@ public class SignLoader implements FileController {
                     }
                     sObj.put("text", text);
 
-                    Location loc = value.getLocation();
-                    sObj.put("world", loc.getWorld().getName());
-                    sObj.put("x", loc.getBlockX()+"");
-                    sObj.put("y", loc.getBlockY()+"");
-                    sObj.put("z", loc.getBlockZ()+"");
+                    sObj.put("world", value.getWorld().getName());
+                    sObj.put("x", value.getBlockX()+"");
+                    sObj.put("y", value.getBlockY()+"");
+                    sObj.put("z", value.getBlockZ()+"");
 
                     signs.add(sObj);
                 }

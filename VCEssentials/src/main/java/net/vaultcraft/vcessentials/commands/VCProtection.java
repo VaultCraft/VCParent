@@ -178,7 +178,7 @@ public class VCProtection extends ICommand {
         boolean cancel = !(args.length >= 3 ? parseBoolean(args[2]) : true);
         area.addToProtection(t, cancel);
 
-        Form.at(player, Prefix.SUCCESS, "Area: &e"+args[1]+Prefix.SUCCESS.getChatColor()+" will now &e&o"+(cancel ? "cancel" : "not cancel")+Prefix.SUCCESS.getChatColor()+" a(n) &e"+t.getAliases()[0]);
+        Form.at(player, Prefix.SUCCESS, "Area: &e"+args[0]+Prefix.SUCCESS.getChatColor()+" will now &e&o"+(cancel ? "cancel" : "not cancel")+Prefix.SUCCESS.getChatColor()+" a(n) &e"+t.getAliases()[0]);
         saveAll();
     }
 

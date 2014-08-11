@@ -88,6 +88,8 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCTeleportHere("tphere", Group.MOD, "teleporthere"));
         CommandManager.addCommand(new VCSpeed("speed", Group.ADMIN));
         CommandManager.addCommand(new VCButcher("butcher", Group.ADMIN, "killall"));
+        CommandManager.addCommand(new VCAddSign("addsign", Group.DEVELOPER, "createsign", "linksign"));
+        CommandManager.addCommand(new VCRemoveSign("removesign", Group.DEVELOPER, "deletesign", "unlinksign"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
