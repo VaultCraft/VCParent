@@ -1,5 +1,7 @@
 package net.vaultcraft.vcutils.util;
 
+import net.vaultcraft.vcutils.events.TimeUnit;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
@@ -110,5 +112,28 @@ public class DateUtil {
             return max.getTimeInMillis();
         }
         return c.getTimeInMillis();
+    }
+
+    public static String fromTime(TimeUnit unit, double ticks) {
+        switch (unit) {
+            case HOURS:
+                ticks = ticks/(20*3600);
+                break;
+            case MINUTES:
+                ticks = ticks/(20*60);
+                break;
+            case SECONDS:
+                ticks = ticks/(20);
+        }
+
+        ticks = ticks*20; //for seconds
+        int hours = (int) (ticks / 3600);
+        int remainder = (int) (ticks - hours * 3600);
+        int mins = remainder / 60;
+        remainder = (remainder - mins * 60);
+        int secs = remainder;
+
+        String value = ((hours == 0 ? "" : hours+" hr, ") + (mins == 0 ? "" : mins+" min, ") + (secs == 0 ? "" : secs+" sec"));
+        return value.endsWith(", ") ? value.substring(0, value.length()-2) : value;
     }
 }

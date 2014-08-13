@@ -18,6 +18,11 @@ public class Form {
         player.sendMessage(sent);
     }
 
+    public static void atCharacter(Player player, Prefix prefix, String message, String character) {
+        String sent = ChatColor.translateAlternateColorCodes('&', prefix.getPrefix().replace("{0}", character)+message+prefix.getSuffix());
+        player.sendMessage(sent);
+    }
+
     public static void at(Player player, String message) {
         at(player, Prefix.VAULT_CRAFT, message);
     }

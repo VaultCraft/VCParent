@@ -1,5 +1,7 @@
 package net.vaultcraft.vcutils.chat;
 
+import org.bukkit.ChatColor;
+
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */
@@ -10,6 +12,7 @@ public enum Prefix {
     ERROR("&4&lERROR&f: &7", "", "&7"),
     WARNING("&e&lWARNING&f: &7", "", "&7"),
     SUCCESS("&a&lSUCCESS&f: &7", "", "&7"),
+    CHARACTER("&6&l{0}&7: &f", "", "&f"),
     NOTHING("", "", "");
 
     private String prefix;

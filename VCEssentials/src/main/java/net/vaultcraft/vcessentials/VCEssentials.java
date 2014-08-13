@@ -110,6 +110,7 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addPluginWhitelist("/");
         CommandManager.addPluginWhitelist("reload");
         CommandManager.addPluginWhitelist("rl");
+        CommandManager.addPluginWhitelist("npc");
     }
 
     public void onDisable() {
