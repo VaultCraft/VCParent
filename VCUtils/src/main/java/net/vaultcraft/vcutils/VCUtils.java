@@ -10,6 +10,7 @@ import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.file.FileController;
+import net.vaultcraft.vcutils.item.menu.MenuListener;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
@@ -81,6 +82,9 @@ public class VCUtils extends JavaPlugin {
 
         FileController fc = new SignLoader();
         fc.load();
+
+        MenuListener ml = new MenuListener();
+        Bukkit.getPluginManager().registerEvents(ml, this);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             CommonPlayerListener.getInstance().onPlayerJoin(new PlayerJoinEvent(player, null));
