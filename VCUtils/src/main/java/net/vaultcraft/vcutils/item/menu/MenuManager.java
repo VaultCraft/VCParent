@@ -13,7 +13,7 @@ public class MenuManager {
     private static HashMap<String, MenuModel> menus = new HashMap<>();
     private static HashMap<Player, ActiveMenu> active = new HashMap<>();
 
-    public static void addMenuMode(String title, MenuModel menu) {
+    public static void addMenuModel(String title, MenuModel menu) {
         menus.put(title, menu);
     }
 

@@ -19,12 +19,8 @@ public class MenuItem {
     private Map<Integer, ItemStack> itemStates = new HashMap<>();
     private int slot;
 
-    public MenuItem(ItemStack... stacks) {
-        int x = 0;
-        for (ItemStack stack : stacks) {
-            itemStates.put(x, stack);
-            x++;
-        }
+    public MenuItem(int slot) {
+        this.slot = slot;
     }
 
     public MenuItem switchToState(int state) {
