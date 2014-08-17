@@ -30,6 +30,7 @@ import java.util.List;
 public class BEnderChest implements Listener {
     private enum EnderChestState {
         CHEST_MENU,
+        CHEST_SWITCHING,
         CHEST_INVENTORY,
         INV_NORANK(15),
         INV_EMPTY(0),
@@ -137,7 +138,20 @@ public class BEnderChest implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) { // This is called for every inventory, even custom ones.
         if(activeUsers.containsKey(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()))) {
+            if(activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer())) == EnderChestState.CHEST_SWITCHING) {
+                activeUsers.put(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()), EnderChestState.CHEST_INVENTORY);
+                return;
+            } else if(activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer())) == EnderChestState.CHEST_INVENTORY) {
+                int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]); // This feels so hacky
+                JSONArray myCoolArray = new JSONArray();
+                for(ItemStack i : e.getInventory()) {
+                    myCoolArray.add(ItemSerializer.fromStack(i));
+                }
+                User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
+
+            }
             activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
+
         }
     }
 
@@ -149,8 +163,8 @@ public class BEnderChest implements Listener {
             EnderChestInventory clickedInv = EnderChestInventory.getForUser(e.getRawSlot(), clickingUser);
             switch (clickedInv.getCurrState()) {
                 default:
+                    activeUsers.put(clickingUser, EnderChestState.CHEST_SWITCHING);
                     e.getWhoClicked().openInventory(clickedInv.getInventory());
-                    activeUsers.put(clickingUser, EnderChestState.CHEST_INVENTORY);
                     break;
                 case INV_NORANK:
                     Form.at((org.bukkit.entity.Player) e.getWhoClicked(), Prefix.ERROR, "You do not have permission to access that inventory.");
