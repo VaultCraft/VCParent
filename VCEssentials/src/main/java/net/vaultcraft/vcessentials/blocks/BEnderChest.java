@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -130,6 +132,13 @@ public class BEnderChest implements Listener {
             e.setCancelled(true);
             activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
             e.getPlayer().openInventory(getEnderMenuForUser(networkUser, e.getInventory().getHolder()));
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        if(activeUsers.containsKey(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()))) {
+            activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
         }
     }
 
