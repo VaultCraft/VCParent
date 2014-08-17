@@ -1,11 +1,8 @@
 package net.vaultcraft.vcessentials.blocks;
 
-import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
-import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.item.ItemSerializer;
-import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -146,7 +142,7 @@ public class BEnderChest implements Listener {
     }
 
     @EventHandler
-    public void onInventoryInteract(InventoryClickEvent e) {
+    public void onInventoryClick(InventoryClickEvent e) {
         if(activeUsers.containsKey(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked()))
                 && activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked())) == EnderChestState.CHEST_MENU) {
             User clickingUser = User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked());
