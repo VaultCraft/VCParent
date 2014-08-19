@@ -1,7 +1,6 @@
 package net.vaultcraft.vcessentials;
 
 import net.vaultcraft.vcessentials.commands.*;
-import net.vaultcraft.vcessentials.echest.EChestMaster;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.command.CommandManager;
@@ -63,9 +62,8 @@ public class VCEssentials extends JavaPlugin {
         sqlite = VCUtils.getInstance().getSqlite();
         sqlite.updateThread.add(Statements.TABLE_SQLITE.getSql("UserData",
                 "User TEXT, " +
-                    "UserJSON TEXT"));
+                "UserJSON TEXT"));
 
-        new EChestMaster();
     }
 
     public static VCEssentials getInstance() {
