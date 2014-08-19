@@ -1,12 +1,19 @@
 package net.vaultcraft.vcutils.user;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.logging.Logger;
+import net.vaultcraft.vcutils.network.CallbackUser;
+import net.vaultcraft.vcutils.network.Packet;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,56 +57,109 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
-                if (dbObject != null) {
-                    group = dbObject.get("Group") == null ? Group.COMMON : Group.fromPermLevel((Integer) dbObject.get("Group"));
-                    banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
-                    tempBan = (Date) dbObject.get("TempBan");
-                    muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
-                    tempMute = (Date) dbObject.get("TempMute");
-
-                    Object o = dbObject.get(VCUtils.serverName+"-Money");
-                    double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
-
-                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
-                    tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
-                    userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
-                    globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
-                    //Check if banned
-                    Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
-                        public void run() {
-                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
-                            UserLoadedEvent event = new UserLoadedEvent(User.this);
-                            if (banned) {
-                                async_player_map.remove(player, User.this);
-                                if (tempBan != null) {
-                                    Date now = new Date();
-                                    if (now.after(tempBan)) {
-                                        setBanned(false, null);
-                                        Bukkit.getPluginManager().callEvent(event);
-                                        return;
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF(player.getUniqueId().toString());
+                out.writeUTF(VCUtils.serverName);
+                Packet packet = new Packet(Packet.CommandType.USER, "get", out.toByteArray());
+                VCUtils.getInstance().getClient().sendPacket(packet, new CallbackUser(packet, player.getUniqueId().toString()) {
+                    @Override
+                    public void callback(Packet packet) {
+                        ObjectInputStream in = packet.getDataStream();
+                        try {
+                            UserInfo info = (UserInfo) in.readObject();
+                            User.this.group = Group.fromPermLevel(info.getGroup());
+                            User.this.banned = info.isBanned();
+                            User.this.tempBan = info.getTempBan();
+                            User.this.muted = info.isMuted();
+                            User.this.tempMute = info.getTempMute();
+                            User.this.money = info.getMoney();
+                            User.this.tokens = info.getTokens();
+                            User.this.globalUserdata = info.getGlobalUserdata();
+                            User.this.userdata = info.getUserdata();
+                            //Check if banned
+                            Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
+                                public void run() {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+                                    UserLoadedEvent event = new UserLoadedEvent(User.this);
+                                    if (banned) {
+                                        async_player_map.remove(player, User.this);
+                                        if (tempBan != null) {
+                                            Date now = new Date();
+                                            if (now.after(tempBan)) {
+                                                setBanned(false, null);
+                                                Bukkit.getPluginManager().callEvent(event);
+                                                return;
+                                            }
+                                            player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
+                                            return;
+                                        } else {
+                                            player.kickPlayer("You are banned!");
+                                            return;
+                                        }
                                     }
-                                    player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
-                                    return;
-                                } else {
-                                    player.kickPlayer("You are banned!");
-                                    return;
+                                    Bukkit.getPluginManager().callEvent(event);
                                 }
-                            }
-                            Bukkit.getPluginManager().callEvent(event);
+                            });
+                        } catch (IOException | ClassNotFoundException e) {
+                            Logger.error(VCUtils.getInstance(), e);
                         }
-                    });
-                } else {
-                    Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
-                        @Override
-                        public void run() {
-                            UserLoadedEvent event = new UserLoadedEvent(User.this);
-                            VCUtils.getInstance().getServer().getPluginManager().callEvent(event);
-                        }
-                    });
-                }
+                    }
+                });
             }
         });
+//        Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
+//            @Override
+//            public void run() {
+//                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+//                if (dbObject != null) {
+//                    group = dbObject.get("Group") == null ? Group.COMMON : Group.fromPermLevel((Integer) dbObject.get("Group"));
+//                    banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
+//                    tempBan = (Date) dbObject.get("TempBan");
+//                    muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
+//                    tempMute = (Date) dbObject.get("TempMute");
+//
+//                    Object o = dbObject.get(VCUtils.serverName+"-Money");
+//                    double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
+//
+//                    money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
+//                    tokens = dbObject.get("Tokens") == null? 0 : (Integer) dbObject.get("Tokens");
+//                    userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+//                    globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
+//                    //Check if banned
+//                    Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
+//                        public void run() {
+//                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+//                            UserLoadedEvent event = new UserLoadedEvent(User.this);
+//                            if (banned) {
+//                                async_player_map.remove(player, User.this);
+//                                if (tempBan != null) {
+//                                    Date now = new Date();
+//                                    if (now.after(tempBan)) {
+//                                        setBanned(false, null);
+//                                        Bukkit.getPluginManager().callEvent(event);
+//                                        return;
+//                                    }
+//                                    player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
+//                                    return;
+//                                } else {
+//                                    player.kickPlayer("You are banned!");
+//                                    return;
+//                                }
+//                            }
+//                            Bukkit.getPluginManager().callEvent(event);
+//                        }
+//                    });
+//                } else {
+//                    Bukkit.getScheduler().runTask(VCUtils.getInstance(), new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            UserLoadedEvent event = new UserLoadedEvent(User.this);
+//                            VCUtils.getInstance().getServer().getPluginManager().callEvent(event);
+//                        }
+//                    });
+//                }
+//            }
+//        });
     }
 
     public void addUserdata(String key, String value) {
@@ -153,50 +213,87 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                if(user.getScoreboard() != null)
-                    user.getScoreboard().remove();
-                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
-                dbObject.put("UUID", player.getUniqueId().toString());
-                dbObject.put("Group", user.getGroup().getPermLevel());
-                dbObject.put("Banned", user.isBanned());
-                dbObject.put("TempBan", user.getTempBan());
-                dbObject.put("Muted", user.isMuted());
-                dbObject.put("TempMute", user.getTempMute());
-                dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
-                dbObject.put("Tokens", user.getTokens());
-                dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.userdata));
-                dbObject.put("Global-UserData", dataToString(user.globalUserdata));
-                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
-                if (dbObject1 == null)
-                    VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
-                else
-                    VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                try {
+                    ObjectOutputStream objOut = new ObjectOutputStream(out);
+                    objOut.writeUTF(player.getUniqueId().toString());
+                    objOut.writeUTF(VCUtils.serverName);
+                    objOut.writeObject(new UserInfo(user));
+                    objOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Packet packet = new Packet(Packet.CommandType.USER, "send", out.toByteArray());
+                VCUtils.getInstance().getClient().sendPacket(packet);
             }
         });
         async_player_map.remove(player);
+//        Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
+//            @Override
+//            public void run() {
+//                if(user.getScoreboard() != null)
+//                    user.getScoreboard().remove();
+//                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+//                dbObject.put("UUID", player.getUniqueId().toString());
+//                dbObject.put("Group", user.getGroup().getPermLevel());
+//                dbObject.put("Banned", user.isBanned());
+//                dbObject.put("TempBan", user.getTempBan());
+//                dbObject.put("Muted", user.isMuted());
+//                dbObject.put("TempMute", user.getTempMute());
+//                dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
+//                dbObject.put("Tokens", user.getTokens());
+//                dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.userdata));
+//                dbObject.put("Global-UserData", dataToString(user.globalUserdata));
+//                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+//                if (dbObject1 == null)
+//                    VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+//                else
+//                    VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+//            }
+//        });
     }
 
     public static void disable() {
-        for (User user : async_player_map.values()) {
-            if(user.getScoreboard() != null)
-                user.getScoreboard().remove();
-            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
-            dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
-            dbObject.put("Group", user.getGroup().getPermLevel());
-            dbObject.put("Banned", user.isBanned());
-            dbObject.put("TempBan", user.getTempBan());
-            dbObject.put("Muted", user.isMuted());
-            dbObject.put("TempMute", user.getTempMute());
-            dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
-            dbObject.put("Tokens", user.getTokens());
-            dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.userdata));
-            dbObject.put("Global-UserData", dataToString(user.globalUserdata));
-            DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
-            if (dbObject1 == null)
-                VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
-            else
-                VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+        for(final User user : async_player_map.values()) {
+            Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    try {
+                        ObjectOutputStream objOut = new ObjectOutputStream(out);
+                        objOut.writeUTF(user.getPlayer().getUniqueId().toString());
+                        objOut.writeUTF(VCUtils.serverName);
+                        objOut.writeObject(new UserInfo(user));
+                        objOut.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Packet packet = new Packet(Packet.CommandType.USER, "send", out.toByteArray());
+                    VCUtils.getInstance().getClient().sendPacket(packet);
+                }
+            });
         }
+        async_player_map.clear();
+//        for (User user : async_player_map.values()) {
+//            if(user.getScoreboard() != null)
+//                user.getScoreboard().remove();
+//            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+//            dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
+//            dbObject.put("Group", user.getGroup().getPermLevel());
+//            dbObject.put("Banned", user.isBanned());
+//            dbObject.put("TempBan", user.getTempBan());
+//            dbObject.put("Muted", user.isMuted());
+//            dbObject.put("TempMute", user.getTempMute());
+//            dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
+//            dbObject.put("Tokens", user.getTokens());
+//            dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.userdata));
+//            dbObject.put("Global-UserData", dataToString(user.globalUserdata));
+//            DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+//            if (dbObject1 == null)
+//                VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+//            else
+//                VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+//        }
     }
 
     public void setGroup(Group group) {

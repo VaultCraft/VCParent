@@ -1,6 +1,5 @@
 package net.vaultcraft.vcutils;
 
-import com.avaje.ebean.config.dbplatform.SqlLimiter;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
 import net.vaultcraft.vcutils.database.mongo.MongoDB;
@@ -13,6 +12,8 @@ import net.vaultcraft.vcutils.file.FileController;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
+import net.vaultcraft.vcutils.network.Client;
+import net.vaultcraft.vcutils.network.NetworkInfo;
 import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
@@ -33,20 +34,27 @@ public class VCUtils extends JavaPlugin {
     private MySQL mySQL;
     private MongoDB mongoDB;
     private SQLite sqlite;
+    private Client client;
 
     @ClassConfig.Config(path = "ServerName")
     public static String serverName = "Lobby";
+    @ClassConfig.Config(path = "UniqueServerName")
+    public static String uniqueServerName = "Lobby1";
 
     public void onEnable() {
         instance = this;
 
         ClassConfig.loadConfig(SQLInfo.class, getConfig());
         ClassConfig.loadConfig(MongoInfo.class, getConfig());
+        ClassConfig.loadConfig(NetworkInfo.class, getConfig());
         ClassConfig.loadConfig(VCUtils.class, getConfig());
         ClassConfig.updateConfig(SQLInfo.class, getConfig());
         ClassConfig.updateConfig(MongoInfo.class, getConfig());
+        ClassConfig.updateConfig(NetworkInfo.class, getConfig());
         ClassConfig.updateConfig(VCUtils.class, getConfig());
         saveConfig();
+
+        client = new Client(NetworkInfo.host, NetworkInfo.port);
 
         try {
             mongoDB = new MongoDB(MongoInfo.host, MongoInfo.port);
@@ -119,4 +127,8 @@ public class VCUtils extends JavaPlugin {
     }
 
     public SQLite getSqlite() { return sqlite;}
+
+    public Client getClient() {
+        return client;
+    }
 }
