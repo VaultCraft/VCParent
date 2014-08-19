@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.network;
 
+import common.network.Packet;
 import net.minecraft.util.org.apache.commons.io.IOUtils;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
-public class ClientReceiveThread extends BukkitRunnable{
+public class ClientReceiveThread extends BukkitRunnable {
 
     private Socket client;
     private List<Callback> callbackList = new ArrayList<>();
@@ -26,16 +27,36 @@ public class ClientReceiveThread extends BukkitRunnable{
 
     @Override
     public void run() {
+        ObjectInputStream in;
         try {
-            ObjectInputStream in = new ObjectInputStream(client.getInputStream());
-            Packet packet = (Packet) in.readObject();
+            in = new ObjectInputStream(client.getInputStream());
+        } catch (IOException e) {
+            Logger.error(VCUtils.getInstance(), e);
+            return;
+        }
+        while (true) {
+            if(!client.isConnected()) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    Logger.error(VCUtils.getInstance(), e);
+                }
+                break;
+            }
+            Packet packet;
+            try {
+                packet = (Packet) in.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                Logger.error(VCUtils.getInstance(), e);
+                continue;
+            }
 
-            if(!packet.getChannel().isEmpty()) {
+            if (!packet.getChannel().isEmpty()) {
                 for (int i = 0; i < callbackList.size(); i++) {
                     Callback callback = callbackList.get(i);
                     if (callback.getCommandType().equals(packet.getCommandType())) {
                         if (callback.getChannel().equals(packet.getChannel())) {
-                            if(callback instanceof CallbackUser)
+                            if (callback instanceof CallbackUser)
                                 continue;
                             callback.callback(packet);
                             callbackList.remove(i);
@@ -59,8 +80,7 @@ public class ClientReceiveThread extends BukkitRunnable{
                     });
                     break;
             }
-        } catch (IOException | ClassNotFoundException e){
-            Logger.error(VCUtils.getInstance(), e);
+            Logger.debug(VCUtils.getInstance(), "Message Received!");
         }
     }
 
@@ -69,14 +89,15 @@ public class ClientReceiveThread extends BukkitRunnable{
             case "get":
                 try {
                     String uuid = stream.readUTF();
-                    for(int i = 0; i < callbackList.size(); i++) {
-                        if(!(callbackList.get(i) instanceof CallbackUser))
+                    for (int i = 0; i < callbackList.size(); i++) {
+                        if (!(callbackList.get(i) instanceof CallbackUser))
                             continue;
                         CallbackUser callbackUser = (CallbackUser) callbackList.get(i);
-                        if(!callbackUser.getUuid().equals(uuid))
+                        if (!callbackUser.getUuid().equals(uuid))
                             continue;
                         Packet packet = new Packet(Packet.CommandType.USER, "get", IOUtils.toByteArray(stream));
                         callbackUser.callback(packet);
+                        callbackList.remove(i);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

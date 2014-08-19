@@ -1,5 +1,7 @@
 package net.vaultcraft.vcutils.network;
 
+import common.network.Packet;
+
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */

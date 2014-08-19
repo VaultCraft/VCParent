@@ -1,11 +1,10 @@
 package net.vaultcraft.vcutils.user;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import common.network.Packet;
+import common.network.UserInfo;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.network.CallbackUser;
-import net.vaultcraft.vcutils.network.Packet;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -57,9 +56,15 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF(player.getUniqueId().toString());
-                out.writeUTF(VCUtils.serverName);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                try {
+                    ObjectOutputStream objOut = new ObjectOutputStream(out);
+                    objOut.writeUTF(player.getUniqueId().toString());
+                    objOut.writeUTF(VCUtils.serverName);
+                    objOut.flush();
+                } catch (IOException e) {
+                    Logger.error(VCUtils.getInstance(), e);
+                }
                 Packet packet = new Packet(Packet.CommandType.USER, "get", out.toByteArray());
                 VCUtils.getInstance().getClient().sendPacket(packet, new CallbackUser(packet, player.getUniqueId().toString()) {
                     @Override
@@ -254,7 +259,7 @@ public class User {
     }
 
     public static void disable() {
-        for(final User user : async_player_map.values()) {
+        for (final User user : async_player_map.values()) {
             Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
                 @Override
                 public void run() {
@@ -398,7 +403,7 @@ public class User {
         HashMap<String, String> userdata = new HashMap<>();
         if (!(data.contains(":")))
             return userdata;
-        if(data.contains(",")) {
+        if (data.contains(",")) {
             String[] parts = data.split(",");
             for (String s : parts) {
                 String[] entry = s.split(":");

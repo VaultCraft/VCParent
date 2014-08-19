@@ -1,12 +1,13 @@
 package net.vaultcraft.vcutils.network;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import common.network.Packet;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -30,8 +31,15 @@ public class Client {
         clientSendThread = new ClientSendThread(client);
         receiveTask = clientReceiveThread.runTaskAsynchronously(VCUtils.getInstance());
         sendTask = clientSendThread.runTaskAsynchronously(VCUtils.getInstance());
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(VCUtils.uniqueServerName);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream objOut = new ObjectOutputStream(out);
+            objOut.writeUTF(VCUtils.uniqueServerName);
+            objOut.flush();
+        } catch (IOException e) {
+            Logger.error(VCUtils.getInstance(), e);
+            return;
+        }
         this.sendPacket(new Packet(Packet.CommandType.START, out.toByteArray()));
     }
 

@@ -1,12 +1,15 @@
-package net.vaultcraft.vcutils.user;
+package common.network;
 
+import net.vaultcraft.vcutils.user.User;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
-public class UserInfo {
+public class UserInfo implements Serializable{
 
     private int group = 0;
     private boolean banned = false;

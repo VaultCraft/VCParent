@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.network;
 
+import common.network.Packet;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,10 +29,20 @@ public class ClientSendThread extends BukkitRunnable {
         try {
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
             while(true) {
+                if(!client.isConnected()) {
+                    try {
+                        client.close();
+                    } catch (IOException e) {
+                        Logger.error(VCUtils.getInstance(), e);
+                    }
+                    break;
+                }
+
                 if(packets.size() > 0) {
                     Packet packet = packets.get(0);
                     out.writeObject(packet);
                     packets.remove(0);
+                    Logger.debug(VCUtils.getInstance(), "Message Sent");
                 }
             }
         } catch (IOException e) {
