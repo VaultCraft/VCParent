@@ -24,7 +24,7 @@ public enum Group {
 
     private String tag;
     private int permLevel;
-    private int enderChestSlots;
+    private int enderChestSlots = 1;
     private boolean isDonorRank;
 
     private Group(String tag, int permLevel, boolean isDonorRank) {

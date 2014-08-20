@@ -16,6 +16,7 @@ import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.vote.Votifier;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -83,6 +84,9 @@ public class VCUtils extends JavaPlugin {
         FileController fc = new SignLoader();
         fc.load();
 
+        Votifier votifier = new Votifier();
+        votifier.onEnable();
+
         MenuListener ml = new MenuListener();
         Bukkit.getPluginManager().registerEvents(ml, this);
 
@@ -101,6 +105,8 @@ public class VCUtils extends JavaPlugin {
 
         User.disable();
         mongoDB.close();
+
+        Votifier.getInstance().onDisable();
 
         SignLoader.getInstance().save();
     }
