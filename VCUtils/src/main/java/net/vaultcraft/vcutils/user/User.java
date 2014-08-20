@@ -1,18 +1,14 @@
 package net.vaultcraft.vcutils.user;
 
-import common.network.Packet;
+import common.network.PacketInUserGet;
+import common.network.PacketInUserSend;
+import common.network.PacketOutUserGet;
 import common.network.UserInfo;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.logging.Logger;
-import net.vaultcraft.vcutils.network.CallbackUser;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,22 +52,11 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                try {
-                    ObjectOutputStream objOut = new ObjectOutputStream(out);
-                    objOut.writeUTF(player.getUniqueId().toString());
-                    objOut.writeUTF(VCUtils.serverName);
-                    objOut.flush();
-                } catch (IOException e) {
-                    Logger.error(VCUtils.getInstance(), e);
-                }
-                Packet packet = new Packet(Packet.CommandType.USER, "get", out.toByteArray());
-                VCUtils.getInstance().getClient().sendPacket(packet, new CallbackUser(packet, player.getUniqueId().toString()) {
+                VCUtils.getInstance().getClient().sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName) {
                     @Override
-                    public void callback(Packet packet) {
-                        ObjectInputStream in = packet.getDataStream();
-                        try {
-                            UserInfo info = (UserInfo) in.readObject();
+                    public void callback(PacketOutUserGet packet) {
+                        if (player.getUniqueId().toString().equals(packet.getUuid())) {
+                            UserInfo info = packet.getInfo();
                             User.this.group = Group.fromPermLevel(info.getGroup());
                             User.this.banned = info.isBanned();
                             User.this.tempBan = info.getTempBan();
@@ -105,8 +90,6 @@ public class User {
                                     Bukkit.getPluginManager().callEvent(event);
                                 }
                             });
-                        } catch (IOException | ClassNotFoundException e) {
-                            Logger.error(VCUtils.getInstance(), e);
                         }
                     }
                 });
@@ -218,18 +201,7 @@ public class User {
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
             @Override
             public void run() {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                try {
-                    ObjectOutputStream objOut = new ObjectOutputStream(out);
-                    objOut.writeUTF(player.getUniqueId().toString());
-                    objOut.writeUTF(VCUtils.serverName);
-                    objOut.writeObject(new UserInfo(user));
-                    objOut.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Packet packet = new Packet(Packet.CommandType.USER, "send", out.toByteArray());
-                VCUtils.getInstance().getClient().sendPacket(packet);
+                VCUtils.getInstance().getClient().sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo(user)));
             }
         });
         async_player_map.remove(player);
@@ -260,23 +232,7 @@ public class User {
 
     public static void disable() {
         for (final User user : async_player_map.values()) {
-            Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    try {
-                        ObjectOutputStream objOut = new ObjectOutputStream(out);
-                        objOut.writeUTF(user.getPlayer().getUniqueId().toString());
-                        objOut.writeUTF(VCUtils.serverName);
-                        objOut.writeObject(new UserInfo(user));
-                        objOut.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Packet packet = new Packet(Packet.CommandType.USER, "send", out.toByteArray());
-                    VCUtils.getInstance().getClient().sendPacket(packet);
-                }
-            });
+            VCUtils.getInstance().getClient().sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo(user)));
         }
         async_player_map.clear();
 //        for (User user : async_player_map.values()) {

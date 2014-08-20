@@ -1,22 +1,25 @@
 package net.vaultcraft.vcutils.network;
 
+import common.network.CallbackPacket;
 import common.network.Packet;
+import common.network.PacketInStart;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
 public class Client {
 
+    private static List<CallbackPacket> callbackPackets = new ArrayList<>();
+
     private Socket client;
-    private ClientReceiveThread clientReceiveThread;
     private ClientSendThread clientSendThread;
     private BukkitTask receiveTask;
     private BukkitTask sendTask;
@@ -27,29 +30,27 @@ public class Client {
         } catch (IOException e) {
             Logger.error(VCUtils.getInstance(), e);
         }
-        clientReceiveThread = new ClientReceiveThread(client);
+        ClientReceiveThread clientReceiveThread = new ClientReceiveThread(client);
         clientSendThread = new ClientSendThread(client);
         receiveTask = clientReceiveThread.runTaskAsynchronously(VCUtils.getInstance());
         sendTask = clientSendThread.runTaskAsynchronously(VCUtils.getInstance());
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream objOut = new ObjectOutputStream(out);
-            objOut.writeUTF(VCUtils.uniqueServerName);
-            objOut.flush();
-        } catch (IOException e) {
-            Logger.error(VCUtils.getInstance(), e);
-            return;
-        }
-        this.sendPacket(new Packet(Packet.CommandType.START, out.toByteArray()));
+        this.sendPacket(new PacketInStart(VCUtils.serverName));
     }
 
     public void sendPacket(Packet packet) {
         clientSendThread.addPacket(packet);
     }
 
-    public void sendPacket(Packet packet, Callback callback) {
-        clientSendThread.addPacket(packet);
-        clientReceiveThread.addCallback(callback);
+    public static void addCallbackPacket(CallbackPacket callbackPacket) {
+        callbackPackets.add(callbackPacket);
+    }
+
+    public static void removeCallbackPacket(CallbackPacket callbackPacket) {
+        callbackPackets.remove(callbackPacket);
+    }
+
+    public static List<CallbackPacket> getAllCallbackPackets() {
+        return callbackPackets;
     }
 
     public void stop() {

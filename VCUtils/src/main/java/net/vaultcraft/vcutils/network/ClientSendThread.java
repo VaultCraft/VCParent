@@ -29,14 +29,10 @@ public class ClientSendThread extends BukkitRunnable {
         try {
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
             while(true) {
-                if(!client.isConnected()) {
-                    try {
-                        client.close();
-                    } catch (IOException e) {
-                        Logger.error(VCUtils.getInstance(), e);
-                    }
+                if(!client.isConnected() || client.isInputShutdown() || client.isOutputShutdown() || client.isClosed()) {
                     break;
                 }
+
 
                 if(packets.size() > 0) {
                     Packet packet = packets.get(0);
