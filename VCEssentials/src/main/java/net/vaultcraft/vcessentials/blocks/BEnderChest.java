@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -160,11 +161,17 @@ public class BEnderChest implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
+        if(e.getCurrentItem() == null) {
+            return;
+        }
+
         if(activeUsers.containsKey(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked()))
                 && activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked())) == EnderChestState.CHEST_MENU) {
+            if (e.getAction() != InventoryAction.PICKUP_ALL) {
+                e.setCancelled(true);
+                return;
+            }
             if(e.getCurrentItem().getType() != Material.STAINED_GLASS_PANE || e.getSlot() > 53) {
-                Form.at((org.bukkit.entity.Player) e.getWhoClicked(), Prefix.ERROR, "That is not an ender chest inventory.");
-                e.getWhoClicked().closeInventory();
                 e.setCancelled(true);
                 return;
             }
