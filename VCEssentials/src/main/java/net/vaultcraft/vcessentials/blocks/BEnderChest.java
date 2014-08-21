@@ -173,8 +173,8 @@ public class BEnderChest implements Listener {
                     e.getWhoClicked().closeInventory();
                     break;
             }
+            e.setCancelled(true);
         }
-        e.setCancelled(true);
     }
 
     private Inventory getEnderMenuForUser(User user) {
