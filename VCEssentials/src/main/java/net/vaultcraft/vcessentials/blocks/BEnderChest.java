@@ -77,7 +77,7 @@ public class BEnderChest implements Listener {
             if (user.getGroup().getEnderChestSlots() < slot + 1) {
                 return EnderChestState.INV_NORANK;
             }
-            int howFull = getItemCount() / INV_SIZE;
+            float howFull = getItemCount() / INV_SIZE;
             if (howFull == 0) {
                 return EnderChestState.INV_EMPTY;
             } else if(howFull <= 0.33) {
