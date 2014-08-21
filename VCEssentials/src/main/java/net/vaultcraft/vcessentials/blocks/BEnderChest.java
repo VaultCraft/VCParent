@@ -183,7 +183,7 @@ public class BEnderChest implements Listener {
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
             short statusColor = thisInv.getCurrState().getGlassColor();
-            ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, statusColor);
+            ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, statusColor);
             ItemMeta glassMeta = glass.getItemMeta();
             glassMeta.setDisplayName("Ender Inventory #"+i);
             glassMeta.setLore(new ArrayList<String>() {{
