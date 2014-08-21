@@ -124,18 +124,6 @@ public class BEnderChest implements Listener {
 
     private HashMap<User, EnderChestState> activeUsers = new HashMap<>();
 
-//    @EventHandler
-//    public void onInventoryOpen(InventoryOpenEvent e) {
-//        if (!(e.getInventory() instanceof EnderChest)) {
-//            return;
-//        }
-//        User networkUser = User.fromPlayer((org.bukkit.entity.Player) e.getPlayer());
-//        if (!activeUsers.containsKey(networkUser)) {
-//            e.setCancelled(true);
-//            activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
-//            e.getPlayer().openInventory(getEnderMenuForUser(networkUser, e.getInventory().getHolder()));
-//        }
-//    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
@@ -144,7 +132,7 @@ public class BEnderChest implements Listener {
             if (!activeUsers.containsKey(networkUser)) {
                 e.setCancelled(true);
                 activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
-                e.getPlayer().openInventory(getEnderMenuForUser(networkUser, (InventoryHolder) e.getClickedBlock()));
+                e.getPlayer().openInventory(getEnderMenuForUser(networkUser));
             }
         }
     }
@@ -189,8 +177,8 @@ public class BEnderChest implements Listener {
         e.setCancelled(true);
     }
 
-    private Inventory getEnderMenuForUser(User user, InventoryHolder parent) {
-        Inventory base = Bukkit.createInventory(parent, 54, "The Ender Storage Realm.");
+    private Inventory getEnderMenuForUser(User user) {
+        Inventory base = Bukkit.createInventory(null, 54, "The Ender Storage Realm.");
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
             short statusColor = thisInv.getCurrState().getGlassColor();
