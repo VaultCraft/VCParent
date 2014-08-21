@@ -162,6 +162,12 @@ public class BEnderChest implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         if(activeUsers.containsKey(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked()))
                 && activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked())) == EnderChestState.CHEST_MENU) {
+            if(e.getCurrentItem().getType() != Material.STAINED_GLASS_PANE) {
+                Form.at((org.bukkit.entity.Player) e.getWhoClicked(), Prefix.ERROR, "That is not an ender chest inventory.");
+                e.getWhoClicked().closeInventory();
+                e.setCancelled(true);
+                return;
+            }
             User clickingUser = User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked());
             EnderChestInventory clickedInv = EnderChestInventory.getForUser(e.getRawSlot(), clickingUser);
             switch (clickedInv.getCurrState()) {
