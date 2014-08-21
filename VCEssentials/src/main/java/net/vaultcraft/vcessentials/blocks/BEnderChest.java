@@ -8,9 +8,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -122,16 +124,28 @@ public class BEnderChest implements Listener {
 
     private HashMap<User, EnderChestState> activeUsers = new HashMap<>();
 
+//    @EventHandler
+//    public void onInventoryOpen(InventoryOpenEvent e) {
+//        if (!(e.getInventory() instanceof EnderChest)) {
+//            return;
+//        }
+//        User networkUser = User.fromPlayer((org.bukkit.entity.Player) e.getPlayer());
+//        if (!activeUsers.containsKey(networkUser)) {
+//            e.setCancelled(true);
+//            activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
+//            e.getPlayer().openInventory(getEnderMenuForUser(networkUser, e.getInventory().getHolder()));
+//        }
+//    }
+
     @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent e) {
-        if (!(e.getInventory().getHolder() instanceof EnderChest)) {
-            return;
-        }
-        User networkUser = User.fromPlayer((org.bukkit.entity.Player) e.getPlayer());
-        if (!activeUsers.containsKey(networkUser)) {
-            e.setCancelled(true);
-            activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
-            e.getPlayer().openInventory(getEnderMenuForUser(networkUser, e.getInventory().getHolder()));
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getType() == Material.ENDER_CHEST) {
+            User networkUser = User.fromPlayer(e.getPlayer());
+            if (!activeUsers.containsKey(networkUser)) {
+                e.setCancelled(true);
+                activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
+                e.getPlayer().openInventory(getEnderMenuForUser(networkUser, (InventoryHolder) e.getClickedBlock()));
+            }
         }
     }
 
