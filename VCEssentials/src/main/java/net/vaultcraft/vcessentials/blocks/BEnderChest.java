@@ -147,7 +147,8 @@ public class BEnderChest implements Listener {
                 int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]); // This feels so hacky
                 JSONArray myCoolArray = new JSONArray();
                 for(ItemStack i : e.getInventory()) {
-                    myCoolArray.add(ItemSerializer.fromStack(i));
+                    if (i != null)
+                        myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
 
