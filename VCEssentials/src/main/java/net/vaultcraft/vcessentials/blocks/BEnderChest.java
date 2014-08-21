@@ -187,7 +187,7 @@ public class BEnderChest implements Listener {
             ItemMeta glassMeta = glass.getItemMeta();
             glassMeta.setDisplayName("Ender Inventory #"+i);
             glassMeta.setLore(new ArrayList<String>() {{
-            add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + "Slots filled.");
+            add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + " Slots filled.");
             }});
             glass.setItemMeta(glassMeta);
             base.addItem(glass);
