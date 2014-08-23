@@ -8,8 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -18,7 +17,8 @@ public class ClientSendThread extends BukkitRunnable {
 
     private Socket client;
 
-    private List<Packet> packets = new ArrayList<>();
+    private ConcurrentLinkedQueue<Packet> packets = new ConcurrentLinkedQueue<>();
+    private boolean running = true;
 
     public ClientSendThread(Socket client) {
         this.client = client;
@@ -28,22 +28,23 @@ public class ClientSendThread extends BukkitRunnable {
     public void run() {
         try {
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-            while(true) {
-                if(!client.isConnected() || client.isInputShutdown() || client.isOutputShutdown() || client.isClosed()) {
-                    break;
-                }
-
-
+            while(running) {
                 if(packets.size() > 0) {
-                    Packet packet = packets.get(0);
+                    Packet packet = packets.poll();
+                    Logger.debug(VCUtils.getInstance(), packet.getClass().getSimpleName());
                     out.writeObject(packet);
-                    packets.remove(0);
                     Logger.debug(VCUtils.getInstance(), "Message Sent");
                 }
             }
         } catch (IOException e) {
+            Logger.warning(VCUtils.getInstance(), "This server is no longer sending messages from Message Server!");
             Logger.error(VCUtils.getInstance(), e);
+            running = false;
         }
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public void addPacket(Packet packet) {

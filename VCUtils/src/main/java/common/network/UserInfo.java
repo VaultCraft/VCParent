@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class UserInfo implements Serializable{
 
-    private int group = 0;
+    private int group = 1;
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -23,7 +23,8 @@ public class UserInfo implements Serializable{
     private HashMap<String, String> globalUserdata = new HashMap<>();
     private HashMap<String, String> userdata = new HashMap<>();
 
-    public UserInfo(User user) {
+    public UserInfo(String serverName, String uuid) {
+        User user = User.fromUUID(uuid);
         this.group = user.getGroup().getPermLevel();
         this.banned = user.isBanned();
         this.tempBan = user.getTempBan();
@@ -33,6 +34,14 @@ public class UserInfo implements Serializable{
         this.tokens = user.getTokens();
         this.globalUserdata = user.getAllGlobalUserdata();
         this.userdata = user.getAllUserdata();
+    }
+
+    public void updateUser(String uuid, String serverName) {
+
+    }
+
+    public void saveUser(String uuid, String serverName) {
+
     }
 
     public int getGroup() {

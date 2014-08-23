@@ -1,6 +1,5 @@
 package net.vaultcraft.vcutils.network;
 
-import common.network.CallbackPacket;
 import common.network.Packet;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
@@ -16,6 +15,7 @@ import java.net.Socket;
 public class ClientReceiveThread extends BukkitRunnable {
 
     private Socket client;
+    private boolean running = true;
 
     public ClientReceiveThread(Socket client) {
         this.client = client;
@@ -28,24 +28,27 @@ public class ClientReceiveThread extends BukkitRunnable {
             in = new ObjectInputStream(client.getInputStream());
         } catch (IOException e) {
             Logger.error(VCUtils.getInstance(), e);
+            running = false;
             return;
         }
-        while (true) {
-            if(!client.isConnected() || client.isInputShutdown() || client.isOutputShutdown() || client.isClosed()) {
-                break;
-            }
-
+        while (running) {
             Packet packet;
             try {
                 packet = (Packet) in.readObject();
             } catch (IOException | ClassNotFoundException e) {
+                Logger.warning(VCUtils.getInstance(), "This server is no longer receiving messages from Message Server!");
                 Logger.error(VCUtils.getInstance(), e);
+                running = false;
                 continue;
             }
-            if(packet instanceof CallbackPacket)
-                Client.addCallbackPacket((CallbackPacket) packet);
-            packet.run(client, VCUtils.uniqueServerName);
+            if(packet == null)
+                continue;
             Logger.debug(VCUtils.getInstance(), "Message Received!");
+            packet.run(client, VCUtils.uniqueServerName);
         }
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }

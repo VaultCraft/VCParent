@@ -109,6 +109,7 @@ public class VCUtils extends JavaPlugin {
 
         User.disable();
         mongoDB.close();
+        client.stop();
 
         SignLoader.getInstance().save();
     }
