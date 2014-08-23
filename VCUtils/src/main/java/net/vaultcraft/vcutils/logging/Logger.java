@@ -32,12 +32,14 @@ public class Logger {
     public static void error(Plugin plugin, Exception e) {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
-        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                "'" + Statements.makeSqlSafe(pluginName) + "', '"
-                        + pluginVersion + "', '"
-                        + Statements.makeSqlSafe(e.toString()) + "', '"
-                        + MySQL.getDate() + "'"
-        ));
+        if (VCUtils.getInstance().getMySQL() != null) {
+            VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
+                    "'" + Statements.makeSqlSafe(pluginName) + "', '"
+                            + pluginVersion + "', '"
+                            + Statements.makeSqlSafe(e.toString()) + "', '"
+                            + MySQL.getDate() + "'"
+            ));
+        }
 
         System.out.println(ansi_red + "(ERROR) " + ansi_reset + "[" + plugin.getName() + "] " + "Error preparing statement! Stack trace below..." + ansi_reset);
         e.printStackTrace();

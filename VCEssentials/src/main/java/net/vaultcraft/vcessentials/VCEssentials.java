@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials;
 
+import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcutils.VCUtils;
@@ -63,6 +64,8 @@ public class VCEssentials extends JavaPlugin {
         sqlite.updateThread.add(Statements.TABLE_SQLITE.getSql("UserData",
                 "User TEXT, " +
                 "UserJSON TEXT"));
+
+        Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
 
     }
 

@@ -8,9 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -72,10 +75,10 @@ public class BEnderChest implements Listener {
         }
 
         public EnderChestState getCurrState() {
-            if (user.getGroup().getEnderChestSlots() < slot) {
+            if (user.getGroup().getEnderChestSlots() < slot + 1) {
                 return EnderChestState.INV_NORANK;
             }
-            int howFull = getItemCount() / INV_SIZE;
+            float howFull = ((float)getItemCount() / (float)INV_SIZE);
             if (howFull == 0) {
                 return EnderChestState.INV_EMPTY;
             } else if(howFull <= 0.33) {
@@ -122,16 +125,16 @@ public class BEnderChest implements Listener {
 
     private HashMap<User, EnderChestState> activeUsers = new HashMap<>();
 
+
     @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent e) {
-        if (!(e.getInventory().getHolder() instanceof EnderChest)) {
-            return;
-        }
-        User networkUser = User.fromPlayer((org.bukkit.entity.Player) e.getPlayer());
-        if (!activeUsers.containsKey(networkUser)) {
-            e.setCancelled(true);
-            activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
-            e.getPlayer().openInventory(getEnderMenuForUser(networkUser, e.getInventory().getHolder()));
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getType() == Material.ENDER_CHEST) {
+            User networkUser = User.fromPlayer(e.getPlayer());
+            if (!activeUsers.containsKey(networkUser)) {
+                e.setCancelled(true);
+                activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
+                e.getPlayer().openInventory(getEnderMenuForUser(networkUser));
+            }
         }
     }
 
@@ -145,7 +148,8 @@ public class BEnderChest implements Listener {
                 int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]); // This feels so hacky
                 JSONArray myCoolArray = new JSONArray();
                 for(ItemStack i : e.getInventory()) {
-                    myCoolArray.add(ItemSerializer.fromStack(i));
+                    if (i != null)
+                        myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
 
@@ -157,8 +161,20 @@ public class BEnderChest implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
+        if(e.getCurrentItem() == null) {
+            return;
+        }
+
         if(activeUsers.containsKey(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked()))
                 && activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked())) == EnderChestState.CHEST_MENU) {
+            if (e.getAction() != InventoryAction.PICKUP_ALL) {
+                e.setCancelled(true);
+                return;
+            }
+            if(e.getCurrentItem().getType() != Material.STAINED_GLASS_PANE || e.getSlot() > 53) {
+                e.setCancelled(true);
+                return;
+            }
             User clickingUser = User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked());
             EnderChestInventory clickedInv = EnderChestInventory.getForUser(e.getRawSlot(), clickingUser);
             switch (clickedInv.getCurrState()) {
@@ -171,20 +187,20 @@ public class BEnderChest implements Listener {
                     e.getWhoClicked().closeInventory();
                     break;
             }
+            e.setCancelled(true);
         }
-        e.setCancelled(true);
     }
 
-    private Inventory getEnderMenuForUser(User user, InventoryHolder parent) {
-        Inventory base = Bukkit.createInventory(parent, 54, "The Ender Storage Realm.");
+    private Inventory getEnderMenuForUser(User user) {
+        Inventory base = Bukkit.createInventory(null, 54, "The Ender Storage Realm.");
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
             short statusColor = thisInv.getCurrState().getGlassColor();
-            ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, statusColor);
+            ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, statusColor);
             ItemMeta glassMeta = glass.getItemMeta();
             glassMeta.setDisplayName("Ender Inventory #"+i);
             glassMeta.setLore(new ArrayList<String>() {{
-            add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + "Slots filled.");
+            add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + " Slots filled.");
             }});
             glass.setItemMeta(glassMeta);
             base.addItem(glass);
