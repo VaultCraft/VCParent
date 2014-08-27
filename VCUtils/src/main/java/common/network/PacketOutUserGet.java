@@ -1,11 +1,9 @@
 package common.network;
 
 import net.vaultcraft.vcutils.user.User;
-import org.bukkit.Bukkit;
 
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.UUID;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -27,7 +25,7 @@ public class PacketOutUserGet implements Packet, Serializable {
 
     @Override
     public void run(Socket socket, String clientName) {
-        User user = User.fromPlayer(Bukkit.getPlayer(UUID.fromString(uuid)));
+        User user = User.fromUUID(uuid);
         if (user != null)
             user.setUserInfo(info);
     }
