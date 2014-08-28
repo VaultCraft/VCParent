@@ -1,5 +1,6 @@
 package common.network;
 
+import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.network.PacketReceivedEvent;
@@ -9,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.net.Socket;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -35,7 +35,7 @@ public class PacketOutSend implements Packet, Serializable {
     }
 
     @Override
-    public void run(Socket socket, String clientName) {
+    public void run(ChannelHandlerContext chx, String clientName) {
         ObjectInputStream in = null;
         try {
             in = new ObjectInputStream(new ByteArrayInputStream(data));

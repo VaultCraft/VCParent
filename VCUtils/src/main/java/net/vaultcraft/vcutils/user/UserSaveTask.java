@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.user;
 import common.network.PacketInSaveUser;
 import common.network.UserInfo;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.network.MessageClient;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -26,6 +27,6 @@ public class UserSaveTask extends BukkitRunnable {
         }
         if(!user.isReady())
             return;
-        VCUtils.getInstance().getClient().sendPacket(new PacketInSaveUser(new UserInfo(VCUtils.serverName, uuid), uuid, VCUtils.serverName));
+        MessageClient.sendPacket(new PacketInSaveUser(new UserInfo(VCUtils.serverName, uuid), uuid, VCUtils.serverName));
     }
 }

@@ -1,11 +1,11 @@
 package common.network;
 
+import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
 import net.vaultcraft.vcutils.network.VoteEvent;
 import net.vaultcraft.vcutils.user.UUIDFetcher;
 import org.bukkit.Bukkit;
 
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.UUID;
 
 /**
@@ -25,7 +25,7 @@ public class PacketOutVote implements Packet, Serializable {
     }
 
     @Override
-    public void run(Socket socket, String clientName) {
+    public void run(ChannelHandlerContext chx, String clientName) {
         UUID userUUID = null;
         try {
             userUUID = UUIDFetcher.getUUIDOf(username);
