@@ -18,11 +18,6 @@ public class MessageClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext chx) {
-        MessageClient.close();
-    }
-
-    @Override
     public void channelUnregistered(ChannelHandlerContext chx) {
         MessageClient.close();
     }

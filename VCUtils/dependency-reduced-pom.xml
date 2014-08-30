@@ -125,13 +125,49 @@
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
       <version>5.6.1</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>iconomy</artifactId>
+          <groupId>com.nijikokun</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commandbook</artifactId>
+          <groupId>com.sk89q</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>bukkit</artifactId>
+          <groupId>org.bukkit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>truezip</artifactId>
+          <groupId>de.schlichtherle</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>js</artifactId>
+          <groupId>rhino</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldguard</artifactId>
       <version>5.9.1-SNAPSHOT</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>iconomy</artifactId>
+          <groupId>com.nijikokun</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commandbook</artifactId>
+          <groupId>com.sk89q</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>bukkit</artifactId>
+          <groupId>org.bukkit</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <properties>

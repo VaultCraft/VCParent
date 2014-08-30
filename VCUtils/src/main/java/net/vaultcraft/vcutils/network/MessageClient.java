@@ -30,7 +30,7 @@ public class MessageClient {
         this.port = port;
     }
 
-    public void init() throws Exception {
+    public MessageClient init() throws Exception {
         workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
@@ -46,7 +46,7 @@ public class MessageClient {
                 .option(ChannelOption.TCP_NODELAY, true);
         serverChannel = b.connect(host, port).awaitUninterruptibly().channel();
         Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
-
+        return this;
     }
 
     public static void sendPacket(Packet packet) {
