@@ -111,6 +111,11 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addPluginWhitelist("reload");
         CommandManager.addPluginWhitelist("rl");
         CommandManager.addPluginWhitelist("npc");
+        CommandManager.addPluginWhitelist("buy");
+        CommandManager.addPluginWhitelist("buycraft");
+
+        //LOL
+        CommandManager.addCommand(new VCSpamFunStuff("spam", Group.OWNER, "funny", "bots"));
     }
 
     public void onDisable() {
