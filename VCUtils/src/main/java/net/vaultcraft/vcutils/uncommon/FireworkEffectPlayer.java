@@ -1,112 +1,69 @@
 package net.vaultcraft.vcutils.uncommon;
 
-import java.lang.reflect.Method;
-
+import net.minecraft.server.v1_7_R3.EntityFireworks;
+import net.minecraft.server.v1_7_R3.PacketPlayOutEntityStatus;
+import net.minecraft.server.v1_7_R3.World;
+import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-/**
- * FireworkEffectPlayer v1.0
- *
- * FireworkEffectPlayer provides a thread-safe and (reasonably) version independant way to instantly explode a FireworkEffect at a given location.
- * You are welcome to use, redistribute, modify and destroy your own copies of this source with the following conditions:
- *
- * 1. No warranty is given or implied.
- * 2. All damage is your own responsibility.
- * 3. You provide credit publicly to the original source should you release the plugin.
- *
- * @author codename_B
- */
-public class FireworkEffectPlayer {
+public class FireworkEffectPlayer extends EntityFireworks {
 
-    /*
-     * Example use:
-     *
-     * public class FireWorkPlugin implements Listener {
-     *
-     * FireworkEffectPlayer fplayer = new FireworkEffectPlayer();
-     *
-     * @EventHandler
-     * public void onPlayerLogin(PlayerLoginEvent event) {
-     *   fplayer.playFirework(event.getPlayer().getWorld(), event.getPlayer.getLocation(), Util.getRandomFireworkEffect());
-     * }
-     *
-     * }
-     */
+    Player[] players = null;
 
-    // internal references, performance improvements
-    private static Method world_getHandle = null;
-    private static Method nms_world_broadcastEntityEffect = null;
-    private static Method firework_getHandle = null;
-
-    /**
-     * Play a pretty firework at the location with the FireworkEffect when called
-     * @param world
-     * @param loc
-     * @param fe
-     * @throws Exception
-     */
-    public static void playFirework(World world, Location loc, FireworkEffect fe) throws Exception {
-        // Bukkity load (CraftFirework)
-        final Firework fw = (Firework) world.spawn(loc, Firework.class);
-        // the net.minecraft.server.World
-        Object nms_world = null;
-        Object nms_firework = null;
-        /*
-         * The reflection part, this gives us access to funky ways of messing around with things
-         */
-        if(world_getHandle == null) {
-            // get the methods of the craftbukkit objects
-            world_getHandle = getMethod(world.getClass(), "getHandle");
-            firework_getHandle = getMethod(fw.getClass(), "getHandle");
-        }
-        // invoke with no arguments
-        nms_world = world_getHandle.invoke(world, (Object[]) null);
-        nms_firework = firework_getHandle.invoke(fw, (Object[]) null);
-        // null checks are fast, so having this seperate is ok
-        if(nms_world_broadcastEntityEffect == null) {
-            // get the method of the nms_world
-            nms_world_broadcastEntityEffect = getMethod(nms_world.getClass(), "broadcastEntityEffect");
-        }
-        /*
-         * Now we mess with the metadata, allowing nice clean spawning of a pretty firework (look, pretty lights!)
-         */
-        // metadata load
-        FireworkMeta data = (FireworkMeta) fw.getFireworkMeta();
-        // clear existing
-        data.clearEffects();
-        // power of one
-        data.setPower(1);
-        // add the effect
-        data.addEffect(fe);
-        // set the meta
-        fw.setFireworkMeta(data);
-        /*
-         * Finally, we broadcast the entity effect then kill our fireworks object
-         */
-
-        // invoke with arguments
-        nms_world_broadcastEntityEffect.invoke(nms_world, new Object[] {nms_firework, (byte) 17});
-        // remove from the game
-        fw.remove();
+    public FireworkEffectPlayer(World world, Player... p) {
+        super(world);
+        players = p;
+        this.a(0.25F, 0.25F);
     }
 
-    /**
-     * Internal method, used as shorthand to grab our method in a nice friendly manner
-     * @param cl
-     * @param method
-     * @return Method (or null)
-     */
-    private static Method getMethod(Class<?> cl, String method) {
-        for(Method m : cl.getMethods()) {
-            if(m.getName().equals(method)) {
-                return m;
+    boolean gone = false;
+
+    @Override
+    public void h() {
+        if (gone) {
+            return;
+        }
+
+        if (!this.world.isStatic) {
+            gone = true;
+
+            if (players != null) {
+                if (players.length > 0) {
+                    for (Player player : players) {
+                        (((CraftPlayer) player).getHandle()).playerConnection.sendPacket(new PacketPlayOutEntityStatus(this, (byte) 17));
+                    }
+
+                    this.die();
+                    return;
+                }
             }
+
+            world.broadcastEntityEffect(this, (byte) 17);
+            this.die();
         }
-        return null;
     }
 
+    public static void playFirework(org.bukkit.World world, Location location, FireworkEffect effect) {
+        try {
+            FireworkEffectPlayer firework = new FireworkEffectPlayer(((CraftWorld) location.getWorld()).getHandle(), Bukkit.getOnlinePlayers());
+            FireworkMeta meta = ((Firework) firework.getBukkitEntity()).getFireworkMeta();
+
+            meta.addEffect(effect);
+
+            ((Firework) firework.getBukkitEntity()).setFireworkMeta(meta);
+            firework.setPosition(location.getX(), location.getY(), location.getZ());
+
+            if ((((CraftWorld) location.getWorld()).getHandle()).addEntity(firework)) {
+                firework.setInvisible(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
