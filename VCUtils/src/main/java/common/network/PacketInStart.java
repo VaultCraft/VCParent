@@ -1,7 +1,8 @@
 package common.network;
 
+import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
+
 import java.io.Serializable;
-import java.net.Socket;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -20,7 +21,11 @@ public class PacketInStart implements Packet, Serializable {
     }
 
     @Override
-    public void run(Socket client, String clientName) {
+    public void run(ChannelHandlerContext chx, String clientName) {
         //Server Only
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -19,12 +19,14 @@ public class Logger {
     public static void log(Plugin plugin, String message) {
         String pluginName = plugin.getDescription().getFullName();
         String pluginVersion = plugin.getDescription().getVersion();
-        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                "'" + Statements.makeSqlSafe(pluginName) + "', '"
-                        + pluginVersion + "', '"
-                        + Statements.makeSqlSafe(message) + "', '"
-                        + MySQL.getDate() + "'"
-        ));
+        if(VCUtils.getInstance().getMySQL() != null) {
+            VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
+                    "'" + Statements.makeSqlSafe(pluginName) + "', '"
+                            + pluginVersion + "', '"
+                            + Statements.makeSqlSafe(message) + "', '"
+                            + MySQL.getDate() + "'"
+            ));
+        }
 
         System.out.println(ansi_yellow + "(" + plugin.getName() + ") " + ansi_reset + message + ansi_reset);
     }

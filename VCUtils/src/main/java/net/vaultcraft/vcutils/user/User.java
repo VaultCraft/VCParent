@@ -4,6 +4,7 @@ import common.network.PacketInUserGet;
 import common.network.PacketInUserSend;
 import common.network.UserInfo;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -57,7 +58,7 @@ public class User {
         this.player = player;
         async_player_map.put(player, User.this);
         async_uuid_map.put(player.getUniqueId().toString(), User.this);
-        VCUtils.getInstance().getClient().sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
+        MessageClient.sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
     }
 
     public void setUserInfo(UserInfo info) {
@@ -149,7 +150,7 @@ public class User {
             @Override
             public void run() {
                 if (user.isReady())
-                    VCUtils.getInstance().getClient().sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+                    MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
                 async_player_map.remove(player);
                 async_uuid_map.remove(player.getUniqueId().toString());
             }
@@ -160,7 +161,7 @@ public class User {
         for (final User user : async_player_map.values()) {
             if (!user.isReady())
                 continue;
-            VCUtils.getInstance().getClient().sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+            MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
         }
         async_player_map.clear();
     }

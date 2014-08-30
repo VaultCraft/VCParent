@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils;
 
+import common.network.PacketInStart;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
 import net.vaultcraft.vcutils.database.mongo.MongoDB;
@@ -13,7 +14,7 @@ import net.vaultcraft.vcutils.item.menu.MenuListener;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
 import net.vaultcraft.vcutils.logging.Logger;
-import net.vaultcraft.vcutils.network.Client;
+import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.network.NetworkInfo;
 import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.user.User;
@@ -35,7 +36,6 @@ public class VCUtils extends JavaPlugin {
     private MySQL mySQL;
     private MongoDB mongoDB;
     private SQLite sqlite;
-    private Client client;
 
     @ClassConfig.Config(path = "ServerName")
     public static String serverName = "Lobby";
@@ -55,7 +55,12 @@ public class VCUtils extends JavaPlugin {
         ClassConfig.updateConfig(VCUtils.class, getConfig());
         saveConfig();
 
-        client = new Client(NetworkInfo.host, NetworkInfo.port);
+        try {
+            new MessageClient(NetworkInfo.host, NetworkInfo.port).init();
+            MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             mongoDB = new MongoDB(MongoInfo.host, MongoInfo.port);
@@ -109,7 +114,6 @@ public class VCUtils extends JavaPlugin {
 
         User.disable();
         mongoDB.close();
-        client.stop();
 
         SignLoader.getInstance().save();
     }
@@ -132,8 +136,4 @@ public class VCUtils extends JavaPlugin {
     }
 
     public SQLite getSqlite() { return sqlite;}
-
-    public Client getClient() {
-        return client;
-    }
 }
