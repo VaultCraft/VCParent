@@ -32,6 +32,8 @@ public class VCEssentials extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         ProtectionFile.getInstance().load();
         initCommands();
         mySQL = VCUtils.getInstance().getMySQL();
@@ -68,7 +70,6 @@ public class VCEssentials extends JavaPlugin {
                 "UserJSON TEXT"));
 
         Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
-
     }
 
     public static VCEssentials getInstance() {
@@ -99,6 +100,7 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCAddSign("addsign", Group.DEVELOPER, "createsign", "linksign"));
         CommandManager.addCommand(new VCRemoveSign("removesign", Group.DEVELOPER, "deletesign", "unlinksign"));
         CommandManager.addCommand(new VCWorld("world", Group.ADMIN));
+        CommandManager.addCommand(new VCServer("server", Group.COMMON));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
@@ -130,11 +132,11 @@ public class VCEssentials extends JavaPlugin {
 
     public SQLite getSqlite() { return sqlite; }
 
-    public static void sendPlayerToServer(Player player, String serverName) {
+    public void sendPlayerToServer(Player player, String serverName) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(serverName);
-        player.sendPluginMessage(VCUtils.getInstance(), "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(VCEssentials.getInstance(), "BungeeCord", out.toByteArray());
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

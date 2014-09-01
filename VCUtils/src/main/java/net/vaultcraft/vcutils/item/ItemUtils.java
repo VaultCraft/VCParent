@@ -1,7 +1,10 @@
 package net.vaultcraft.vcutils.item;
 
+import com.google.common.collect.Lists;
 import net.vaultcraft.vcutils.VCUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -42,5 +45,32 @@ public class ItemUtils {
         leatherArmorMeta.setColor(Color.fromRGB(r, g, b));
         itemStack.setItemMeta(leatherArmorMeta);
         return itemStack;
+    }
+
+    public static ItemStack build(Material type, String displayName, String... lore) {
+        return build(type, (byte)0, 1, displayName, lore);
+    }
+
+    public static ItemStack build(Material type, int amount, String displayName, String... lore) {
+        return build(type, (byte)0, amount, displayName, lore);
+    }
+
+    public static ItemStack build(Material type, byte data, String displayName, String... lore) {
+        return build(type, data, 1, displayName, lore);
+    }
+
+    public static ItemStack build(Material type, byte data, int amount, String displayName, String... lore) {
+        ItemStack stack = new ItemStack(type, 1, (short)1, data);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+        if (lore.length > 0) {
+            List<String> l = Lists.newArrayList();
+            for (String s : lore) {
+                l.add(ChatColor.translateAlternateColorCodes('&', s));
+            }
+            meta.setLore(l);
+        }
+        stack.setItemMeta(meta);
+        return stack;
     }
 }
