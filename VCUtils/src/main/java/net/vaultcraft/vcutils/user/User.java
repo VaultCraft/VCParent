@@ -8,7 +8,6 @@ import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +40,6 @@ public class User {
     private boolean isPrivateMessaging = true;
     private VCScoreboard scoreboard = null;
     private boolean ready = false;
-    private BukkitTask saveTask;
 
     private boolean banned = false;
     private Date tempBan = null;
@@ -59,6 +57,7 @@ public class User {
         async_player_map.put(player, User.this);
         async_uuid_map.put(player.getUniqueId().toString(), User.this);
         MessageClient.sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
+        new UserSaveTask(player.getUniqueId().toString());
     }
 
     public void setUserInfo(UserInfo info) {

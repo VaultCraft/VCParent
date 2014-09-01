@@ -1,5 +1,7 @@
 package net.vaultcraft.vcessentials;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
@@ -127,6 +129,13 @@ public class VCEssentials extends JavaPlugin {
     }
 
     public SQLite getSqlite() { return sqlite; }
+
+    public static void sendPlayerToServer(Player player, String serverName) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Connect");
+        out.writeUTF(serverName);
+        player.sendPluginMessage(VCUtils.getInstance(), "BungeeCord", out.toByteArray());
+    }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         //console commands
