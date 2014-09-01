@@ -251,33 +251,4 @@ public class User {
     public void setScoreboard(VCScoreboard scoreboard) {
         this.scoreboard = scoreboard;
     }
-
-    private static String dataToString(HashMap<String, String> userdata) {
-        StringBuilder sb = new StringBuilder();
-        int counter = 0;
-        for (Map.Entry entry : userdata.entrySet()) {
-            sb.append(entry.getKey()).append(":").append(entry.getValue());
-            if (userdata.size() - 1 != counter)
-                sb.append(",");
-            counter++;
-        }
-        return sb.toString();
-    }
-
-    private static HashMap<String, String> parseData(String data) {
-        HashMap<String, String> userdata = new HashMap<>();
-        if (!(data.contains(":")))
-            return userdata;
-        if (data.contains(",")) {
-            String[] parts = data.split(",");
-            for (String s : parts) {
-                String[] entry = s.split(":");
-                userdata.put(entry[0], entry[1]);
-            }
-        } else {
-            String[] parts = data.split(":");
-            userdata.put(parts[0], parts[1]);
-        }
-        return userdata;
-    }
 }

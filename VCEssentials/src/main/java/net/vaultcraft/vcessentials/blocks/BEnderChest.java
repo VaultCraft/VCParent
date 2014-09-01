@@ -152,10 +152,8 @@ public class BEnderChest implements Listener {
                         myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
-
             }
             activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
-
         }
     }
 
@@ -192,7 +190,7 @@ public class BEnderChest implements Listener {
     }
 
     private Inventory getEnderMenuForUser(User user) {
-        Inventory base = Bukkit.createInventory(null, 54, "The Ender Storage Realm.");
+        Inventory base = Bukkit.createInventory(null, 54, "Ender Storage");
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
             short statusColor = thisInv.getCurrState().getGlassColor();
