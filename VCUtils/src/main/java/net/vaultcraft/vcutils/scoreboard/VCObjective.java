@@ -15,6 +15,7 @@ public class VCObjective {
 
     private String name;
     private List<VCScoreboard> scoreboards = new ArrayList<>();
+    private List<VCScore> scores = new ArrayList<>();
 
     public VCObjective(String name) {
         this.name = name;
@@ -54,5 +55,23 @@ public class VCObjective {
 
     public String getName() {
         return name;
+    }
+
+    public void addScore(VCScore score) {
+        if(scores.contains(score))
+            return;
+        scores.add(score);
+    }
+
+    public VCScore getScore(String name) {
+        for(VCScore score : scores) {
+            if(score.getName().equalsIgnoreCase(name))
+                return score;
+        }
+        return null;
+    }
+
+    public List<VCScore> getScores() {
+        return scores;
     }
 }
