@@ -26,6 +26,7 @@ public class VCScore {
             PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
             scoreboard.sendPacket(packet);
         }
+        objective.addScore(this);
     }
 
     public VCScore(VCTicker ticker, int score, VCObjective objective) {
