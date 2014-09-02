@@ -51,7 +51,7 @@ public class FireworkEffectPlayer extends EntityFireworks {
 
     public static void playFirework(org.bukkit.World world, Location location, FireworkEffect effect) {
         try {
-            FireworkEffectPlayer firework = new FireworkEffectPlayer(((CraftWorld) location.getWorld()).getHandle(), Bukkit.getOnlinePlayers());
+            FireworkEffectPlayer firework = new FireworkEffectPlayer(((CraftWorld) location.getWorld()).getHandle(), Bukkit.getOnlinePlayers().toArray(new Player[0]));
             FireworkMeta meta = ((Firework) firework.getBukkitEntity()).getFireworkMeta();
 
             meta.addEffect(effect);
