@@ -57,6 +57,9 @@ public class VCScore {
     }
 
     public void tick() {
+        if (ticker == null)
+            return;
+        
         setName(ticker.tick());
     }
 
