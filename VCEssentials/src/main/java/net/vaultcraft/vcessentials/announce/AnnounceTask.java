@@ -1,6 +1,7 @@
 package net.vaultcraft.vcessentials.announce;
 
 import net.vaultcraft.vcutils.chat.fancy.*;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -18,11 +19,31 @@ public class AnnounceTask implements Runnable {
     }
 
     public boolean _muted = true;
+    private int index = 0;
 
     public void run() {
-        JSONChatMessage curr = buildMessage("(DARK-PURPLE+BOLD)Vault_(GRAY+BOLD)Craft_(WHITE):^_(GRAY)Welcome^_(DARK-PURPLE)"+player.getName()+"{HOVER*SHOW-TEXT=You can hover on things!}_(GRAY)!");
-        curr.sendToPlayer(player);
+        if (_muted)
+            return;
+
+        if (++index >= messages.length)
+            index = 0;
+
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&m-----------------------------------------------------"));
+        header.sendToPlayer(player);
+        player.sendMessage("");
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "  &5- &7"+messages[index].replace("%player%", player.getName())));
+        player.sendMessage("");
+        disable.sendToPlayer(player);
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&m-----------------------------------------------------"));
     }
+
+    private static JSONChatMessage header = buildMessage("(DARK-PURPLE+BOLD)Vault{CLICK*OPEN-URL=http://vaultcraft.net}_(GRAY+BOLD)Craft{CLICK*OPEN-URL=http://vaultcraft.net}");
+    private static JSONChatMessage disable = buildMessage("(DARK-GRAY+ITALIC)Click to disable messages{CLICK*RUN-COMMAND=/announce}");
+    private static String[] messages = {
+        "Welcome &d%player% &7to our network!",
+        "We are currently in &d&npre-alpha&r &7so be sure to report bugs!",
+        "Looking to help out the server in return for some &dEPIC &7  perks? Click the \"VaultCraft\" text above to go to our website!"
+    };
 
     private static JSONChatMessage buildMessage(String input) {
         String[] split = input.split("_");

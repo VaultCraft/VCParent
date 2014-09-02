@@ -1,7 +1,7 @@
 package net.vaultcraft.vcutils.scoreboard;
 
-import net.minecraft.server.v1_7_R3.PacketPlayOutScoreboardScore;
-import net.minecraft.server.v1_7_R3.ScoreboardScore;
+import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardScore;
+import net.minecraft.server.v1_7_R4.ScoreboardScore;
 
 /**
  * Created by tacticalsk8er on 7/26/2014.

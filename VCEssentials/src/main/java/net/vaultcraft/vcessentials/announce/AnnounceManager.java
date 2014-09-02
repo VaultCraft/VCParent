@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class AnnounceManager {
 
-    private static final int TIME = 5;
+    private static final int TIME = 60;
 
     private static HashMap<Player, AnnounceTask> announcements = new HashMap<>();
     private static HashMap<AnnounceTask, Integer> task_ids = new HashMap<>();
@@ -40,5 +40,9 @@ public class AnnounceManager {
 
         AnnounceTask task = announcements.remove(player);
         Bukkit.getScheduler().cancelTask(task_ids.remove(task));
+    }
+
+    public static AnnounceTask getTask(Player player) {
+        return announcements.get(player);
     }
 }

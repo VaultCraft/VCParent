@@ -1,6 +1,6 @@
 package net.vaultcraft.vcutils.scoreboard;
 
-import net.minecraft.server.v1_7_R3.IScoreboardCriteria;
+import net.minecraft.server.v1_7_R4.IScoreboardCriteria;
 
 /**
  * Created by tacticalsk8er on 7/26/2014.

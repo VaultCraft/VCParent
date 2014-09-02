@@ -13,3 +13,4 @@ softdepend: [VCUtils]
 main: net.vaultcraft.vcessentials.VCEssentials
 commands:
   promote: {}
+  redir: {}

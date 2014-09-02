@@ -1,11 +1,11 @@
 package net.vaultcraft.vcutils.scoreboard;
 
-import net.minecraft.server.v1_7_R3.Packet;
-import net.minecraft.server.v1_7_R3.PacketPlayOutScoreboardDisplayObjective;
-import net.minecraft.server.v1_7_R3.PacketPlayOutScoreboardObjective;
-import net.minecraft.server.v1_7_R3.Scoreboard;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardDisplayObjective;
+import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardObjective;
+import net.minecraft.server.v1_7_R4.Scoreboard;
 import net.vaultcraft.vcutils.user.User;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

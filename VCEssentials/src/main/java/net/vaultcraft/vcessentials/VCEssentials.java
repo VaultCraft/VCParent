@@ -108,6 +108,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCWorld("world", Group.ADMIN));
         CommandManager.addCommand(new VCServer("server", Group.COMMON));
         CommandManager.addCommand(new VCHub("hub", Group.COMMON, "lobby", "cloud"));
+        CommandManager.addCommand(new VCAnnounceToggle("announce", Group.COMMON, "announcements"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
@@ -170,6 +171,18 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 User.fromPlayer(wrapped).setGroup(select);
                 Logger.log(this, wrapped.getName() + " promoted to " + select.getName());
                 break;
+            }
+            case "redir": {
+                if (!(sender instanceof Player))
+                    return true;
+
+                String send = "";
+                for (String arg : args) {
+                    send+=arg+" ";
+                }
+                System.out.println("Redirecting command to chat="+send);
+                ((Player)sender).chat("/"+send);
+                return true;
             }
         }
         return true;

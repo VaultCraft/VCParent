@@ -17,6 +17,7 @@ import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.network.NetworkInfo;
 import net.vaultcraft.vcutils.sign.SignLoader;
+import net.vaultcraft.vcutils.uncommon.GhostFactory;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -42,6 +43,8 @@ public class VCUtils extends JavaPlugin {
     @ClassConfig.Config(path = "UniqueServerName")
     public static String uniqueServerName = "Lobby1";
 
+    private static GhostFactory factory; public static GhostFactory getGhostFactory() { return factory; }
+
     public void onEnable() {
         instance = this;
 
@@ -54,6 +57,8 @@ public class VCUtils extends JavaPlugin {
         ClassConfig.updateConfig(NetworkInfo.class, getConfig());
         ClassConfig.updateConfig(VCUtils.class, getConfig());
         saveConfig();
+
+        factory = new GhostFactory(this);
 
         try {
             new MessageClient(NetworkInfo.host, NetworkInfo.port).init();

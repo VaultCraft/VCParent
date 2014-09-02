@@ -1,8 +1,8 @@
 package net.vaultcraft.vcutils.scoreboard;
 
-import net.minecraft.server.v1_7_R3.PacketPlayOutScoreboardObjective;
-import net.minecraft.server.v1_7_R3.PacketPlayOutScoreboardScore;
-import net.minecraft.server.v1_7_R3.ScoreboardObjective;
+import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardObjective;
+import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardScore;
+import net.minecraft.server.v1_7_R4.ScoreboardObjective;
 
 import java.util.ArrayList;
 import java.util.List;

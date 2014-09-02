@@ -3,7 +3,6 @@ package net.vaultcraft.vcutils.bossbar;
 import java.lang.reflect.*;
 import java.util.*;
 
-import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -213,8 +212,8 @@ public class StatusBarAPI {
         public Object getTeleportPacket(Location loc){
             try{
                 Class<?> packetClass = ReflectionUtils.getCraftClass("PacketPlayOutEntityTeleport");
-                return packetClass.getConstructor(new Class<?>[] { int.class, int.class, int.class, int.class, byte.class, byte.class }).newInstance(
-                        this.id, loc.getBlockX() * 32, loc.getBlockY() * 32, loc.getBlockZ() * 32, (byte) ((int) loc.getYaw() * 256 / 360), (byte) ((int) loc.getPitch() * 256 / 360));
+                return packetClass.getConstructor(new Class<?>[] { int.class, int.class, int.class, int.class, byte.class, byte.class, boolean.class }).newInstance(
+                        this.id, loc.getBlockX() * 32, loc.getBlockY() * 32, loc.getBlockZ() * 32, (byte) ((int) loc.getYaw() * 256 / 360), (byte) ((int) loc.getPitch() * 256 / 360), false);
             }
             catch(Exception e){
                 e.printStackTrace();
