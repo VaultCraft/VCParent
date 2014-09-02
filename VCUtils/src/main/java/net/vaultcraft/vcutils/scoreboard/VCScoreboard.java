@@ -24,7 +24,6 @@ public class VCScoreboard {
         scoreboard = new Scoreboard();
         this.player = player;
         User.fromPlayer(player).setScoreboard(this);
-
     }
 
     public void registerObjective(VCObjective objective) {

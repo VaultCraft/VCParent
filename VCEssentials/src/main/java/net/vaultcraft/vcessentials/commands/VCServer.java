@@ -37,7 +37,7 @@ public class VCServer extends ICommand {
         if (args.length == 0) {
             //open GUI etc...
             Inventory inv = Bukkit.createInventory(player, (server_map.size()+(9-(server_map.size()%9))), ChatColor.DARK_PURPLE+"Select a server");
-            inv.addItem(server_map.keySet().toArray(new ItemStack[0]));
+            inv.addItem(server_map.keySet().toArray(new ItemStack[server_map.size()]));
             player.openInventory(inv);
         } else {
             VCEssentials.getInstance().sendPlayerToServer(player, args[0].toLowerCase());

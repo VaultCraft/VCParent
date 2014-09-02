@@ -100,8 +100,8 @@ public class MySQL {
     public void close() throws SQLException {
         if (connection != null)
             connection.close();
-        updateTask.interrupt();
         queryTask.interrupt();
+        updateTask.interrupt();
         updateThread.clear();
         queryThread.clear();
         callbacks.clear();

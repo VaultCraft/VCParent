@@ -18,10 +18,9 @@ public class VCObjective {
     private ScoreboardObjective objective;
     private VCScoreboard scoreboard;
 
-    public VCObjective(String name, VCCriteria criteria, VCScoreboard scoreboard) {
+    public VCObjective(String name, VCCriteria criteria) {
         this.name = name;
         this.criteria = criteria;
-        this.scoreboard = scoreboard;
         scoreboard.registerObjective(this);
     }
 
@@ -82,10 +81,6 @@ public class VCObjective {
         scores.remove(score);
         PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(score.getScoreboardScore(scoreboard, this), 1);
         scoreboard.sendPacket(scoreboard.getPlayer(), packet);
-    }
-
-    public void setObjective(ScoreboardObjective objective) {
-        this.objective = objective;
     }
 
     public ScoreboardObjective getObjective() {
