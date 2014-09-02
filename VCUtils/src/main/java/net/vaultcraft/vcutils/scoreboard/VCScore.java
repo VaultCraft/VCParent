@@ -1,39 +1,74 @@
 package net.vaultcraft.vcutils.scoreboard;
 
 import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardScore;
+import net.minecraft.server.v1_7_R4.ScoreboardObjective;
 import net.minecraft.server.v1_7_R4.ScoreboardScore;
 
 /**
- * Created by tacticalsk8er on 7/26/2014.
+ * Created by tacticalsk8er on 9/2/2014.
  */
 public class VCScore {
 
+    private VCObjective objective;
     private String name;
     private int score;
-    private VCObjective objective;
+
+    private VCTicker ticker;
 
     public VCScore(String name, int score, VCObjective objective) {
         this.name = name;
         this.score = score;
         this.objective = objective;
-        objective.registerScore(this);
+        for(VCScoreboard scoreboard : objective.getScoreboards()) {
+            ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
+            ScoreboardScore scoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
+            scoreboardScore.setScore(score);
+            PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
+            scoreboard.sendPacket(packet);
+        }
+    }
+
+    public VCScore(VCTicker ticker, int score, VCObjective objective) {
+        this.name = ticker.tick();
+        this.score = score;
+        this.ticker = ticker;
+        this.objective = objective;
+        for (VCScoreboard scoreboard : objective.getScoreboards()) {
+            ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
+            ScoreboardScore scoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
+            scoreboardScore.setScore(score);
+            PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
+            scoreboard.sendPacket(packet);
+        }
     }
 
     public void setName(String name) {
-        ScoreboardScore oldScore = this.getScoreboardScore(objective.getScoreboard(), objective);
+        for(VCScoreboard scoreboard : objective.getScoreboards()) {
+            ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
+            ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
+            ScoreboardScore newScoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
+            newScoreboardScore.setScore(score);
+            PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 1);
+            PacketPlayOutScoreboardScore packet1 = new PacketPlayOutScoreboardScore(newScoreboardScore, 0);
+            scoreboard.sendPacket(packet);
+            scoreboard.sendPacket(packet1);
+        }
         this.name = name;
-        ScoreboardScore newScore = this.getScoreboardScore(objective.getScoreboard(), objective);
-        PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(oldScore, 1);
-        PacketPlayOutScoreboardScore packet1 = new PacketPlayOutScoreboardScore(newScore, 0);
-        objective.getScoreboard().sendPacket(objective.getScoreboard().getPlayer(), packet);
-        objective.getScoreboard().sendPacket(objective.getScoreboard().getPlayer(), packet1);
+    }
+
+    public void tick() {
+        setName(ticker.tick());
     }
 
     public void setScore(int score) {
+        for (VCScoreboard scoreboard : objective.getScoreboards()) {
+            ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
+            ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
+            scoreboardScore.setScore(score);
+            PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
+            scoreboard.sendPacket(packet);
+        }
         this.score = score;
-        ScoreboardScore newScore = this.getScoreboardScore(objective.getScoreboard(), objective);
-        PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(newScore, 0);
-        objective.getScoreboard().sendPacket(objective.getScoreboard().getPlayer(), packet);
     }
 
     public String getName() {
@@ -46,15 +81,5 @@ public class VCScore {
 
     public VCObjective getObjective() {
         return objective;
-    }
-
-    public ScoreboardScore getScoreboardScore(VCScoreboard scoreboard, VCObjective objective) {
-        ScoreboardScore score =  new ScoreboardScore(scoreboard.getScoreboard(), objective.getObjective(), name);
-        score.setScore(this.getScore());
-        return score;
-    }
-
-    public void remove() {
-        objective.unregisterScore(this);
     }
 }
