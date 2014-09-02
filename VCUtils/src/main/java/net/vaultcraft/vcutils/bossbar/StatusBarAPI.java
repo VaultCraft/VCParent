@@ -215,7 +215,7 @@ public class StatusBarAPI {
                 return packetClass.getConstructor(new Class<?>[] { int.class, int.class, int.class, int.class, byte.class, byte.class, boolean.class }).newInstance(
                         this.id, loc.getBlockX() * 32, loc.getBlockY() * 32, loc.getBlockZ() * 32, (byte) ((int) loc.getYaw() * 256 / 360), (byte) ((int) loc.getPitch() * 256 / 360), false);
             }
-            catch(Exception e){
+            catch(Exception e) {
                 e.printStackTrace();
                 return null;
             }

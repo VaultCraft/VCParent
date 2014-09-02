@@ -31,7 +31,6 @@ public class VCScoreboard {
             if (objective1.getName().equalsIgnoreCase(objective.getName()))
                 return;
 
-        objective.setObjective(scoreboard.registerObjective(objective.getName(), objective.getCriteria().getiScoreboardCriteria()));
         objectives.add(objective);
         PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(objective.getObjective(), 0);
         this.sendPacket(player, packet);
