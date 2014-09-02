@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 
 public enum Prefix {
 
-    VAULT_CRAFT("&5&lV&7&lC &f&l> &7", " &f&l", "&7"),
+    VAULT_CRAFT("&5&lV&7&lC&f: &7", " &f&l", "&7"),
     ERROR("&4&lERROR&f: &7", "", "&7"),
     WARNING("&e&lWARNING&f: &7", "", "&7"),
     SUCCESS("&a&lSUCCESS&f: &7", "", "&7"),

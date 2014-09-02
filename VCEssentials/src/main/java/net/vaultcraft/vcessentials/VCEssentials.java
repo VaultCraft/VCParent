@@ -2,6 +2,7 @@ package net.vaultcraft.vcessentials;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import net.vaultcraft.vcessentials.announce.AnnounceManager;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
@@ -17,13 +18,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */
 
-public class VCEssentials extends JavaPlugin {
+public class VCEssentials extends JavaPlugin implements Listener {
 
     private static VCEssentials instance;
     private MySQL mySQL;
@@ -33,6 +38,7 @@ public class VCEssentials extends JavaPlugin {
         instance = this;
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        Bukkit.getPluginManager().registerEvents(this, this);
 
         ProtectionFile.getInstance().load();
         initCommands();
@@ -101,6 +107,7 @@ public class VCEssentials extends JavaPlugin {
         CommandManager.addCommand(new VCRemoveSign("removesign", Group.DEVELOPER, "deletesign", "unlinksign"));
         CommandManager.addCommand(new VCWorld("world", Group.ADMIN));
         CommandManager.addCommand(new VCServer("server", Group.COMMON));
+        CommandManager.addCommand(new VCHub("hub", Group.COMMON, "lobby", "cloud"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
@@ -166,5 +173,15 @@ public class VCEssentials extends JavaPlugin {
             }
         }
         return true;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        AnnounceManager.subscribeTask(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        AnnounceManager.unsubscribeTask(event.getPlayer());
     }
 }
