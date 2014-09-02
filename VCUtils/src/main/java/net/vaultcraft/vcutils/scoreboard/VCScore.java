@@ -29,17 +29,8 @@ public class VCScore {
     }
 
     public VCScore(VCTicker ticker, int score, VCObjective objective) {
-        this.name = ticker.tick();
-        this.score = score;
+        this(ticker.tick(), score, objective);
         this.ticker = ticker;
-        this.objective = objective;
-        for (VCScoreboard scoreboard : objective.getScoreboards()) {
-            ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
-            ScoreboardScore scoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
-            scoreboardScore.setScore(score);
-            PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
-            scoreboard.sendPacket(packet);
-        }
     }
 
     public void setName(String name) {
@@ -59,7 +50,7 @@ public class VCScore {
     public void tick() {
         if (ticker == null)
             return;
-        
+
         setName(ticker.tick());
     }
 
