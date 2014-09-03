@@ -50,9 +50,18 @@ public class VCObjective {
     }
 
     public void addScoreboard(VCScoreboard scoreboard) {
-        ScoreboardObjective scoreboardObjective = new ScoreboardObjective(scoreboard.getScoreboard(), name, IScoreboardCriteria.b);
+        ScoreboardObjective scoreboardObjective = new ScoreboardObjective(scoreboard.getScoreboard(), this.name, IScoreboardCriteria.b);
         PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 0);
         scoreboard.sendPacket(packet);
+        scoreboards.add(scoreboard);
+    }
+
+    public void addScoreboardAndDisplay(VCScoreboard scoreboard, VCDisplay display) {
+        ScoreboardObjective scoreboardObjective = new ScoreboardObjective(scoreboard.getScoreboard(), this.name, IScoreboardCriteria.b);
+        PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 0);
+        PacketPlayOutScoreboardDisplayObjective packet2 = new PacketPlayOutScoreboardDisplayObjective(display.getId(), scoreboardObjective);
+        scoreboard.sendPacket(packet);
+        scoreboard.sendPacket(packet2);
         scoreboards.add(scoreboard);
     }
 
