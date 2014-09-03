@@ -16,7 +16,7 @@ public class VCScore {
     private VCTicker ticker;
 
     public VCScore(String name, int score, VCObjective objective) {
-        this.name = name;
+        this.name = (name.length() > 16 ? name.substring(0, 16) : name);
         this.score = score;
         this.objective = objective;
         for(VCScoreboard scoreboard : objective.getScoreboards()) {
@@ -35,6 +35,7 @@ public class VCScore {
     }
 
     public void setName(String name) {
+        name = (name.length() > 16 ? name.substring(0, 16) : name);
         for(VCScoreboard scoreboard : objective.getScoreboards()) {
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
             ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);

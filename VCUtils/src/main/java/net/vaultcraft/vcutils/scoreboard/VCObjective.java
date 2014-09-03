@@ -13,12 +13,40 @@ import java.util.List;
  */
 public class VCObjective {
 
+    private VCTicker ticker;
+
     private String name;
     private List<VCScoreboard> scoreboards = new ArrayList<>();
     private List<VCScore> scores = new ArrayList<>();
 
     public VCObjective(String name) {
         this.name = name;
+    }
+
+    public VCObjective(VCTicker ticker) {
+        this(ticker.tick());
+        this.ticker = ticker;
+    }
+
+    public void tick() {
+        if (ticker != null)
+            name = ticker.tick();
+
+        for (VCScore score : scores) {
+            score.tick();
+        }
+    }
+
+    public VCTicker getTicker() {
+        return ticker;
+    }
+
+    public VCScore getFirstScore(int value) {
+        for (VCScore score : scores) {
+            if (score.getScore() == value)
+                return score;
+        }
+        return null;
     }
 
     public void addScoreboard(VCScoreboard scoreboard) {
