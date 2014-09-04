@@ -1,9 +1,6 @@
 package net.vaultcraft.vcutils.scoreboard;
 
-import net.minecraft.server.v1_7_R4.IScoreboardCriteria;
-import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardDisplayObjective;
-import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardObjective;
-import net.minecraft.server.v1_7_R4.ScoreboardObjective;
+import net.minecraft.server.v1_7_R4.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +13,7 @@ public class VCObjective {
     private VCTicker ticker;
 
     private String name;
+    private String oldName;
     private List<VCScoreboard> scoreboards = new ArrayList<>();
     private List<VCScore> scores = new ArrayList<>();
 
@@ -50,17 +48,29 @@ public class VCObjective {
     }
 
     public void addScoreboard(VCScoreboard scoreboard) {
-        ScoreboardObjective scoreboardObjective = new ScoreboardObjective(scoreboard.getScoreboard(), this.name, IScoreboardCriteria.b);
+        ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().registerObjective(this.name, IScoreboardCriteria.b);
         PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 0);
         scoreboard.sendPacket(packet);
+        for(VCScore score : scores) {
+            ScoreboardScore scoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, score.getName());
+            scoreboardScore.setScore(score.getScore());
+            PacketPlayOutScoreboardScore packet1 = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
+            scoreboard.sendPacket(packet1);
+        }
         scoreboards.add(scoreboard);
     }
 
     public void addScoreboardAndDisplay(VCScoreboard scoreboard, VCDisplay display) {
-        ScoreboardObjective scoreboardObjective = new ScoreboardObjective(scoreboard.getScoreboard(), this.name, IScoreboardCriteria.b);
+        ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().registerObjective(this.name, IScoreboardCriteria.b);
         PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 0);
-        PacketPlayOutScoreboardDisplayObjective packet2 = new PacketPlayOutScoreboardDisplayObjective(display.getId(), scoreboardObjective);
         scoreboard.sendPacket(packet);
+        for(VCScore score : scores) {
+            ScoreboardScore scoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, score.getName());
+            scoreboardScore.setScore(score.getScore());
+            PacketPlayOutScoreboardScore packet1 = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
+            scoreboard.sendPacket(packet1);
+        }
+        PacketPlayOutScoreboardDisplayObjective packet2 = new PacketPlayOutScoreboardDisplayObjective(display.getId(), scoreboardObjective);
         scoreboard.sendPacket(packet2);
         scoreboards.add(scoreboard);
     }
@@ -75,6 +85,7 @@ public class VCObjective {
             PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 2);
             scoreboard.sendPacket(packet);
         }
+        this.oldName = this.name;
         this.name = name;
     }
 
@@ -92,6 +103,10 @@ public class VCObjective {
 
     public String getName() {
         return name;
+    }
+
+    public String getOldName() {
+        return oldName;
     }
 
     public void addScore(VCScore score) {
