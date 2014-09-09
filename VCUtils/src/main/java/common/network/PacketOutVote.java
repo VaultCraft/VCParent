@@ -1,7 +1,7 @@
 package common.network;
 
 import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
-import net.vaultcraft.vcutils.network.VoteEvent;
+import net.vaultcraft.vcutils.voting.VoteEvent;
 import net.vaultcraft.vcutils.user.UUIDFetcher;
 import org.bukkit.Bukkit;
 

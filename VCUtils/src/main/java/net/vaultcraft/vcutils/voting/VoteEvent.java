@@ -1,4 +1,4 @@
-package net.vaultcraft.vcutils.network;
+package net.vaultcraft.vcutils.voting;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
