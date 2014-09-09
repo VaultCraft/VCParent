@@ -62,28 +62,22 @@
         <url>http://fasterxml.com</url>
     </organization>
 
-    <repositories>
-        <repository>
-            <id>spigotmc-snapshots</id>
-            <url>http://repo.md-5.net/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/bukkit.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
+            <version>1.7.5-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/spigot.jar</systemPath>
         </dependency>
 
         <dependency>

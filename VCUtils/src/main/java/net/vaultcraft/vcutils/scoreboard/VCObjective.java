@@ -30,7 +30,7 @@ public class VCObjective {
 
     public void tick() {
         if (ticker != null)
-            name = ticker.tick();
+            setName(ticker.tick());
 
         for (VCScore score : scores) {
             score.tick();

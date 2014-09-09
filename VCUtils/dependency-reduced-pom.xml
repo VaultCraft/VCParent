@@ -106,10 +106,6 @@
   </build>
   <repositories>
     <repository>
-      <id>spigotmc-snapshots</id>
-      <url>http://repo.md-5.net/content/repositories/snapshots</url>
-    </repository>
-    <repository>
       <id>sk89q-repo</id>
       <url>http://maven.sk89q.com/repo/</url>
     </repository>
@@ -119,13 +115,15 @@
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
       <version>1.7.10-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
+      <scope>system</scope>
+      <systemPath>C:\Users\Connor\Desktop\VaultCraft\VCUtils\VCUtils/src/main/resources/bukkit.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
-      <version>1.7.10-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
+      <version>1.7.5-R0.1-SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath>C:\Users\Connor\Desktop\VaultCraft\VCUtils\VCUtils/src/main/resources/spigot.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sk89q</groupId>

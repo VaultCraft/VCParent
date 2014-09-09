@@ -5,6 +5,7 @@ import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.Bukkit;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 /**
@@ -22,6 +23,9 @@ public class VCWorld extends ICommand{
             Form.at(player, Prefix.ERROR, "Missing Argument! World name.");
             return;
         }
+
+        if (args[0].equalsIgnoreCase("create") && args.length > 1)
+            Bukkit.createWorld(WorldCreator.name(args[0]));
 
         if(Bukkit.getWorld(args[0]) == null) {
             Form.at(player, Prefix.ERROR, "Invalid world.");

@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.uncommon;
 import net.minecraft.server.v1_7_R4.EntityFireworks;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityStatus;
 import net.minecraft.server.v1_7_R4.World;
+import net.vaultcraft.vcutils.VCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
