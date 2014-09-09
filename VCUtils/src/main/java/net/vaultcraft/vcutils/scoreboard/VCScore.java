@@ -38,9 +38,11 @@ public class VCScore {
         name = (name.length() > 16 ? name.substring(0, 16) : name);
         for(VCScoreboard scoreboard : objective.getScoreboards()) {
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
+            if(scoreboardObjective == null)
+                scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getOldName());
             ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
             ScoreboardScore newScoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
-            newScoreboardScore.setScore(score);
+            newScoreboardScore.setScore(this.score);
             PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 1);
             PacketPlayOutScoreboardScore packet1 = new PacketPlayOutScoreboardScore(newScoreboardScore, 0);
             scoreboard.sendPacket(packet);
@@ -59,6 +61,8 @@ public class VCScore {
     public void setScore(int score) {
         for (VCScoreboard scoreboard : objective.getScoreboards()) {
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
+            if(scoreboardObjective == null)
+                scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getOldName());
             ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
             scoreboardScore.setScore(score);
             PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);

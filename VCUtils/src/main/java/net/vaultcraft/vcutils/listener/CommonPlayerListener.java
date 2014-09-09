@@ -5,8 +5,13 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
+import net.vaultcraft.vcutils.scoreboard.VCDisplay;
+import net.vaultcraft.vcutils.scoreboard.VCObjective;
+import net.vaultcraft.vcutils.scoreboard.VCScore;
+import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,6 +48,20 @@ public class CommonPlayerListener implements Listener {
 
         Player member = event.getPlayer();
         new User(member);
+
+        VCScoreboard scoreboard = new VCScoreboard(member);
+        final VCObjective objective = new VCObjective("Test");
+        objective.addScoreboard(scoreboard);
+        final VCScore score = new VCScore("testing", 0, objective);
+        objective.display(VCDisplay.SIDEBAR);
+        Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                objective.setName("Testing");
+                score.setScore(10);
+                score.setName("tested");
+            }
+        }, 20l);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
