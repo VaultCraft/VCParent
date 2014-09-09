@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.scoreboard;
 import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardScore;
 import net.minecraft.server.v1_7_R4.ScoreboardObjective;
 import net.minecraft.server.v1_7_R4.ScoreboardScore;
+import org.bukkit.ChatColor;
 
 /**
  * Created by tacticalsk8er on 9/2/2014.
@@ -11,6 +12,7 @@ public class VCScore {
 
     private VCObjective objective;
     private String name;
+    private String oldName;
     private int score;
 
     private VCTicker ticker;
@@ -40,7 +42,11 @@ public class VCScore {
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
             if(scoreboardObjective == null)
                 scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getOldName());
+
             ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
+            if (scoreboardScore == null)
+                continue;
+
             ScoreboardScore newScoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
             newScoreboardScore.setScore(this.score);
             PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 1);
@@ -48,6 +54,7 @@ public class VCScore {
             scoreboard.sendPacket(packet);
             scoreboard.sendPacket(packet1);
         }
+        this.oldName = this.name;
         this.name = name;
     }
 
