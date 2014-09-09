@@ -39,7 +39,7 @@ public class VCScore {
         for(VCScoreboard scoreboard : objective.getScoreboards()) {
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
             if(scoreboardObjective == null)
-                scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getOldName());
+                return;
             ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
             ScoreboardScore newScoreboardScore = new ScoreboardScore(scoreboard.getScoreboard(), scoreboardObjective, name);
             newScoreboardScore.setScore(this.score);
@@ -62,7 +62,7 @@ public class VCScore {
         for (VCScoreboard scoreboard : objective.getScoreboards()) {
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getName());
             if(scoreboardObjective == null)
-                scoreboardObjective = scoreboard.getScoreboard().getObjective(objective.getOldName());
+                return;
             ScoreboardScore scoreboardScore = scoreboard.getScoreboard().getPlayerScoreForObjective(this.name, scoreboardObjective);
             scoreboardScore.setScore(score);
             PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(scoreboardScore, 0);
