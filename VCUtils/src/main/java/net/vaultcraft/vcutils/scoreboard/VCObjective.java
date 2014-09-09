@@ -82,6 +82,10 @@ public class VCObjective {
                 continue;
 
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(this.name);
+            if(scoreboardObjective == null)
+                scoreboardObjective = scoreboard.getScoreboard().getObjective(this.oldName);
+            if(scoreboardObjective == null)
+                continue;
             scoreboardObjective.setDisplayName(name);
             PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 2);
             scoreboard.sendPacket(packet);
