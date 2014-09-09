@@ -80,6 +80,7 @@ public class VCObjective {
             ScoreboardObjective check = scoreboard.getScoreboard().getObjective(name);
             if(check != null)
                 continue;
+
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(this.name);
             scoreboardObjective.setDisplayName(name);
             PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 2);

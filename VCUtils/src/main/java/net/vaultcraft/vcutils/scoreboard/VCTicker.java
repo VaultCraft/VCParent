@@ -8,10 +8,10 @@ import org.bukkit.ChatColor;
 
 public class VCTicker {
 
-    private String value;
-    private int tick;
-    private int maxLen;
-    private ChatColor prefix;
+    protected String value;
+    protected int tick;
+    protected int maxLen;
+    protected ChatColor prefix;
 
     public VCTicker(String whole, int maxLen) {
         this(ChatColor.WHITE, whole, maxLen);

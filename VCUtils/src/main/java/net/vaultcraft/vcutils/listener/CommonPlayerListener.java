@@ -48,20 +48,6 @@ public class CommonPlayerListener implements Listener {
 
         Player member = event.getPlayer();
         new User(member);
-
-        VCScoreboard scoreboard = new VCScoreboard(member);
-        final VCObjective objective = new VCObjective("Test");
-        objective.addScoreboard(scoreboard);
-        final VCScore score = new VCScore("testing", 0, objective);
-        objective.display(VCDisplay.SIDEBAR);
-        Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                objective.setName("Testing");
-                score.setScore(10);
-                score.setName("tested");
-            }
-        }, 20l);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
