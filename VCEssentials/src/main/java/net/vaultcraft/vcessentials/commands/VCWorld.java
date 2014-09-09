@@ -25,7 +25,7 @@ public class VCWorld extends ICommand{
         }
 
         if (args[0].equalsIgnoreCase("create") && args.length > 1)
-            Bukkit.createWorld(WorldCreator.name(args[0]));
+            Bukkit.createWorld(WorldCreator.name(args[1]));
 
         if(Bukkit.getWorld(args[0]) == null) {
             Form.at(player, Prefix.ERROR, "Invalid world.");
