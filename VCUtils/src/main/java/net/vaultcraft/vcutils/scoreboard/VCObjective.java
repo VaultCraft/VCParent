@@ -13,7 +13,6 @@ public class VCObjective {
     private VCTicker ticker;
 
     private String name;
-    private String oldName;
     private List<VCScoreboard> scoreboards = new ArrayList<>();
     private List<VCScore> scores = new ArrayList<>();
 
@@ -77,21 +76,13 @@ public class VCObjective {
 
     public void setName(String name) {
         for(VCScoreboard scoreboard : scoreboards) {
-            ScoreboardObjective check = scoreboard.getScoreboard().getObjective(name);
-            if(check != null)
-                continue;
-
             ScoreboardObjective scoreboardObjective = scoreboard.getScoreboard().getObjective(this.name);
-            if(scoreboardObjective == null)
-                scoreboardObjective = scoreboard.getScoreboard().getObjective(this.oldName);
             if(scoreboardObjective == null)
                 continue;
             scoreboardObjective.setDisplayName(name);
             PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(scoreboardObjective, 2);
             scoreboard.sendPacket(packet);
         }
-        this.oldName = this.name;
-        this.name = name;
     }
 
     public void display(VCDisplay display) {
@@ -108,10 +99,6 @@ public class VCObjective {
 
     public String getName() {
         return name;
-    }
-
-    public String getOldName() {
-        return oldName;
     }
 
     public void addScore(VCScore score) {

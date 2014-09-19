@@ -27,7 +27,8 @@ public enum FlagType {
     CHAT(AsyncPlayerChatEvent.class, "playerchat", "chat", "chatplayer", "talk"),
     ITEM_DROP(PlayerDropItemEvent.class, "dropitem", "itemdrop", "playerdropitem"),
     CREATURE_SPAWN(CreatureSpawnEvent.class, "entityspawn", "mobspawn", "mobspawning"),
-    HUNGER(FoodLevelChangeEvent.class, "food", "hunger", "foodchange");
+    HUNGER(FoodLevelChangeEvent.class, "food", "hunger", "foodchange"),
+    BLOCK_SPREAD(BlockSpreadEvent.class, "spread", "firespread");
 
     private String[] aliases;
 

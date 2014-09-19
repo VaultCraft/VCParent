@@ -96,8 +96,8 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCFeed("feed", Group.ADMIN));
         CommandManager.addCommand(new VCGod(this, "god", Group.ADMIN, "godmode"));
         CommandManager.addCommand(new VCKick("kick", Group.MOD));
-        CommandManager.addCommand(new VCMute(this, "mute", Group.ADMIN));
-        CommandManager.addCommand(new VCBan(this, "ban", Group.ADMIN));
+        CommandManager.addCommand(new VCMute(this, "mute", Group.MOD));
+        CommandManager.addCommand(new VCBan(this, "ban", Group.MOD));
         CommandManager.addCommand(new VCMoney("money", Group.COMMON, "bal", "balance"));
         CommandManager.addCommand(new VCToken("tokens", Group.COMMON));
         CommandManager.addCommand(new VCTeleportHere("tphere", Group.MOD, "teleporthere"));

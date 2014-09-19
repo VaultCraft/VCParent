@@ -70,6 +70,13 @@ public class ProtectionListener implements Listener {
         event.setCancelled(willCancel(FlagType.BLOCK_BREAK, player, broken));
     }
 
+    @EventHandler
+    public void blockSpread(BlockSpreadEvent event) {
+        Block block = event.getBlock();
+
+        event.setCancelled(willCancel(FlagType.BLOCK_SPREAD, block.getLocation()));
+    }
+
     @EventHandler (priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();

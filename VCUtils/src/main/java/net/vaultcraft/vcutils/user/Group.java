@@ -1,5 +1,10 @@
 package net.vaultcraft.vcutils.user;
 
+import com.google.common.collect.Lists;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
  */
@@ -10,7 +15,7 @@ public enum Group {
     DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 12, false),
     MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 11, false),
     ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 10, false),
-    MOD("&f/&3&lMOD&f/ &7%user%&3: &f%message%", 9, false),
+    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 9, false),
     HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 8, false),
 
     //DONOR RANKS
@@ -32,39 +37,71 @@ public enum Group {
     private boolean isDonorRank;
 
     private Group(String tag, int permLevel, boolean isDonorRank) {
+        this();
         this.tag = tag;
         this.permLevel = permLevel;
         this.isDonorRank = isDonorRank;
         this.enderChestSlots = 54;
     }
 
+    private List<Group> all = Lists.newArrayList();
+    private Group highest;
+
     private Group(String tag, int permLevel, int enderChestSlots, boolean isDonorRank) {
+        this();
         this.tag = tag;
         this.permLevel = permLevel;
         this.isDonorRank = isDonorRank;
         this.enderChestSlots = enderChestSlots;
     }
 
+    private Group() {
+        merge(this);
+    }
+
     public int getEnderChestSlots() {
-        return enderChestSlots;
+        return highest.enderChestSlots;
     }
 
     public String getTag() {
-        return tag;
+        return highest.tag;
     }
 
     public boolean hasPermission(Group other) {
+        for (Group a : all) {
+            boolean use = _hasPermission(a, other);
+            if (use == true)
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean _hasPermission(Group me, Group other) {
         int level = other.permLevel;
         boolean donor = other.isDonorRank;
 
-        if (this.getPermLevel() >= 10)
+        if (me.getPermLevel() >= 10)
             return true;
 
         if (donor) {
-            return (this.permLevel >= level && this.isDonorRank);
+            return (me.permLevel >= level && me.isDonorRank);
         } else {
-            return (this.permLevel >= level);
+            return (me.permLevel >= level);
         }
+    }
+
+    public void merge(Group other) {
+        if (all.contains(other))
+            return;
+
+        all.add(other);
+        if (other.hasPermission(highest))
+            highest = other;
+    }
+
+    public void remove(Group other) {
+        all.remove(other);
     }
 
     public static Group fromString(String find) {
@@ -82,7 +119,11 @@ public enum Group {
     }
 
     public int getPermLevel() {
-        return permLevel;
+        return highest.permLevel;
+    }
+
+    public List<Group> getAllGroups() {
+        return all;
     }
 
     public static Group fromPermLevel(int permLevel) {
