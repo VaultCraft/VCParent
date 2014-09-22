@@ -61,7 +61,7 @@ public class User {
 
     public void setUserInfo(UserInfo info) {
         for(int i = 0; i < info.getGroups().size(); i++) {
-            int permLevel = info.getGroups().get(i);
+            int permLevel = (Integer) info.getGroups().get(i);
             if(i == 0) {
                 this.group = Group.fromPermLevel(permLevel);
                 continue;
