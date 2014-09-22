@@ -7,14 +7,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
 public class UserInfo implements Serializable {
 
-    private List<Integer> groups;
+    private ArrayList groups;
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -51,7 +50,7 @@ public class UserInfo implements Serializable {
 
     }
 
-    public List<Integer> getGroups() {
+    public ArrayList getGroups() {
         return groups;
     }
 

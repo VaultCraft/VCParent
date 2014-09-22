@@ -2,7 +2,6 @@ package net.vaultcraft.vcutils.user;
 
 import com.google.common.collect.Lists;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -133,5 +132,9 @@ public enum Group {
         }
 
         return null;
+    }
+
+    public Group getHighest() {
+        return highest;
     }
 }
