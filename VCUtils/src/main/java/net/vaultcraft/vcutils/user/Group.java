@@ -37,11 +37,7 @@ public enum Group {
     private boolean isDonorRank;
 
     private Group(String tag, int permLevel, boolean isDonorRank) {
-        this();
-        this.tag = tag;
-        this.permLevel = permLevel;
-        this.isDonorRank = isDonorRank;
-        this.enderChestSlots = 54;
+        this(tag, permLevel, 54, isDonorRank);
     }
 
     private List<Group> all = Lists.newArrayList();
@@ -96,7 +92,7 @@ public enum Group {
             return;
 
         all.add(other);
-        if (other.hasPermission(highest))
+        if (highest == null || other.hasPermission(highest))
             highest = other;
     }
 
