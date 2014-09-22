@@ -1,17 +1,20 @@
 package common.network;
 
+import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
 public class UserInfo implements Serializable {
 
-    private int group = 1;
+    private List<Integer> groups;
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -25,7 +28,11 @@ public class UserInfo implements Serializable {
 
     public UserInfo(String serverName, String uuid) {
         User user = User.fromUUID(uuid);
-        this.group = user.getGroup().getPermLevel();
+        Group group = user.getGroup();
+        this.groups = new ArrayList<>();
+        for(Group group1 : group.getAllGroups()) {
+            groups.add(group1.getPermLevel());
+        }
         this.banned = user.isBanned();
         this.tempBan = user.getTempBan();
         this.muted = user.isMuted();
@@ -44,8 +51,8 @@ public class UserInfo implements Serializable {
 
     }
 
-    public int getGroup() {
-        return group;
+    public List<Integer> getGroups() {
+        return groups;
     }
 
     public boolean isBanned() {

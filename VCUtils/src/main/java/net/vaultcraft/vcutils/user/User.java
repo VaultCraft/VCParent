@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -61,7 +60,14 @@ public class User {
     }
 
     public void setUserInfo(UserInfo info) {
-        this.group = Group.fromPermLevel(info.getGroup());
+        for(int i = 0; i < info.getGroups().size(); i++) {
+            int permLevel = info.getGroups().get(i);
+            if(i == 0) {
+                this.group = Group.fromPermLevel(permLevel);
+                continue;
+            }
+            this.group.merge(Group.fromPermLevel(permLevel));
+        }
         this.banned = info.isBanned();
         this.tempBan = info.getTempBan();
         this.muted = info.isMuted();
