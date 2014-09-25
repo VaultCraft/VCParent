@@ -26,7 +26,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by Connor on 7/19/14. Designed for the VCUtils project.

@@ -14,6 +14,7 @@ import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.user.WhitelistManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
 
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
@@ -76,6 +79,19 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 "UserJSON TEXT"));
 
         Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
+
+        saveDefaultConfig();
+
+        if (!getConfig().contains("whitelist") && !getConfig().contains("whitelist-status")) {
+            getConfig().set("whitelist", new ArrayList<String>());
+            getConfig().set("whitelist-status", false);
+            return;
+        }
+
+        WhitelistManager.setWhitelist(getConfig().getBoolean("whitelist-status"));
+        for (String key : getConfig().getStringList("whitelist")) {
+            WhitelistManager.addPlayer(key);
+        }
     }
 
     public static VCEssentials getInstance() {
@@ -109,6 +125,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCServer("server", Group.COMMON));
         CommandManager.addCommand(new VCHub("hub", Group.COMMON, "lobby", "cloud"));
         CommandManager.addCommand(new VCAnnounceToggle("announce", Group.COMMON, "announcements"));
+        CommandManager.addCommand(new VCWhitelist("whitelist", Group.MANAGER, "wlist"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
@@ -132,6 +149,8 @@ public class VCEssentials extends JavaPlugin implements Listener {
 
     public void onDisable() {
         ProtectionFile.getInstance().save();
+
+        saveDefaultConfig();
     }
 
     public MySQL getMySQL() {
