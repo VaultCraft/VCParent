@@ -82,12 +82,6 @@ public class VCEssentials extends JavaPlugin implements Listener {
 
         saveDefaultConfig();
 
-        if (!getConfig().contains("whitelist") && !getConfig().contains("whitelist-status")) {
-            getConfig().set("whitelist", new ArrayList<String>());
-            getConfig().set("whitelist-status", false);
-            return;
-        }
-
         WhitelistManager.setWhitelist(getConfig().getBoolean("whitelist-status"));
         for (String key : getConfig().getStringList("whitelist")) {
             WhitelistManager.addPlayer(key);
@@ -111,8 +105,8 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCHeal("heal", Group.ADMIN, "h"));
         CommandManager.addCommand(new VCFeed("feed", Group.ADMIN));
         CommandManager.addCommand(new VCGod(this, "god", Group.ADMIN, "godmode"));
-        CommandManager.addCommand(new VCKick("kick", Group.MOD));
-        CommandManager.addCommand(new VCMute(this, "mute", Group.MOD));
+        CommandManager.addCommand(new VCKick("kick", Group.HELPER));
+        CommandManager.addCommand(new VCMute(this, "mute", Group.HELPER));
         CommandManager.addCommand(new VCBan(this, "ban", Group.MOD));
         CommandManager.addCommand(new VCMoney("money", Group.COMMON, "bal", "balance"));
         CommandManager.addCommand(new VCToken("tokens", Group.COMMON));
@@ -126,7 +120,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCHub("hub", Group.COMMON, "lobby", "cloud"));
         CommandManager.addCommand(new VCAnnounceToggle("announce", Group.COMMON, "announcements"));
         CommandManager.addCommand(new VCWhitelist("whitelist", Group.MANAGER, "wlist"));
-
+        CommandManager.addCommand(new VCHat("hat", Group.SLIME));
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
 
@@ -149,6 +143,9 @@ public class VCEssentials extends JavaPlugin implements Listener {
 
     public void onDisable() {
         ProtectionFile.getInstance().save();
+
+        getConfig().set("whitelist", WhitelistManager.getOnList());
+        getConfig().set("whitelist-status", WhitelistManager.isWhiteListed());
 
         saveDefaultConfig();
     }

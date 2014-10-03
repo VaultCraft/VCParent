@@ -20,6 +20,15 @@
   </organization>
   <build>
     <defaultGoal>clean package</defaultGoal>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>bukkit.jar</exclude>
+          <exclude>spigot.jar</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

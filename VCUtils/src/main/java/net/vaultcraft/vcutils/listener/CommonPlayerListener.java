@@ -11,6 +11,7 @@ import net.vaultcraft.vcutils.scoreboard.VCScore;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.user.WhitelistManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -47,7 +48,13 @@ public class CommonPlayerListener implements Listener {
         event.setJoinMessage(null);
 
         Player member = event.getPlayer();
+
         new User(member);
+
+        if (WhitelistManager.isWhiteListed() && !(WhitelistManager.getOnList().contains(member.getName()))) {
+            member.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&5&lV&7&lC&f: You are not on the white-list, please rejoin later!"));
+            return;
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

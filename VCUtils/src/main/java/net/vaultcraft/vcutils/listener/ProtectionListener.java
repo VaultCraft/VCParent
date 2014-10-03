@@ -19,8 +19,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.*;
 
 /**
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
@@ -170,5 +169,19 @@ public class ProtectionListener implements Listener {
         event.setCancelled(willCancel(FlagType.HUNGER, player.getLocation()));
         if (event.isCancelled())
             player.setSaturation(4.0f);
+    }
+
+    @EventHandler
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+        Player player = (Player) event.getPlayer();
+
+        event.setCancelled(willCancel(FlagType.BUCKET_EMPTY, player, player.getLocation()));
+    }
+
+    @EventHandler
+    public void onBucketFill(PlayerBucketFillEvent event) {
+        Player player = (Player) event.getPlayer();
+
+        event.setCancelled(willCancel(FlagType.BUCKET_FILL, player, player.getLocation()));
     }
 }

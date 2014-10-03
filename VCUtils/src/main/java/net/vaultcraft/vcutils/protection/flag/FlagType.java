@@ -6,8 +6,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.*;
 
 /**
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
@@ -28,6 +27,8 @@ public enum FlagType {
     ITEM_DROP(PlayerDropItemEvent.class, "dropitem", "itemdrop", "playerdropitem"),
     CREATURE_SPAWN(CreatureSpawnEvent.class, "entityspawn", "mobspawn", "mobspawning"),
     HUNGER(FoodLevelChangeEvent.class, "food", "hunger", "foodchange"),
+    BUCKET_EMPTY(PlayerBucketEmptyEvent.class, "bucketempty", "emptybucket", "bucketdrain"),
+    BUCKET_FILL(PlayerBucketFillEvent.class, "bucketfill", "fillbucket"),
     BLOCK_SPREAD(BlockSpreadEvent.class, "spread", "firespread");
 
     private String[] aliases;
