@@ -6,6 +6,7 @@ import net.vaultcraft.vcessentials.announce.AnnounceManager;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
+import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
@@ -79,6 +80,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 "UserJSON TEXT"));
 
         Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
+        Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
 
         saveDefaultConfig();
 
