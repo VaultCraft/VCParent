@@ -11,6 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class VCChatListener implements Listener {
 
@@ -31,7 +32,11 @@ public class VCChatListener implements Listener {
         }
 
         // Do anti-advertising stuff here
-
+        if(event.getMessage().matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")) {
+            Form.at(event.getPlayer(), Prefix.WARNING, "Please do not put IP addresses in chat!");
+            event.setCancelled(true);
+            return;
+        }
         // Chat delay stuff
         if (delayTime < 1) {
             return;
