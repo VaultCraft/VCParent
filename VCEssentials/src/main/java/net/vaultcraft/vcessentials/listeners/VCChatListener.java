@@ -1,0 +1,57 @@
+package net.vaultcraft.vcessentials.listeners;
+
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
+import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.User;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.text.DecimalFormat;
+import java.util.HashMap;
+
+public class VCChatListener implements Listener {
+
+    public int delayTime = 2;
+
+    private HashMap<Player, Long> playerTimes;
+    private static DecimalFormat df = new DecimalFormat("0,000.#");
+    private static VCChatListener instance = null;
+
+    public VCChatListener() {
+        instance = this;
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if(User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER)) {
+            return;
+        }
+
+        // Do anti-advertising stuff here
+
+        // Chat delay stuff
+        if (delayTime < 1) {
+            return;
+        }
+
+        if(playerTimes.containsKey(event.getPlayer())) {
+            if(playerTimes.get(event.getPlayer()) + (delayTime * 1000) > System.currentTimeMillis()) {
+                double timeDiff = ((playerTimes.get(event.getPlayer()) + (delayTime * 1000)) - System.currentTimeMillis()) / 1000;
+                Form.at(event.getPlayer(), Prefix.ERROR, "You can't talk for another " + df.format(timeDiff) + " seconds.");
+                event.setCancelled(true);
+            } else {
+                playerTimes.put(event.getPlayer(), System.currentTimeMillis());
+            }
+        } else {
+            playerTimes.put(event.getPlayer(), System.currentTimeMillis());
+        }
+    }
+
+
+    public static VCChatListener getInstance() {
+        return instance;
+    }
+}
