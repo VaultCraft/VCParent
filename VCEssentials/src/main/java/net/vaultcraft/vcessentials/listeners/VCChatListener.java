@@ -17,7 +17,7 @@ public class VCChatListener implements Listener {
 
     public int delayTime = 2;
 
-    private HashMap<Player, Long> playerTimes;
+    private HashMap<Player, Long> playerTimes = new HashMap<>();
     private static DecimalFormat df = new DecimalFormat("0,000.#");
     private static VCChatListener instance = null;
 
