@@ -6,6 +6,7 @@ import net.vaultcraft.vcessentials.announce.AnnounceManager;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
+import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
@@ -79,6 +80,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 "UserJSON TEXT"));
 
         Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
+        Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
 
         saveDefaultConfig();
 
@@ -121,6 +123,10 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCAnnounceToggle("announce", Group.COMMON, "announcements"));
         CommandManager.addCommand(new VCWhitelist("whitelist", Group.MANAGER, "wlist"));
         CommandManager.addCommand(new VCHat("hat", Group.SLIME));
+        CommandManager.addCommand(new VCClearChat("ccg", Group.MOD, "clearchatglobal"));
+        CommandManager.addCommand(new VCClearChatPersonal("ccp", Group.COMMON, "clearchat"));
+        CommandManager.addCommand(new VCChatDelay("chatdelay", Group.ADMIN, "ccd"));
+
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
 
