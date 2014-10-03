@@ -126,6 +126,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCHub("hub", Group.COMMON, "lobby", "cloud"));
         CommandManager.addCommand(new VCAnnounceToggle("announce", Group.COMMON, "announcements"));
         CommandManager.addCommand(new VCWhitelist("whitelist", Group.MANAGER, "wlist"));
+        CommandManager.addCommand(new VCClearChat("ccg", Group.MOD, "clearchatglobal"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
