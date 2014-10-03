@@ -32,7 +32,7 @@ public class VCChatListener implements Listener {
         }
 
         // Do anti-advertising stuff here
-        if(event.getMessage().matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")) {
+        if(event.getMessage().replace(" ", "").replaceAll("[^0-9\\^.]", "").matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")) {
             Form.at(event.getPlayer(), Prefix.WARNING, "Please do not put IP addresses in chat!");
             event.setCancelled(true);
             return;
@@ -44,7 +44,7 @@ public class VCChatListener implements Listener {
 
         if(playerTimes.containsKey(event.getPlayer())) {
             if(playerTimes.get(event.getPlayer()) + (delayTime * 1000) > System.currentTimeMillis()) {
-                double timeDiff = ((playerTimes.get(event.getPlayer()) + (delayTime * 1000)) - System.currentTimeMillis()) / 1000;
+                double timeDiff = ((double)(playerTimes.get(event.getPlayer()) + ((double)delayTime * 1000.0)) - (double)System.currentTimeMillis()) / 1000.0;
                 Form.at(event.getPlayer(), Prefix.ERROR, "You can't talk for another " + df.format(timeDiff) + " seconds.");
                 event.setCancelled(true);
             } else {
