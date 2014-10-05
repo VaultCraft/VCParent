@@ -38,7 +38,7 @@ public class VCChatListener implements Listener {
             return;
         }
 
-        if(event.getMessage().replace(" ", "").matches("@^(http\\:\\/\\/|https\\:\\/\\/)?([a-z0-9][a-z0-9\\-]*\\.)+[a-z0-9][a-z0-9\\-]*$@i")) {
+        if(event.getMessage().replace(" ", "").matches("\\b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[A-Z0-9+&@#/%=~_|]")) {
             Form.at(event.getPlayer(), Prefix.WARNING, "Please do not put domain names in chat!");
             event.setCancelled(true);
             return;
