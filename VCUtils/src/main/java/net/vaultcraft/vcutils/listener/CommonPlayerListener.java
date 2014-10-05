@@ -5,14 +5,8 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
-import net.vaultcraft.vcutils.scoreboard.VCDisplay;
-import net.vaultcraft.vcutils.scoreboard.VCObjective;
-import net.vaultcraft.vcutils.scoreboard.VCScore;
-import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
-import net.vaultcraft.vcutils.user.WhitelistManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,11 +44,6 @@ public class CommonPlayerListener implements Listener {
         Player member = event.getPlayer();
 
         new User(member);
-
-        if (WhitelistManager.isWhiteListed() && !(WhitelistManager.getOnList().contains(member.getName()))) {
-            member.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&5&lV&7&lC&f: You are not on the white-list, please rejoin later!"));
-            return;
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
