@@ -11,7 +11,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public class VCChatListener implements Listener {
 
@@ -38,7 +37,7 @@ public class VCChatListener implements Listener {
             return;
         }
 
-        if(event.getMessage().matches("^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.[a-zA-Z]{2,}$")) {
+        if(event.getMessage().matches("^.*[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.[a-zA-Z]{2,}.*$")) {
             Form.at(event.getPlayer(), Prefix.WARNING, "Please do not put domain names in chat!");
             event.setCancelled(true);
             return;
