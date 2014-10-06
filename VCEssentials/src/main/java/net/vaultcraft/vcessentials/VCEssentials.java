@@ -137,6 +137,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
 
         //whitelist
         CommandManager.addPluginWhitelist("/");
+        CommandManager.addPluginWhitelist("ec");
         CommandManager.addPluginWhitelist("reload");
         CommandManager.addPluginWhitelist("rl");
         CommandManager.addPluginWhitelist("npc");

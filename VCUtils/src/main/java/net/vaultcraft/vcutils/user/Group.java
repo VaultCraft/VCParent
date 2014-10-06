@@ -91,12 +91,23 @@ public enum Group {
             return;
 
         all.add(other);
-        if (highest == null || other.hasPermission(highest))
-            highest = other;
+        evalHighest();
     }
 
     public void remove(Group other) {
         all.remove(other);
+
+        evalHighest();
+    }
+
+    private void evalHighest() {
+        Group highest = null;
+        for (Group group : all) {
+            if (highest == null || group.permLevel > highest.permLevel)
+                highest = group;
+        }
+
+        this.highest = highest;
     }
 
     public static Group fromString(String find) {
