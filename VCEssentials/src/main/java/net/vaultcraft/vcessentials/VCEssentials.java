@@ -8,6 +8,8 @@ import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
@@ -191,8 +193,23 @@ public class VCEssentials extends JavaPlugin implements Listener {
                     return true;
                 }
 
-                User.fromPlayer(wrapped).setGroup(select);
-                Logger.log(this, wrapped.getName() + " promoted to " + select.getName());
+                String message = wrapped.getName() + " %s " + select.getName();
+
+                if (args.length >= 3 && args[2].equalsIgnoreCase("-a")) {
+                    //add
+                    User.fromPlayer(wrapped).getGroup().merge(select);
+                    message = message.replace("%s", "added to group");
+                } else if (args.length >= 3 && args[2].equalsIgnoreCase("-r")) {
+                    //remove
+                    User.fromPlayer(wrapped).getGroup().remove(select);
+                    message = message.replace("%s", "removed from group");
+                } else {
+                    //set
+                    User.fromPlayer(wrapped).setGroup(select);
+                    message = message.replace("%s", "set group to");
+                }
+
+                Logger.log(this, message);
                 break;
             }
             case "redir": {
