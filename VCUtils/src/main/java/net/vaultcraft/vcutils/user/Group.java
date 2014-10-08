@@ -10,18 +10,19 @@ import java.util.List;
 public enum Group {
 
     //STAFF RANKS
-    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 13, false),
-    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 12, false),
-    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 11, false),
-    ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 10, false),
-    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 9, false),
-    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 8, false),
+    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 14, false),
+    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 13, false),
+    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 12, false),
+    ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 11, false),
+    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 10, false),
+    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false),
 
     //DONOR RANKS
     ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 7, 54, true),
-    ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 40, true),
-    SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 25, true),
-    SLIME("&f/&a&lSLIME&f/ &7%user%&a: &7%message%", 3, 14, true),
+    WITHER("&f/&e&lWITHER&f/ &e%user%&7: &f%message%", 7, 42, true),
+    ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 30, true),
+    SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 20, true),
+    SLIME("&f/&a&lSLIME&f/ &7%user%&a: &7%message%", 3, 12, true),
     WOLF("&f/&8&lWOLF&f/ &7%user%&8: &7%message%", 2, 6, true),
 
     //DEFAULT RANK
@@ -76,7 +77,7 @@ public enum Group {
         int level = other.permLevel;
         boolean donor = other.isDonorRank;
 
-        if (me.getPermLevel() >= 10)
+        if (me.getPermLevel() >= 11)
             return true;
 
         if (donor) {
@@ -91,12 +92,23 @@ public enum Group {
             return;
 
         all.add(other);
-        if (highest == null || other.hasPermission(highest))
-            highest = other;
+        evalHighest();
     }
 
     public void remove(Group other) {
         all.remove(other);
+
+        evalHighest();
+    }
+
+    private void evalHighest() {
+        Group highest = null;
+        for (Group group : all) {
+            if (highest == null || group.permLevel > highest.permLevel)
+                highest = group;
+        }
+
+        this.highest = highest;
     }
 
     public static Group fromString(String find) {
