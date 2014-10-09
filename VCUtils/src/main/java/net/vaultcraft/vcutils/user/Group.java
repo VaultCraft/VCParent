@@ -3,7 +3,6 @@ package net.vaultcraft.vcutils.user;
 import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -100,24 +99,15 @@ public enum Group {
 
     public static class GroupHandler {
 
-        private static HashMap<Player, GroupHandler> handlers = new HashMap<>();
-
-        public static GroupHandler get(Player player) {
-            return handlers.get(player);
-        }
+        private Player player;
+        private List<Group> all = Lists.newArrayList();
+        private Group highest;
 
         public GroupHandler(Player player) {
             this.player = player;
             this.all.add(Group.COMMON);
             this.highest = Group.COMMON;
-
-            handlers.put(player, this);
         }
-
-        private Player player;
-
-        private List<Group> all = Lists.newArrayList();
-        private Group highest;
 
         public List<Group> getAllGroups() {
             return all;

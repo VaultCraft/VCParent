@@ -45,7 +45,7 @@ public class CommandManager implements Listener {
             VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Commands",
                     "'" + user.getUniqueId().toString() + "', '"
                             + user.getName() + "', '"
-                            + User.fromPlayer(user).getGroup().getName() + "', '"
+                            + User.fromPlayer(user).getGroup().getHighest().getName() + "', '"
                             + Statements.makeSqlSafe(event.getMessage()) + "', '"
                             + MySQL.getDate() + "'"
             ));

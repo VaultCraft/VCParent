@@ -33,7 +33,7 @@ public class User {
 
     private Player conversation;
     private boolean editMode;
-    private Group group = Group.COMMON;
+    private Group.GroupHandler group;
     private Player player;
     private boolean isChatVisible = true;
     private boolean isPrivateMessaging = true;
@@ -63,7 +63,7 @@ public class User {
         for(int i = 0; i < info.getGroups().size(); i++) {
             int permLevel = (Integer) info.getGroups().get(i);
             if(i == 0) {
-                this.group = Group.fromPermLevel(permLevel);
+                this.group.merge(Group.fromPermLevel(permLevel));
                 continue;
             }
             this.group.merge(Group.fromPermLevel(permLevel));
@@ -171,11 +171,20 @@ public class User {
         async_player_map.clear();
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void addGroup(Group group) {
+        this.group.merge(group);
     }
 
-    public Group getGroup() {
+    public void removeGroup(Group group) {
+        this.group.merge(group);
+    }
+
+    public void setGroup(Group group) {
+        this.group = new Group.GroupHandler(player);
+        this.group.merge(group);
+    }
+
+    public Group.GroupHandler getGroup() {
         return group;
     }
 

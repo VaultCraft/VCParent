@@ -41,7 +41,7 @@ public class ProtectionListener implements Listener {
         if (player.isOp())
             return false;
 
-        Group pGroup = User.fromPlayer(player).getGroup();
+        Group.GroupHandler pGroup = User.fromPlayer(player).getGroup();
         FlagResult result = ProtectionManager.getInstance().getState(type, at);
         if (result.isCancelled())
             return (!(pGroup.hasPermission(result.getAllowed())));

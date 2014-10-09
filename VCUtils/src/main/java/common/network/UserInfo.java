@@ -28,7 +28,7 @@ public class UserInfo implements Serializable {
 
     public UserInfo(String serverName, String uuid) {
         User user = User.fromUUID(uuid);
-        Group group = user.getGroup();
+        Group.GroupHandler group = user.getGroup();
         this.groups = new ArrayList<>();
         for(Group group1 : group.getAllGroups()) {
             groups.add(group1.getPermLevel());

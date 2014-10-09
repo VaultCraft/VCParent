@@ -12,13 +12,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.EnderChest;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -75,7 +72,7 @@ public class BEnderChest implements Listener {
         }
 
         public EnderChestState getCurrState() {
-            if (user.getGroup().getEnderChestSlots() < slot + 1) {
+            if (user.getGroup().getHighest().getEnderChestSlots() < slot + 1) {
                 return EnderChestState.INV_NORANK;
             }
             float howFull = ((float)getItemCount() / (float)INV_SIZE);

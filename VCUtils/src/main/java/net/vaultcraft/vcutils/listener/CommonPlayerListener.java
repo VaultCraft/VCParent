@@ -7,7 +7,6 @@ import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
-import net.vaultcraft.vcutils.user.WhitelistManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,11 +44,6 @@ public class CommonPlayerListener implements Listener {
         Player member = event.getPlayer();
 
         new User(member);
-
-        if (WhitelistManager.isWhiteListed() && !(WhitelistManager.getOnList().contains(member.getName()))) {
-            member.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&5&lV&7&lC&f: You are not on the white-list, please rejoin later!"));
-            return;
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -70,7 +64,7 @@ public class CommonPlayerListener implements Listener {
         String message = event.getMessage();
 
         //original format <%1$s> %2$s
-        String format = chatter.getGroup().getTag();
+        String format = chatter.getGroup().getHighest().getTag();
         format = format.replace("%user%", "%1$s").replace("%message%", "%2$s");
         event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
 
