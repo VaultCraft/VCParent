@@ -19,7 +19,7 @@ public enum Group {
     HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false),
 
     //DONOR RANKS
-    ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 7, 54, true),
+    ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 8, 54, true),
     WITHER("&f/&e&lWITHER&f/ &e%user%&7: &f%message%", 7, 42, true),
     ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 30, true),
     SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 20, true),
