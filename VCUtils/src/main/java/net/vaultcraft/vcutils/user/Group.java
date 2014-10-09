@@ -1,7 +1,9 @@
 package net.vaultcraft.vcutils.user;
 
 import com.google.common.collect.Lists;
+import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,40 +42,22 @@ public enum Group {
         this(tag, permLevel, 54, isDonorRank);
     }
 
-    private List<Group> all = Lists.newArrayList();
-    private Group highest;
-
     private Group(String tag, int permLevel, int enderChestSlots, boolean isDonorRank) {
-        this();
         this.tag = tag;
         this.permLevel = permLevel;
         this.isDonorRank = isDonorRank;
         this.enderChestSlots = enderChestSlots;
     }
 
-    private Group() {
-        merge(this);
-    }
-
     public int getEnderChestSlots() {
-        return highest.enderChestSlots;
+        return enderChestSlots;
     }
 
     public String getTag() {
-        return highest.tag;
+        return tag;
     }
 
-    public boolean hasPermission(Group other) {
-        for (Group a : all) {
-            boolean use = _hasPermission(a, other);
-            if (use == true)
-                return true;
-        }
-
-        return false;
-    }
-
-    private boolean _hasPermission(Group me, Group other) {
+    private boolean hasPermission(Group me, Group other) {
         int level = other.permLevel;
         boolean donor = other.isDonorRank;
 
@@ -85,30 +69,6 @@ public enum Group {
         } else {
             return (me.permLevel >= level);
         }
-    }
-
-    public void merge(Group other) {
-        if (all.contains(other))
-            return;
-
-        all.add(other);
-        evalHighest();
-    }
-
-    public void remove(Group other) {
-        all.remove(other);
-
-        evalHighest();
-    }
-
-    private void evalHighest() {
-        Group highest = null;
-        for (Group group : all) {
-            if (highest == null || group.permLevel > highest.permLevel)
-                highest = group;
-        }
-
-        this.highest = highest;
     }
 
     public static Group fromString(String find) {
@@ -126,11 +86,7 @@ public enum Group {
     }
 
     public int getPermLevel() {
-        return highest.permLevel;
-    }
-
-    public List<Group> getAllGroups() {
-        return all;
+        return permLevel;
     }
 
     public static Group fromPermLevel(int permLevel) {
@@ -142,7 +98,71 @@ public enum Group {
         return null;
     }
 
-    public Group getHighest() {
-        return highest;
+    public static class GroupHandler {
+
+        private static HashMap<Player, GroupHandler> handlers = new HashMap<>();
+
+        public static GroupHandler get(Player player) {
+            return handlers.get(player);
+        }
+
+        public GroupHandler(Player player) {
+            this.player = player;
+            this.all.add(Group.COMMON);
+            this.highest = Group.COMMON;
+
+            handlers.put(player, this);
+        }
+
+        private Player player;
+
+        private List<Group> all = Lists.newArrayList();
+        private Group highest;
+
+        public List<Group> getAllGroups() {
+            return all;
+        }
+
+        public int getPermLevel() {
+            return highest.permLevel;
+        }
+
+        private void evalHighest() {
+            Group highest = null;
+            for (Group group : all) {
+                if (highest == null || group.permLevel > highest.permLevel)
+                    highest = group;
+            }
+
+            this.highest = highest;
+        }
+
+        public boolean hasPermission(Group other) {
+            for (Group a : all) {
+                boolean use = a.hasPermission(a, other);
+                if (use == true)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void merge(Group other) {
+            if (all.contains(other))
+                return;
+
+            all.add(other);
+            evalHighest();
+        }
+
+        public void remove(Group other) {
+            all.remove(other);
+
+            evalHighest();
+        }
+
+        public Group getHighest() {
+            return highest;
+        }
     }
 }

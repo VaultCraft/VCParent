@@ -24,7 +24,7 @@ public class VCHat extends ICommand {
             return;
         }
 
-        Material mat = Material.getMaterial(args[0]);
+        Material mat = Material.getMaterial(args[0].toUpperCase());
         if (mat == null) {
             Form.at(player, Prefix.ERROR, "No such material exists!");
             return;

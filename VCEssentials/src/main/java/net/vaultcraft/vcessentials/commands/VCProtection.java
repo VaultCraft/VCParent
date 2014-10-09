@@ -13,7 +13,6 @@ import net.vaultcraft.vcutils.string.StringUtils;
 import net.vaultcraft.vcutils.user.Group;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.json.simple.parser.ParseException;
 
 import java.util.HashMap;
 
