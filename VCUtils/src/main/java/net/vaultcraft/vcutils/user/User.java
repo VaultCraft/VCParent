@@ -60,6 +60,7 @@ public class User {
     }
 
     public void setUserInfo(UserInfo info) {
+        group = new Group.GroupHandler(player);
         for(int i = 0; i < info.getGroups().size(); i++) {
             int permLevel = (Integer) info.getGroups().get(i);
             if(i == 0) {
