@@ -8,8 +8,6 @@ import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.chat.Form;
-import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.Statements;
