@@ -30,8 +30,8 @@ public class VCServer extends ICommand {
 
     private static HashMap<ItemStack, String> server_map = new HashMap<>();
     static {
-        server_map.put(ItemUtils.build(Material.IRON_FENCE, "&5&lVault &7&lPrison", "&a➤ Click to connect!"), "prison");
         server_map.put(ItemUtils.build(Material.PORTAL, "&5&lVault &6&lLobby", "&a➤ Click to connect!"), "hub");
+        server_map.put(ItemUtils.build(Material.IRON_FENCE, "&5&lVault &7&lPrison", "&a➤ Click to connect!"), "prison");
     }
 
     public void processCommand(Player player, String[] args) {
