@@ -11,6 +11,7 @@ import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import net.vaultcraft.vcutils.util.DateUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,8 +49,10 @@ public class VCMute extends ICommand implements Listener {
             }
             if (mute(User.fromPlayer(player1), player, "", null)) {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
+                player1.sendMessage(_("&e&lWARNING&f: &7You have been muted."));
             } else {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
+                player1.sendMessage(_("&e&lWARNING&f: &7You are no longer muted."));
             }
         }
 
@@ -84,11 +87,18 @@ public class VCMute extends ICommand implements Listener {
 
             if (mute(User.fromPlayer(player1), player, reason.toString(), temp)) {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
+                player1.sendMessage(_("&e&lWARNING&f: &7You have been muted."));
             } else {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
+                player1.sendMessage(_("&e&lWARNING&f: &7You are no longer muted."));
             }
         }
     }
+
+    private String _(String str) {
+        return ChatColor.translateAlternateColorCodes('&', str);
+    }
+
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
