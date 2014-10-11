@@ -52,19 +52,16 @@ public class GhostFactory {
     }
 
     private void createTask(Plugin plugin) {
-        task = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-            @Override
-            public void run() {
-                for (OfflinePlayer member : getMembers()) {
-                    Player player = member.getPlayer();
+        task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for (OfflinePlayer member : getMembers()) {
+                Player player = member.getPlayer();
 
-                    if (player != null) {
-                        // Update invisibility effect
-                        setGhost(player, isGhost(player));
-                    } else {
-                        ghosts.remove(member.getName());
-                        ghostTeam.removePlayer(member);
-                    }
+                if (player != null) {
+                    // Update invisibility effect
+                    setGhost(player, isGhost(player));
+                } else {
+                    ghosts.remove(member.getName());
+                    ghostTeam.removePlayer(member);
                 }
             }
         }, UPDATE_DELAY, UPDATE_DELAY);

@@ -36,12 +36,9 @@ public class ServerEventHandler {
                     serverEvent.onTick(plugin, (int) (time / serverEvent.getTimeUnit().getModifier()));
                 if (time <= 0) {
                     if (Math.random() < serverEvent.getChance()) {
-                        plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                serverEvent.onEvent(plugin);
-                                Logger.log(plugin, "Event " + serverEvent.getName() + " ran.");
-                            }
+                        plugin.getServer().getScheduler().runTask(plugin, () -> {
+                            serverEvent.onEvent(plugin);
+                            Logger.log(plugin, "Event " + serverEvent.getName() + " ran.");
                         });
                     }
                     timeRemaining.put(serverEvent, (long) (serverEvent.getFrequency() * serverEvent.getTimeUnit().getModifier()));

@@ -29,12 +29,7 @@ public class MessageClientHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         final EventLoop eventLoop = ctx.channel().eventLoop();
         Logger.log(VCUtils.getInstance(), "Lost connection to message server.");
-        eventLoop.schedule(new Runnable() {
-            @Override
-            public void run() {
-                client.init();
-            }
-        }, 1L, TimeUnit.SECONDS);
+        eventLoop.schedule(() -> client.init(), 1L, TimeUnit.SECONDS);
         super.channelInactive(ctx);
     }
 

@@ -30,7 +30,7 @@ public class MessageClient {
         this.port = port;
     }
 
-    public MessageClient init(){
+    public MessageClient init() {
         workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
@@ -53,8 +53,8 @@ public class MessageClient {
                 Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
             }
         }).awaitUninterruptibly().channel();
-            return this;
-        }
+        return this;
+    }
 
     public static void sendPacket(Packet packet) {
         serverChannel.writeAndFlush(packet);
