@@ -65,6 +65,24 @@ public class SQLite {
         }
     }
 
+    public void doUpdate(String basesql, Object ... args) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(basesql);
+            int argnum = 0;
+            for(Object o : args) {
+                if(o instanceof String) {
+                    ps.setString(argnum, (String) o);
+                } else if(o instanceof Integer) {
+                    ps.setInt(argnum, (Integer) o);
+                }
+                argnum++;
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            Logger.error(plugin, e);
+        }
+    }
+
 
     public void close() throws SQLException {
         connection.close();
