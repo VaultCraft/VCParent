@@ -43,12 +43,20 @@ public class MessageClient {
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true);
-        serverChannel = b.connect(host, port).addListener((ChannelFuture f) -> {
-            if (!f.isSuccess()) {
-                Logger.log(VCUtils.getInstance(), "Could not connect to message server.");
-                f.channel().eventLoop().schedule(this::init, 1L, TimeUnit.SECONDS);
+        serverChannel = b.connect(host, port).addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture f) throws Exception {
+                if (!f.isSuccess()) {
+                    Logger.log(VCUtils.getInstance(), "Could not connect to message server.");
+                    f.channel().eventLoop().schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            init();
+                        }
+                    }, 1L, TimeUnit.SECONDS);
                 }
-            }).awaitUninterruptibly().channel();
+            }
+        }).awaitUninterruptibly().channel();
             Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
             return this;
         }
