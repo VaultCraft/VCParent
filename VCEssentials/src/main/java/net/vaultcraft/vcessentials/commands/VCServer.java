@@ -37,7 +37,7 @@ public class VCServer extends ICommand {
     public void processCommand(Player player, String[] args) {
         if (args.length == 0) {
             //open GUI etc...
-            Inventory inv = Bukkit.createInventory(player, (server_map.size()+(9-(server_map.size()%9))), ChatColor.DARK_PURPLE+"Select a server");
+            Inventory inv = Bukkit.createInventory(player, (server_map.size()+(9-(server_map.size()%9))), ChatColor.DARK_PURPLE+"Game Selector - Choose a server!");
             inv.addItem(server_map.keySet().toArray(new ItemStack[server_map.size()]));
             player.openInventory(inv);
         } else {
@@ -49,7 +49,7 @@ public class VCServer extends ICommand {
         @EventHandler
         public void onGUIClick(InventoryClickEvent event) {
             Inventory inv = event.getInventory();
-            if (inv.getName().equals(ChatColor.DARK_PURPLE+"Select a server")) {
+            if (inv.getName().equals(ChatColor.DARK_PURPLE+"Game Selector - Choose a server!")) {
                 VCEssentials.getInstance().sendPlayerToServer((Player)event.getWhoClicked(), server_map.get(event.getCurrentItem()));
                 event.setCancelled(true);
             }
