@@ -38,15 +38,15 @@ public class MessageClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel channel) throws Exception {
-                        channel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(ClassResolvers.cacheDisabled(Packet.class.getClassLoader())), new MessageClientHandler());
+                        channel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(ClassResolvers.cacheDisabled(Packet.class.getClassLoader())), new MessageClientHandler(MessageClient.this));
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true);
         serverChannel = b.connect(host, port).addListener((ChannelFuture f) -> {
             if (!f.isSuccess()) {
-                Logger.log(VCUtils.getInstance(), "Lost connection to message server.");
-                f.channel().eventLoop().schedule((Runnable) this::init, 5, TimeUnit.SECONDS);
+                Logger.log(VCUtils.getInstance(), "Could not connect to message server.");
+                f.channel().eventLoop().schedule(this::init, 1L, TimeUnit.SECONDS);
                 }
             }).awaitUninterruptibly().channel();
             Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
