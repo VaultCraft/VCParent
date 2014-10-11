@@ -12,6 +12,7 @@ import net.minecraft.util.io.netty.handler.codec.serialization.ObjectDecoder;
 import net.minecraft.util.io.netty.handler.codec.serialization.ObjectEncoder;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
+import org.bukkit.Bukkit;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,8 +50,8 @@ public class MessageClient {
                 Logger.log(VCUtils.getInstance(), "Could not connect to message server.");
                 f.channel().eventLoop().schedule(this::init, 1L, TimeUnit.SECONDS);
             } else {
-                MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName));
                 Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
+                Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), () -> MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName)), 5l);
             }
         }).awaitUninterruptibly().channel();
         return this;
