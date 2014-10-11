@@ -26,11 +26,6 @@ public class MessageClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelUnregistered(ChannelHandlerContext chx) {
-        MessageClient.close();
-    }
-
-    @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         final EventLoop eventLoop = ctx.channel().eventLoop();
         Logger.log(VCUtils.getInstance(), "Lost connection to message server.");
