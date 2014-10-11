@@ -72,7 +72,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         ));
 
         sqlite = VCUtils.getInstance().getSqlite();
-        sqlite.updateThread.add(Statements.TABLE_SQLITE.getSql("UserData",
+        sqlite.doUpdate(Statements.TABLE_SQLITE.getSql("UserData",
                 "User TEXT, " +
                 "UserJSON TEXT"));
 
