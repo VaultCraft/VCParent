@@ -138,6 +138,7 @@ public class MySQL {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(sql);
                             ResultSet rs = ps.executeQuery();
+                            connection.commit();
                             callbacks.get(id).onSuccess(rs);
                         } catch (MySQLSyntaxErrorException e) {
                             System.out.println("SQL Statement: " + sql);
@@ -172,6 +173,7 @@ public class MySQL {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(s);
                             ps.executeUpdate();
+                            connection.commit();
                         } catch (MySQLSyntaxErrorException e) {
                             System.out.println("SQL Statement: " + s);
                             e.printStackTrace();
