@@ -47,7 +47,8 @@ public class AnnounceTask implements Runnable {
         "Follow us on Twitter and Facebook! &dhttps://twitter.com/VaultCraftHub &7| &dhttps://www.facebook.com/VaultCraftHub",
         "Come check out the VaultCraft website! &dhttps://vaultcraft.net/",
         "The commands &d/help &7and &d/rules &7are very useful!",
-        "Use the command &d/server &7to switch servers at any time!"
+        "Use the command &d/server &7to switch servers at any time!",
+        "Come listen to some music with us! &dhttps://plug.dj/vaultcraft"
     };
 
     private static JSONChatMessage buildMessage(String input) {
