@@ -38,6 +38,6 @@ public enum Statements {
     }
 
     public static String makeSqlSafe(String s) {
-        return s.replaceAll("'", "\\'");
+        return s.replaceAll("'", "\\'").replaceAll("\"", "\\\"");
     }
 }

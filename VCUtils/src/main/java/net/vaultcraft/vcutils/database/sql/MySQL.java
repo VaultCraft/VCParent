@@ -53,7 +53,7 @@ public class MySQL {
     /**
      * Default constructor for SQLite
      */
-    public MySQL() {
+    protected MySQL() {
     }
 
     /**

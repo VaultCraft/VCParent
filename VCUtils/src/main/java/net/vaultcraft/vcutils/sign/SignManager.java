@@ -75,11 +75,7 @@ public class SignManager {
                 x++;
             }
 
-            Runnable run = new Runnable() {
-                public void run() {
-                    sign.update(true);
-                }
-            };
+            Runnable run = () -> sign.update(true);
             Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), run, 10);
         }
     }
