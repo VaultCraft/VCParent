@@ -44,8 +44,8 @@ public class MessageClient {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true);
         serverChannel = b.connect(host, port).addListener((ChannelFuture f) -> {
-            Logger.log(VCUtils.getInstance(), "Lost connection to message server.");
             if (!f.isSuccess()) {
+                Logger.log(VCUtils.getInstance(), "Lost connection to message server.");
                 f.channel().eventLoop().schedule((Runnable) this::init, 5, TimeUnit.SECONDS);
                 }
             }).awaitUninterruptibly().channel();
