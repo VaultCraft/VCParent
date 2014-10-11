@@ -68,11 +68,13 @@ public class MySQL {
 
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, database_username, database_password);
+                connection.setAutoCommit(false);
                 queries = 0;
             }
             if (connection == null || connection.isClosed()) {
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, database_username, database_password);
+                connection.setAutoCommit(false);
             }
         } catch (SQLException | ClassNotFoundException e) {
             Logger.error(plugin, e);

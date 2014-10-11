@@ -78,7 +78,6 @@
                     <artifactSet>
                         <includes>
                             <include>org.mongodb:mongo-java-driver</include>
-                            <include>org.xerial:sqlite-jdbc</include>
                         </includes>
                     </artifactSet>
                 </configuration>
@@ -135,12 +134,6 @@
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/spigot.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.7.15-M1</version>
         </dependency>
 
         <dependency>
