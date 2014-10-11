@@ -54,10 +54,12 @@ public class MessageClient {
                             init();
                         }
                     }, 1L, TimeUnit.SECONDS);
+                } else {
+                    Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
                 }
             }
         }).awaitUninterruptibly().channel();
-            Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
+
             return this;
         }
 
