@@ -68,7 +68,7 @@ public class SQLite {
     public void doUpdate(String basesql, Object ... args) {
         try {
             PreparedStatement ps = connection.prepareStatement(basesql);
-            int argnum = 0;
+            int argnum = 1;
             for(Object o : args) {
                 if(o instanceof String) {
                     ps.setString(argnum, (String) o);
