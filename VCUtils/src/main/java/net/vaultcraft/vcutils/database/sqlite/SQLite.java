@@ -44,7 +44,6 @@ public class SQLite {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             callback.onSuccess(rs);
-            connection.commit();
         } catch (MySQLSyntaxErrorException e) {
             System.out.print("SQL Statement: " + sql);
             e.printStackTrace();
@@ -61,7 +60,6 @@ public class SQLite {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.executeUpdate();
-            connection.commit();
         } catch (SQLException e) {
             Logger.error(plugin, e);
         }
@@ -69,7 +67,6 @@ public class SQLite {
 
 
     public void close() throws SQLException {
-        connection.commit();
         connection.close();
     }
 }
