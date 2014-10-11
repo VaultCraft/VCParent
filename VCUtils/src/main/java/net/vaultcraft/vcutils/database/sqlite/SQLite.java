@@ -52,4 +52,10 @@ public class SQLite extends MySQL {
         queries++;
         return connection;
     }
+
+    @Override
+    public void close() throws SQLException {
+        connection.commit();
+        super.close();
+    }
 }
