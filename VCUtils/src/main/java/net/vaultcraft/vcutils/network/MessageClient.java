@@ -30,7 +30,7 @@ public class MessageClient {
         this.port = port;
     }
 
-    public MessageClient init() {
+    public MessageClient init(){
         workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
@@ -55,13 +55,14 @@ public class MessageClient {
                             init();
                         }
                     }, 1L, TimeUnit.SECONDS);
+                } else {
+                    MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName));
+                    Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
                 }
             }
         }).awaitUninterruptibly().channel();
-        Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
-        MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName));
-        return this;
-    }
+            return this;
+        }
 
     public static void sendPacket(Packet packet) {
         serverChannel.writeAndFlush(packet);
