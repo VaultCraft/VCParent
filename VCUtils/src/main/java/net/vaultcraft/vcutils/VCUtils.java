@@ -1,6 +1,5 @@
 package net.vaultcraft.vcutils;
 
-import common.network.PacketInStart;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
 import net.vaultcraft.vcutils.database.mongo.MongoDB;
@@ -62,9 +61,9 @@ public class VCUtils extends JavaPlugin {
 
         try {
             new MessageClient(NetworkInfo.host, NetworkInfo.port).init();
-            MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName));
         } catch (Exception e) {
             e.printStackTrace();
+            Bukkit.getServer().shutdown();
         }
 
         try {

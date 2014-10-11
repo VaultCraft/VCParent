@@ -152,14 +152,11 @@ public class User {
 
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
-        Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (user.isReady())
-                    MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
-                async_player_map.remove(player);
-                async_uuid_map.remove(player.getUniqueId().toString());
-            }
+        Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
+            if (user.isReady())
+                MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+            async_player_map.remove(player);
+            async_uuid_map.remove(player.getUniqueId().toString());
         });
     }
 

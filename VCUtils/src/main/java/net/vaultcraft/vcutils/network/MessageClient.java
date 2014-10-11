@@ -1,6 +1,7 @@
 package net.vaultcraft.vcutils.network;
 
 import common.network.Packet;
+import common.network.PacketInStart;
 import net.minecraft.util.io.netty.bootstrap.Bootstrap;
 import net.minecraft.util.io.netty.channel.*;
 import net.minecraft.util.io.netty.channel.nio.NioEventLoopGroup;
@@ -29,7 +30,7 @@ public class MessageClient {
         this.port = port;
     }
 
-    public MessageClient init(){
+    public MessageClient init() {
         workerGroup = new NioEventLoopGroup();
 
         Bootstrap b = new Bootstrap();
@@ -57,9 +58,10 @@ public class MessageClient {
                 }
             }
         }).awaitUninterruptibly().channel();
-            Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
-            return this;
-        }
+        Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
+        MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName));
+        return this;
+    }
 
     public static void sendPacket(Packet packet) {
         serverChannel.writeAndFlush(packet);
