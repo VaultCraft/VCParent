@@ -53,7 +53,7 @@ public class MySQL {
     /**
      * Default constructor for SQLite
      */
-    public MySQL() {
+    protected MySQL() {
     }
 
     /**
@@ -68,11 +68,13 @@ public class MySQL {
 
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, database_username, database_password);
+                connection.setAutoCommit(false);
                 queries = 0;
             }
             if (connection == null || connection.isClosed()) {
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, database_username, database_password);
+                connection.setAutoCommit(false);
             }
         } catch (SQLException | ClassNotFoundException e) {
             Logger.error(plugin, e);
@@ -138,6 +140,7 @@ public class MySQL {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(sql);
                             ResultSet rs = ps.executeQuery();
+                            connection.commit();
                             callbacks.get(id).onSuccess(rs);
                         } catch (MySQLSyntaxErrorException e) {
                             System.out.println("SQL Statement: " + sql);
@@ -172,6 +175,7 @@ public class MySQL {
                         try {
                             PreparedStatement ps = getConnection().prepareStatement(s);
                             ps.executeUpdate();
+                            connection.commit();
                         } catch (MySQLSyntaxErrorException e) {
                             System.out.println("SQL Statement: " + s);
                             e.printStackTrace();

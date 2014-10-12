@@ -30,13 +30,14 @@ public class VCServer extends ICommand {
 
     private static HashMap<ItemStack, String> server_map = new HashMap<>();
     static {
-        server_map.put(ItemUtils.build(Material.IRON_FENCE, "&5&lVault &7&lPrison"), "prison");
+        server_map.put(ItemUtils.build(Material.NOTE_BLOCK, "&5&lVault &6&lLobby", "&a➤ &a&oClick to connect!"), "hub");
+        server_map.put(ItemUtils.build(Material.IRON_FENCE, "&5&lVault &f&lPrison", "&a➤ &a&oClick to connect!"), "prison");
     }
 
     public void processCommand(Player player, String[] args) {
         if (args.length == 0) {
             //open GUI etc...
-            Inventory inv = Bukkit.createInventory(player, (server_map.size()+(9-(server_map.size()%9))), ChatColor.DARK_PURPLE+"Select a server");
+            Inventory inv = Bukkit.createInventory(player, (server_map.size()+(9-(server_map.size()%9))), ChatColor.DARK_PURPLE+"Game Selector");
             inv.addItem(server_map.keySet().toArray(new ItemStack[server_map.size()]));
             player.openInventory(inv);
         } else {
@@ -48,7 +49,7 @@ public class VCServer extends ICommand {
         @EventHandler
         public void onGUIClick(InventoryClickEvent event) {
             Inventory inv = event.getInventory();
-            if (inv.getName().equals(ChatColor.DARK_PURPLE+"Select a server")) {
+            if (inv.getName().equals(ChatColor.DARK_PURPLE+"Game Selector")) {
                 VCEssentials.getInstance().sendPlayerToServer((Player)event.getWhoClicked(), server_map.get(event.getCurrentItem()));
                 event.setCancelled(true);
             }

@@ -72,7 +72,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         ));
 
         sqlite = VCUtils.getInstance().getSqlite();
-        sqlite.updateThread.add(Statements.TABLE_SQLITE.getSql("UserData",
+        sqlite.doUpdate(Statements.TABLE_SQLITE.getSql("UserData",
                 "User TEXT, " +
                 "UserJSON TEXT"));
 
@@ -117,6 +117,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCClearChat("ccg", Group.MOD, "clearchatglobal"));
         CommandManager.addCommand(new VCClearChatPersonal("ccp", Group.COMMON, "clearchat"));
         CommandManager.addCommand(new VCChatDelay("chatdelay", Group.ADMIN, "ccd"));
+        CommandManager.addCommand(new VCVote("vote", Group.COMMON, "v"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));

@@ -9,8 +9,9 @@ import java.util.regex.Matcher;
 public enum Statements {
 
     TABLE("CREATE TABLE IF NOT EXISTS ?(ID INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(ID), ?) DEFAULT CHARSET=utf32", 2),
-    TABLE_SQLITE("CREATE TABLE IF NOT EXISTS ?(ID INT NOT NULL AUTOINCREMENT, PRIMARY KEY(ID), ?) DEFAULT CHARSET=utf32", 2),
+    TABLE_SQLITE("CREATE TABLE IF NOT EXISTS ?(ID INTEGER NOT NULL PRIMARY KEY autoincrement, ?)", 2),
     INSERT("INSERT INTO ? VALUES(default, ?)", 2),
+    INSERT_SQLITE("INSERT INTO ?(?) VALUES(?)", 3),
     UPDATE("UPDATE ? SET ? WHERE ?", 3),
     QUERYALL("SELECT * FROM ?", 1),
     QUERY("SELECT * FROM ? WHERE ?", 2);
@@ -37,6 +38,6 @@ public enum Statements {
     }
 
     public static String makeSqlSafe(String s) {
-        return s.replaceAll("'", "\\'");
+        return s.replaceAll("'", "\\'").replaceAll("\"", "\\\"");
     }
 }

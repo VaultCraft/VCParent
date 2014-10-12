@@ -37,12 +37,18 @@ public class AnnounceTask implements Runnable {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&5&m-----------------------------------------------------"));
     }
 
-    private static JSONChatMessage header = buildMessage("(DARK-PURPLE+BOLD)Vault{CLICK*OPEN-URL=http://vaultcraft.net}_(GRAY+BOLD)Craft{CLICK*OPEN-URL=http://vaultcraft.net}");
+    private static JSONChatMessage header = buildMessage("(DARK-PURPLE+BOLD)Vault{CLICK*OPEN-URL=https://vaultcraft.net}_(GRAY+BOLD)Craft{CLICK*OPEN-URL=https://vaultcraft.net}");
     private static JSONChatMessage disable = buildMessage("(DARK-GRAY+ITALIC)Click to disable messages{CLICK*RUN-COMMAND=/announce}");
     private static String[] messages = {
         "Welcome &d%player% &7to our network!",
         "We are currently in &d&npre-alpha&r &7so be sure to report bugs!",
-        "Looking to help out the server in return for some &dEPIC &7  perks? Click the \"VaultCraft\" text above to go to our website!"
+        "Looking to help out the server in return for some EPIC perks? Check out our store! &dhttp://store.vaultcraft.net",
+        "Join our forums today! &dhttps://vaultcraft.net/forums/index.php",
+        "Follow us on Twitter and Facebook! &dhttps://twitter.com/VaultCraftHub &7| &dhttps://www.facebook.com/VaultCraftHub",
+        "Come check out the VaultCraft website! &dhttps://vaultcraft.net/",
+        "The commands &d/help &7and &d/rules &7are very useful!",
+        "Use the command &d/server &7to switch servers at any time!",
+        "Come listen to some music with us! &dhttps://plug.dj/vaultcraft"
     };
 
     private static JSONChatMessage buildMessage(String input) {

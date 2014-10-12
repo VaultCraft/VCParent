@@ -49,6 +49,18 @@ public class VCGamemode extends ICommand {
                     player.setGameMode(GameMode.ADVENTURE);
                     Form.at(player, Prefix.SUCCESS, "You are in adventure.");
                     break;
+                case "s":
+                    player.setGameMode(GameMode.SURVIVAL);
+                    Form.at(player, Prefix.SUCCESS, "You are in survival.");
+                    break;
+                case "c":
+                    player.setGameMode(GameMode.CREATIVE);
+                    Form.at(player, Prefix.SUCCESS, "You are in creative.");
+                    break;
+                case "a":
+                    player.setGameMode(GameMode.ADVENTURE);
+                    Form.at(player, Prefix.SUCCESS, "You are in adventure.");
+                    break;
             }
         }
 
@@ -90,6 +102,18 @@ public class VCGamemode extends ICommand {
                     player1.setGameMode(GameMode.ADVENTURE);
                     Form.at(player, Prefix.SUCCESS, player1.getName() + " is in adventure.");
                     Form.at(player1, Prefix.SUCCESS, "You are in adventure.");
+                    break;
+                case "s":
+                    player.setGameMode(GameMode.SURVIVAL);
+                    Form.at(player, Prefix.SUCCESS, "You are in survival.");
+                    break;
+                case "c":
+                    player.setGameMode(GameMode.CREATIVE);
+                    Form.at(player, Prefix.SUCCESS, "You are in creative.");
+                    break;
+                case "a":
+                    player.setGameMode(GameMode.ADVENTURE);
+                    Form.at(player, Prefix.SUCCESS, "You are in adventure.");
                     break;
             }
         }

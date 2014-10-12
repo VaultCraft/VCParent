@@ -53,16 +53,16 @@ public class User {
 
     public User(final Player player) {
         this.player = player;
+        group = new Group.GroupHandler(player);
         async_player_map.put(player, User.this);
         async_uuid_map.put(player.getUniqueId().toString(), User.this);
         MessageClient.sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
-        new UserSaveTask(player.getUniqueId().toString());
     }
 
     public void setUserInfo(UserInfo info) {
         group = new Group.GroupHandler(player);
         for(int i = 0; i < info.getGroups().size(); i++) {
-            int permLevel = (Integer) info.getGroups().get(i);
+            int permLevel = info.getGroups().get(i);
             if(i == 0) {
                 this.group.merge(Group.fromPermLevel(permLevel));
                 continue;
@@ -98,6 +98,7 @@ public class User {
         }
         Bukkit.getPluginManager().callEvent(event);
         this.ready = true;
+        new UserSaveTask(player.getUniqueId().toString());
     }
 
     public void addUserdata(String key, String value) {
@@ -152,14 +153,11 @@ public class User {
 
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
-        Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (user.isReady())
-                    MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
-                async_player_map.remove(player);
-                async_uuid_map.remove(player.getUniqueId().toString());
-            }
+        Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
+            if (user.isReady())
+                MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+            async_player_map.remove(player);
+            async_uuid_map.remove(player.getUniqueId().toString());
         });
     }
 

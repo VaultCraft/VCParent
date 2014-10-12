@@ -1,19 +1,21 @@
 package net.vaultcraft.vcutils.database.sqlite;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.plugin.Plugin;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * (This class is untested but should work!)
  *
  * @author Sean "CyberKitsune" McClenaghan
  */
-public class SQLite extends MySQL {
+public class SQLite {
+
+    private final Plugin plugin;
+    private Connection connection;
 
     /**
      * Provides as a connection to a SQLite database, and gives access to easy methods to modify that database.
@@ -22,34 +24,67 @@ public class SQLite extends MySQL {
      * @param database  The path to the database file.
      */
     public SQLite(final Plugin plugin, String database) {
-        this.url = "jdbc:sqlite:" + database;
+        String url = "jdbc:sqlite:" + database;
         this.plugin = plugin;
-        updateTask.start();
-        queryTask.start();
-
+        try {
+            Class.forName("org.sqlite.JDBC");
+            this.connection = DriverManager.getConnection(url);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public Connection getConnection() {
+    /**
+     * Run a SQLite query
+     * @param sql SQL statement to run
+     * @param callback Callback to use with the query
+     */
+    public void doQuery(String sql, MySQL.ISqlCallback callback) {
         try {
-            if (queries >= 1000) {
-                if (connection != null) {
-                    connection.close();
-                }
-
-                Class.forName("org.sqlite.JDBC");
-                connection = DriverManager.getConnection(url);
-                queries = 0;
-            }
-            if (connection == null || connection.isClosed()) {
-                Class.forName("org.sqlite.JDBC");
-                connection = DriverManager.getConnection(url);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            Logger.error(plugin, e);
-            enabled = false;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            callback.onSuccess(rs);
+        } catch (MySQLSyntaxErrorException e) {
+            System.out.print("SQL Statement: " + sql);
+            e.printStackTrace();
+        } catch (SQLException e) {
+            callback.onFailure(e);
         }
-        queries++;
-        return connection;
+    }
+
+    /**
+     * Run a SQLite update
+     * @param sql SQL to run in update mode.
+     */
+    public void doUpdate(String sql) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            Logger.error(plugin, e);
+        }
+    }
+
+    public void doUpdate(String basesql, Object ... args) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(basesql);
+            int argnum = 1;
+            for(Object o : args) {
+                if(o instanceof String) {
+                    ps.setString(argnum, (String) o);
+                } else if(o instanceof Integer) {
+                    ps.setInt(argnum, (Integer) o);
+                }
+                argnum++;
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            Logger.error(plugin, e);
+        }
+    }
+
+
+    public void close() throws SQLException {
+        connection.close();
     }
 }
