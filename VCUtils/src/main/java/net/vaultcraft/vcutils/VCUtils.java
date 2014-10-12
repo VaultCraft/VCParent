@@ -10,6 +10,8 @@ import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.file.FileController;
+import net.vaultcraft.vcutils.innerplugin.InnerPlugin;
+import net.vaultcraft.vcutils.innerplugin.VCPluginManager;
 import net.vaultcraft.vcutils.item.menu.MenuListener;
 import net.vaultcraft.vcutils.listener.CommonPlayerListener;
 import net.vaultcraft.vcutils.listener.ProtectionListener;
@@ -115,6 +117,10 @@ public class VCUtils extends JavaPlugin {
             sqlite.close();
         } catch (SQLException e) {
             Logger.error(this, e);
+        }
+
+        for (InnerPlugin plugin : VCPluginManager.getPlugins().values()) {
+            plugin.onDisable();
         }
 
         User.disable();
