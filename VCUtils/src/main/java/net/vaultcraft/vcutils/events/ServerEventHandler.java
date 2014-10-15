@@ -26,9 +26,9 @@ public class ServerEventHandler {
     }
 
     public static void setTimeRemaining(ServerEvent event, long remaining) {
-        if (timeRemaining.contains(event)) {
+        if (timeRemaining.containsKey(event)) {
             timeRemaining.remove(event);
-            timeRemaining.put(event, remaining);
+            timeRemaining.put(event, remaining*20);
         }
     }
 
