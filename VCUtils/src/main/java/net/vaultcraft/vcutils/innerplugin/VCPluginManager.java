@@ -42,6 +42,7 @@ public class VCPluginManager {
                 try {
                     InnerPlugin create = (InnerPlugin)c.newInstance();
                     registerPlugin(create, c.getSimpleName());
+                    create.onEnable();
                     Logger.log(VCUtils.getInstance(), "Found inner plugin " + c.getSimpleName() + "! Adding to VCPluginManager");
                 } catch (Exception ex) {
                     Logger.log(VCUtils.getInstance(), "Exception while enabling inner pluugin " + c.getSimpleName() + "!");

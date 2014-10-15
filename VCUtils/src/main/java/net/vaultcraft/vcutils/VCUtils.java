@@ -57,6 +57,7 @@ public class VCUtils extends JavaPlugin {
         ClassConfig.updateConfig(MongoInfo.class, getConfig());
         ClassConfig.updateConfig(NetworkInfo.class, getConfig());
         ClassConfig.updateConfig(VCUtils.class, getConfig());
+
         saveConfig();
 
         factory = new GhostFactory(this);
