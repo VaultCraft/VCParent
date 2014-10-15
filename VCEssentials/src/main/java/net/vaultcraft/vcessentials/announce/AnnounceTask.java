@@ -39,6 +39,7 @@ public class AnnounceTask implements Runnable {
 
     private static JSONChatMessage header = buildMessage("(DARK-PURPLE+BOLD)Vault{CLICK*OPEN-URL=https://vaultcraft.net}_(GRAY+BOLD)Craft{CLICK*OPEN-URL=https://vaultcraft.net}");
     private static JSONChatMessage disable = buildMessage("(DARK-GRAY+ITALIC)Click to disable messages{CLICK*RUN-COMMAND=/announce}");
+
     private static String[] messages = {
         "Welcome &d%player% &7to our network!",
         "We are currently in &d&npre-alpha&r &7so be sure to report bugs!",
@@ -48,7 +49,7 @@ public class AnnounceTask implements Runnable {
         "Come check out the VaultCraft website! &dhttps://vaultcraft.net/",
         "The commands &d/help &7and &d/rules &7are very useful!",
         "Use the command &d/server &7to switch servers at any time!",
-        "Come listen to some music with us! &dhttps://plug.dj/vaultcraft"
+        "Come listen to some music with us! &dplug.dj/vaultcraft"
     };
 
     private static JSONChatMessage buildMessage(String input) {

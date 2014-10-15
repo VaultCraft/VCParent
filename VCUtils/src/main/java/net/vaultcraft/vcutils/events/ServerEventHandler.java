@@ -25,9 +25,18 @@ public class ServerEventHandler {
         timeRemaining.put(serverEvent, (long) (serverEvent.getFrequency() * serverEvent.getTimeUnit().getModifier()));
     }
 
-    private class ServerEventTask implements Runnable {
+    public static void setTimeRemaining(ServerEvent event, long remaining) {
+        if (timeRemaining.contains(event)) {
+            timeRemaining.remove(event);
+            timeRemaining.put(event, remaining);
+        }
+    }
 
-        @Override
+    public static long getTimeRemaining(ServerEvent event) {
+        return timeRemaining.get(event);
+    }
+
+    private class ServerEventTask implements Runnable {
         public void run() {
             for (final ServerEvent serverEvent : timeRemaining.keySet()) {
                 Long time = timeRemaining.get(serverEvent);
@@ -35,7 +44,7 @@ public class ServerEventHandler {
                 if(time % serverEvent.getTimeUnit().getModifier() == 0)
                     serverEvent.onTick(plugin, (int) (time / serverEvent.getTimeUnit().getModifier()));
                 if (time <= 0) {
-                    if (Math.random() < serverEvent.getChance()) {
+                    if ((Math.random()*100) <= serverEvent.getChance()) {
                         plugin.getServer().getScheduler().runTask(plugin, () -> {
                             serverEvent.onEvent(plugin);
                             Logger.log(plugin, "Event " + serverEvent.getName() + " ran.");
