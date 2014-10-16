@@ -153,6 +153,11 @@ public class User {
 
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
+
+        //banned or something..?
+        if (user == null)
+            return;
+
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
             if (user.isReady())
                 MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
