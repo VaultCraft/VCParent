@@ -89,10 +89,10 @@ public class User {
                     Bukkit.getPluginManager().callEvent(event);
                     return;
                 }
-                player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
+                Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), () -> player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan)));
                 return;
             } else {
-                player.kickPlayer("You are banned!");
+                Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), () -> player.kickPlayer("You are banned!"));
                 return;
             }
         }
