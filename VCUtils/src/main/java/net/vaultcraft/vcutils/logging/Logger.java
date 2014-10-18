@@ -1,8 +1,5 @@
 package net.vaultcraft.vcutils.logging;
 
-import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.database.sql.MySQL;
-import net.vaultcraft.vcutils.database.sql.Statements;
 import org.bukkit.plugin.Plugin;
 import org.fusesource.jansi.Ansi;
 
@@ -17,32 +14,10 @@ public class Logger {
     private static final String ansi_reset = Ansi.ansi().a(Ansi.Attribute.RESET).boldOff().toString();
 
     public static void log(Plugin plugin, String message) {
-        String pluginName = plugin.getDescription().getFullName();
-        String pluginVersion = plugin.getDescription().getVersion();
-        if(VCUtils.getInstance().getMySQL() != null) {
-            VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                    "'" + Statements.makeSqlSafe(pluginName) + "', '"
-                            + pluginVersion + "', '"
-                            + Statements.makeSqlSafe(message) + "', '"
-                            + MySQL.getDate() + "'"
-            ));
-        }
-
         System.out.println(ansi_yellow + "(" + plugin.getName() + ") " + ansi_reset + message + ansi_reset);
     }
 
     public static void error(Plugin plugin, Exception e) {
-        String pluginName = plugin.getDescription().getFullName();
-        String pluginVersion = plugin.getDescription().getVersion();
-        if (VCUtils.getInstance().getMySQL() != null) {
-            VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                    "'" + Statements.makeSqlSafe(pluginName) + "', '"
-                            + pluginVersion + "', '"
-                            + Statements.makeSqlSafe(e.toString()) + "', '"
-                            + MySQL.getDate() + "'"
-            ));
-        }
-
         System.out.println(ansi_red + "(ERROR) " + ansi_reset + "[" + plugin.getName() + "] " + "Error preparing statement! Stack trace below..." + ansi_reset);
         e.printStackTrace();
     }
@@ -53,14 +28,6 @@ public class Logger {
 
 
     public static void warning(Plugin plugin, String message) {
-        String pluginName = plugin.getDescription().getFullName();
-        String pluginVersion = plugin.getDescription().getVersion();
-        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Log",
-                "'" + Statements.makeSqlSafe(pluginName) + "', '"
-                        + pluginVersion + "', '(WARNING)"
-                        + Statements.makeSqlSafe(message) + "', '"
-                        + MySQL.getDate() + "'"
-        ));
         System.out.println(ansi_yellow + "(WARNING) " + ansi_reset + "[" + plugin.getName() + "] " + message + ansi_reset);
     }
 }

@@ -1,11 +1,8 @@
 package net.vaultcraft.vcessentials.commands;
 
-import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
-import net.vaultcraft.vcutils.database.sql.MySQL;
-import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
@@ -15,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -96,27 +92,6 @@ public class VCBan extends ICommand implements Listener {
             return false;
         } else {
             banned.setBanned(true, temp);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if (temp == null) {
-                VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Bans",
-                        "'" + banned.getPlayer().getUniqueId().toString() + "', '" +
-                                banned.getPlayer().getName() + "', '" +
-                                banner.getUniqueId().toString() + "', '" +
-                                banner.getName() + "', '" +
-                                Statements.makeSqlSafe(reason) + "', '" +
-                                MySQL.getDate() + "', NULL"
-                ));
-            } else {
-                VCEssentials.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Bans",
-                        "'" + banned.getPlayer().getUniqueId().toString() + "', '" +
-                                banned.getPlayer().getName() + "', '" +
-                                banner.getUniqueId().toString() + "', '" +
-                                banner.getName() + "', '" +
-                                Statements.makeSqlSafe(reason) + "', '" +
-                                MySQL.getDate() + "', '" +
-                                sdf.format(temp) + "'"
-                ));
-            }
             return true;
         }
     }

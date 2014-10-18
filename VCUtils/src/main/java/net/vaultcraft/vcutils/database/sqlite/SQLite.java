@@ -65,7 +65,7 @@ public class SQLite {
         }
     }
 
-    public void doUpdate(String basesql, Object ... args) {
+    public void doUpdate(String basesql, Object... args) {
         try {
             PreparedStatement ps = connection.prepareStatement(basesql);
             int argnum = 1;
