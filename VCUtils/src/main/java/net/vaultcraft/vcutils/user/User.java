@@ -108,6 +108,14 @@ public class User {
         userdata.put(key, value);
     }
 
+    public boolean hasUserdata(String key) {
+        return userdata.containsKey(key);
+    }
+
+    public void removeUserdata(String key) {
+        userdata.remove(key);
+    }
+
     public void addGlobalUserdata(String key, String value) {
         if (userdata.containsKey(key))
             userdata.remove(key);
