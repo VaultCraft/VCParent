@@ -68,7 +68,7 @@ public class VCSpamFunStuff extends ICommand {
                     fac = new ChatterBotFactory();
 
                 u1Bot = fac.create(ChatterBotType.JABBERWACKY);
-                u2Bot = fac.create(ChatterBotType.JABBERWACKY);
+                u2Bot = fac.create(ChatterBotType.PANDORABOTS);
 
                 u1Sess = u1Bot.createSession();
                 u2Sess = u2Bot.createSession();
