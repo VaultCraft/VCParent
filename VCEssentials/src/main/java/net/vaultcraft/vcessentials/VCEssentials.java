@@ -126,6 +126,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addRedirect("gms", "gamemode 0");
         CommandManager.addRedirect("gmc", "gamemode 1");
         CommandManager.addRedirect("gma", "gamemode 2");
+        CommandManager.addRedirect("pay", "money pay");
 
         //whitelist
         CommandManager.addPluginWhitelist("/");
