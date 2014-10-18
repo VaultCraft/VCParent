@@ -77,6 +77,7 @@ public class SQLite {
                 }
                 argnum++;
             }
+            System.out.println(ps.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
             Logger.error(plugin, e);
