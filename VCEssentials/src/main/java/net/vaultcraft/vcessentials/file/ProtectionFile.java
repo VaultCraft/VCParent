@@ -73,6 +73,7 @@ public class ProtectionFile implements FileController{
             int priority = (Integer)obj.get("priority");
             Location min = null;
             Location max = null;
+
             if (!(name.equals("global"))) {
                 World world = Bukkit.getWorld(obj.get("world").toString());
                 int xMin = Integer.valueOf(obj.get("xMin").toString());
@@ -86,6 +87,7 @@ public class ProtectionFile implements FileController{
                 min = new Location(world, xMin, yMin, zMin);
                 max = new Location(world, xMax, yMax, zMax);
             }
+
             ProtectedArea area = new ProtectedArea(new Area(min, max));
             area.setPriority(priority);
 
