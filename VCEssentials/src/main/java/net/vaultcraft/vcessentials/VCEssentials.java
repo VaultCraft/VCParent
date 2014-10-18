@@ -10,7 +10,6 @@ import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
-import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
@@ -44,37 +43,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         ProtectionFile.getInstance().load();
         initCommands();
         mySQL = VCUtils.getInstance().getMySQL();
-        mySQL.updateThread.add(Statements.TABLE.getSql("Bans",
-                "BannedID TINYTEXT," +
-                        "BannedName CHAR(16) NOT NULL," +
-                        "BannerID TINYTEXT NOT NULL," +
-                        "BannerName CHAR(16) NOT NULL," +
-                        "Reason TEXT," +
-                        "Time DATETIME NOT NULL," +
-                        "Temp DATETIME"
-        ));
-        mySQL.updateThread.add(Statements.TABLE.getSql("Kicks",
-                "KickedID TINYTEXT NOT NULL," +
-                        "KickedName CHAR(16) NOT NULL," +
-                        "KickerID TINYTEXT NOT NULL," +
-                        "KickerName CHAR(16) NOT NULL," +
-                        "Reason TEXT," +
-                        "Time DATETIME NOT NULL"
-        ));
-        mySQL.updateThread.add(Statements.TABLE.getSql("Mutes",
-                "MutedID TINYTEXT NOT NULL," +
-                        "MutedName CHAR(16)," +
-                        "MuterID TINYTEXT NOT NULL," +
-                        "MuterName CHAR(16) NOT NULL," +
-                        "Reason TEXT," +
-                        "Time DATETIME NOT NULL," +
-                        "Temp DATETIME"
-        ));
-
         sqlite = VCUtils.getInstance().getSqlite();
-        sqlite.doUpdate(Statements.TABLE_SQLITE.getSql("UserData",
-                "User TEXT, " +
-                "UserJSON TEXT"));
 
         Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);

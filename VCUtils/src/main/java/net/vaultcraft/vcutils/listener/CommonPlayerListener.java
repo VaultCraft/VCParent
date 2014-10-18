@@ -1,10 +1,7 @@
 package net.vaultcraft.vcutils.listener;
 
-import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
-import net.vaultcraft.vcutils.database.sql.MySQL;
-import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.ChatColor;
@@ -67,13 +64,6 @@ public class CommonPlayerListener implements Listener {
         String format = chatter.getGroup().getHighest().getTag();
         format = format.replace("%user%", "%1$s").replace("%message%", "%2$s");
         event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
-
-        VCUtils.getInstance().getMySQL().updateThread.add(Statements.INSERT.getSql("Chat",
-                "'" + chatter.getPlayer().getUniqueId().toString() + "', '" +
-                        chatter.getPlayer().getName() + "', '" +
-                        Statements.makeSqlSafe(event.getMessage().replace("'", "^")) + "', '" +
-                        MySQL.getDate() + "'"
-        ));
 
         if (chatter.getGroup().hasPermission(Group.HELPER))
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));

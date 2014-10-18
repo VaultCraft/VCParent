@@ -42,7 +42,7 @@ public class AnnounceTask implements Runnable {
 
     private static String[] messages = {
         "Welcome &d%player% &7to our network!",
-        "We are currently in &d&npre-alpha&r &7so be sure to report bugs!",
+        "We are currently in &d&nalpha&r &7so be sure to report bugs!",
         "Looking to help out the server in return for some EPIC perks? Check out our store! &dhttp://store.vaultcraft.net",
         "Join our forums today! &dhttps://vaultcraft.net/forums/index.php",
         "Follow us on Twitter and Facebook! &dhttps://twitter.com/VaultCraftHub &7| &dhttps://www.facebook.com/VaultCraftHub",

@@ -6,7 +6,6 @@ import net.vaultcraft.vcutils.database.mongo.MongoDB;
 import net.vaultcraft.vcutils.database.mongo.MongoInfo;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
-import net.vaultcraft.vcutils.database.sql.Statements;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.file.FileController;
 import net.vaultcraft.vcutils.innerplugin.InnerPlugin;
@@ -78,25 +77,6 @@ public class VCUtils extends JavaPlugin {
         sqlite = new SQLite(this, this.getDataFolder()+"/sqlite.db"); // TODO un-hardcode this.
 
         mySQL = new MySQL(this, SQLInfo.host, SQLInfo.port, SQLInfo.database_name, SQLInfo.username, SQLInfo.password);
-        mySQL.updateThread.add(Statements.TABLE.getSql("Commands",
-                "SenderID TINYTEXT NOT NULL," +
-                        "SenderName CHAR(16) NOT NULL," +
-                        "SenderGroup CHAR(30) NOT NULL," +
-                        "Command TEXT NOT NULL," +
-                        "Time DATETIME NOT NULL"
-        ));
-        mySQL.updateThread.add(Statements.TABLE.getSql("Log",
-                "PluginName CHAR(64) NOT NULL," +
-                        "PluginVersion CHAR(10) NOT NULL," +
-                        "Message TEXT NOT NULL," +
-                        "Time DATETIME NOT NULL"
-        ));
-        mySQL.updateThread.add(Statements.TABLE.getSql("Chat",
-                "ChatterID TINYTEXT NOT NULL," +
-                        "ChatterName CHAR(16) NOT NULL," +
-                        "Message TEXT NOT NULL," +
-                        "Time DATETIME NOT NULL"
-        ));
         getServer().getPluginManager().registerEvents(new CommandManager(), this);
         initListeners();
 
