@@ -65,7 +65,7 @@ public class SQLite {
         }
     }
 
-    public void doUpdate(String basesql, Object ... args) {
+    public void doUpdate(String basesql, Object... args) {
         try {
             PreparedStatement ps = connection.prepareStatement(basesql);
             int argnum = 1;
@@ -77,7 +77,6 @@ public class SQLite {
                 }
                 argnum++;
             }
-            System.out.println(ps.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
             Logger.error(plugin, e);
