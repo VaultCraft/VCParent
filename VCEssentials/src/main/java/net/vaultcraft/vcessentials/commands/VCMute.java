@@ -45,10 +45,10 @@ public class VCMute extends ICommand implements Listener {
             }
             if (mute(User.fromPlayer(player1), player, "", null)) {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
-                player1.sendMessage(_("&e&lWARNING&f: &7You have been muted."));
+                Form.at(player1, Prefix.WARNING, "&7You have been muted.");
             } else {
-                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
-                player1.sendMessage(_("&e&lWARNING&f: &7You are no longer muted."));
+                Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is no longer muted.");
+                Form.at(player1, Prefix.WARNING, "&7You are no longer muted.");
             }
         }
 
@@ -83,10 +83,8 @@ public class VCMute extends ICommand implements Listener {
 
             if (mute(User.fromPlayer(player1), player, reason.toString(), temp)) {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is muted.");
-                player1.sendMessage(_("&e&lWARNING&f: &7You have been muted."));
             } else {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is unmuted.");
-                player1.sendMessage(_("&e&lWARNING&f: &7You are no longer muted."));
             }
         }
     }
@@ -102,12 +100,14 @@ public class VCMute extends ICommand implements Listener {
 
         if (user.isMuted()) {
             if (user.getTempMute() == null) {
+                Form.at(e.getPlayer(), Prefix.ERROR, "You are muted!");
                 e.setCancelled(true);
             } else {
                 Date now = new Date();
                 if (now.after(user.getTempMute())) {
                     user.setMuted(false, null);
                 } else {
+                    Form.at(e.getPlayer(), Prefix.ERROR, "You are muted!");
                     e.setCancelled(true);
                 }
             }
