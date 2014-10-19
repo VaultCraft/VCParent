@@ -8,6 +8,7 @@ import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +51,8 @@ public class User {
 
     private HashMap<String, String> globalUserdata = new HashMap<>();
     private HashMap<String, String> userdata = new HashMap<>();
+
+    private BukkitTask task;
 
     public User(final Player player) {
         this.player = player;
@@ -98,7 +101,7 @@ public class User {
         }
         Bukkit.getPluginManager().callEvent(event);
         this.ready = true;
-        new UserSaveTask(player.getUniqueId().toString());
+        this.task = new UserSaveTask(player.getUniqueId().toString()).runTaskTimer(VCUtils.getInstance(), 5 * 1200, 5 * 1200);
     }
 
     public void addUserdata(String key, String value) {
@@ -164,13 +167,20 @@ public class User {
             async_player_map.remove(player);
             async_uuid_map.remove(player.getUniqueId().toString());
         });
+        user.getTask().cancel();
     }
 
     public static void disable() {
         for (final User user : async_player_map.values()) {
-            if (!user.isReady())
-                continue;
-            MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+            try {
+                if (!user.isReady())
+                    continue;
+                MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+                user.getTask().cancel();
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
         }
         async_player_map.clear();
     }
@@ -268,5 +278,9 @@ public class User {
 
     public void setScoreboard(VCScoreboard scoreboard) {
         this.scoreboard = scoreboard;
+    }
+
+    public BukkitTask getTask() {
+        return task;
     }
 }
