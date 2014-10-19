@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils.listener;
 
+import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.user.Group;
@@ -38,6 +39,12 @@ public class CommonPlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
 
+        for (Player p : VCUtils.getInstance().getServer().getOnlinePlayers()) {
+            if (p != event.getPlayer() && p.getName().equalsIgnoreCase(event.getPlayer().getName())) {
+                event.getPlayer().kickPlayer("Another player with your name is already on this server!");
+            }
+        }
+
         Player member = event.getPlayer();
 
         new User(member);
@@ -52,7 +59,13 @@ public class CommonPlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event) {
+        if (event.getReason() == "Logged in from another location.") {
+            event.setCancelled(true);
+        }
+
         event.setLeaveMessage(null);
+
+        User.remove(event.getPlayer());
     }
 
     @EventHandler
