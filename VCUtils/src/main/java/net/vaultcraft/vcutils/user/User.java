@@ -7,11 +7,13 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -58,6 +60,7 @@ public class User {
         async_uuid_map.put(player.getUniqueId().toString(), User.this);
         MessageClient.sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
     }
+
 
     public void setUserInfo(UserInfo info) {
         group = new Group.GroupHandler(player);
