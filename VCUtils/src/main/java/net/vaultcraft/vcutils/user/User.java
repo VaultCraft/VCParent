@@ -7,14 +7,12 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -196,7 +194,7 @@ public class User {
                 user.getTask().cancel();
             } catch (Exception e) {
                 e.printStackTrace();
-
+                continue;
             }
         }
         async_player_map.clear();
