@@ -25,6 +25,12 @@ public class VCHat extends ICommand {
     }
 
     public void processCommand(Player player, String[] args) {
+        if(hatPlayers.contains(player)) {
+            player.getEquipment().setHelmet(null);
+            hatPlayers.remove(player);
+            Form.at(player, Prefix.WARNING, "You have removed your hat.");
+            return;
+        }
         if (args.length == 0) {
             Form.at(player, Prefix.ERROR, "You must specify an item to put on your head!");
             return;
@@ -44,10 +50,6 @@ public class VCHat extends ICommand {
             player.getEquipment().setHelmet(new ItemStack(mat));
             hatPlayers.add(player);
             Form.at(player, Prefix.SUCCESS, "Enjoy your net hat!");
-        } else {
-            player.getEquipment().setHelmet(null);
-            hatPlayers.remove(player);
-            Form.at(player, Prefix.WARNING, "You have removed your hat.");
         }
 
     }
