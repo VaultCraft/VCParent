@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.commands;
 
+import com.google.common.collect.Lists;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class VCHat extends ICommand {
 
-    public static List<Player> hatPlayers;
+    public static List<Player> hatPlayers = Lists.newArrayList();
 
     public VCHat(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
