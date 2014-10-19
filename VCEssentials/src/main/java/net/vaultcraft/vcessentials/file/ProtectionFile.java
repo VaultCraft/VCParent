@@ -70,7 +70,7 @@ public class ProtectionFile implements FileController{
         while (regions.hasNext()) {
             JSONObject obj = (JSONObject)regions.next();
             String name = obj.get("name").toString();
-            int priority = (Integer)obj.get("priority");
+            int priority = ((Long)obj.get("priority")).intValue();
             Location min = null;
             Location max = null;
 

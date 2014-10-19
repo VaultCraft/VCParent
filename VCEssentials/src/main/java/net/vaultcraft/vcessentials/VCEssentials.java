@@ -7,6 +7,7 @@ import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
+import net.vaultcraft.vcessentials.listeners.VCHatBugfixListener;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
@@ -47,6 +48,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
+        Bukkit.getPluginManager().registerEvents(new VCHatBugfixListener(), this);
 
         saveDefaultConfig();
     }
@@ -71,6 +73,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCKick("kick", Group.HELPER));
         CommandManager.addCommand(new VCMute(this, "mute", Group.HELPER));
         CommandManager.addCommand(new VCBan(this, "ban", Group.MOD));
+        CommandManager.addCommand(new VCUnban(this, "ban", Group.MOD));
         CommandManager.addCommand(new VCMoney("money", Group.COMMON, "bal", "balance"));
         CommandManager.addCommand(new VCToken("tokens", Group.COMMON));
         CommandManager.addCommand(new VCTeleportHere("tphere", Group.MOD, "teleporthere"));
@@ -96,6 +99,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addRedirect("gmc", "gamemode 1");
         CommandManager.addRedirect("gma", "gamemode 2");
         CommandManager.addRedirect("pay", "money pay");
+        CommandManager.addRedirect("list", "glist");
 
         //whitelist
         CommandManager.addPluginWhitelist("/");

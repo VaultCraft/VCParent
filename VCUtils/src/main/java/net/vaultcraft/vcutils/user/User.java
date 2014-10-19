@@ -7,12 +7,14 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -61,6 +63,7 @@ public class User {
         async_uuid_map.put(player.getUniqueId().toString(), User.this);
         MessageClient.sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
     }
+
 
     public void setUserInfo(UserInfo info) {
         group = new Group.GroupHandler(player);
@@ -111,6 +114,14 @@ public class User {
         userdata.put(key, value);
     }
 
+    public boolean hasUserdata(String key) {
+        return userdata.containsKey(key);
+    }
+
+    public void removeUserdata(String key) {
+        userdata.remove(key);
+    }
+
     public void addGlobalUserdata(String key, String value) {
         if (userdata.containsKey(key))
             userdata.remove(key);
@@ -154,6 +165,8 @@ public class User {
         return globalUserdata;
     }
 
+    private boolean removed = false;
+
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
 
@@ -161,6 +174,10 @@ public class User {
         if (user == null)
             return;
 
+        if (user.removed)
+            return;
+
+        user.removed = true;
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
             if (user.isReady())
                 MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
