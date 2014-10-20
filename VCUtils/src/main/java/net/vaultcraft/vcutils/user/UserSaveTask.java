@@ -15,7 +15,6 @@ public class UserSaveTask extends BukkitRunnable {
 
     public UserSaveTask(String uuid) {
         this.uuid = uuid;
-        this.runTaskTimer(VCUtils.getInstance(), 15 * 1200, 15 * 1200);
     }
 
     @Override

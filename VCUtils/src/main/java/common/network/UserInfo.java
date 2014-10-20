@@ -28,6 +28,8 @@ public class UserInfo implements Serializable {
 
     public UserInfo(String serverName, String uuid) {
         User user = User.fromUUID(uuid);
+        if(user == null)
+            return;
         Group.GroupHandler group = user.getGroup();
         this.groups = new ArrayList<>();
         for(Group group1 : group.getAllGroups()) {
