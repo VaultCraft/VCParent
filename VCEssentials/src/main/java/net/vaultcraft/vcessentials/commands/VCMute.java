@@ -89,7 +89,7 @@ public class VCMute extends ICommand implements Listener {
         }
     }
 
-    private String _(String str) {
+    private String trs(String str) {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 
