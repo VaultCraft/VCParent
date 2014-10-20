@@ -9,6 +9,8 @@ import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcessentials.listeners.VCHatBugfixListener;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
@@ -16,6 +18,8 @@ import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -184,6 +188,21 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 System.out.println("Redirecting command to chat="+send);
                 ((Player)sender).chat("/"+send);
                 return true;
+            }
+            case "unban": {
+                if (args.length == 0) {
+                    sender.sendMessage(ChatColor.YELLOW + "Please specify a player to unban!");
+                } else if(args.length == 1) {
+                    final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+                    final User theUser = new User(offlinePlayer.getPlayer());
+                    Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+                        public void run() {
+                            theUser.setBanned(false, null);
+                            User.remove(offlinePlayer.getPlayer());
+                            sender.sendMessage(ChatColor.YELLOW+"You unbanned " + offlinePlayer.getName() + " from the server!");
+                        }
+                    }, 10);
+                }
             }
         }
         return true;
