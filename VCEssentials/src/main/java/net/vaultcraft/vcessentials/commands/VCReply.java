@@ -37,6 +37,10 @@ public class VCReply extends ICommand {
         }
 
         Player find = user.modifyConversation(null);
+        if (find == null) {
+            Form.at(player, Prefix.ERROR, "You are not chatting with anyone!");
+            return;
+        }
 
         if (!User.fromPlayer(find).isPrivateMessaging()) {
             Form.at(player, Prefix.WARNING, "The player you were talking to is no longer receiving private messages!");

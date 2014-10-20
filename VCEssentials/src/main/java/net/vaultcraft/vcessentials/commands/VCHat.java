@@ -37,7 +37,7 @@ public class VCHat extends ICommand {
         }
 
         Material mat = getMaterial(args[0]);
-        
+
         if (mat == null) {
             Form.at(player, Prefix.ERROR, "No such material exists!");
             return;
