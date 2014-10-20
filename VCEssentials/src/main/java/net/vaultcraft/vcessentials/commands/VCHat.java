@@ -36,7 +36,8 @@ public class VCHat extends ICommand {
             return;
         }
 
-        Material mat = Material.getMaterial(args[0].toUpperCase());
+        Material mat = getMaterial(args[0]);
+        
         if (mat == null) {
             Form.at(player, Prefix.ERROR, "No such material exists!");
             return;
@@ -52,5 +53,22 @@ public class VCHat extends ICommand {
             Form.at(player, Prefix.SUCCESS, "Enjoy your net hat!");
         }
 
+    }
+
+    private static Material getMaterial(String in) {
+        in = in.toLowerCase();
+
+        int id = -1;
+        try { id = Integer.parseInt(in); } catch (NumberFormatException ex) {}
+
+        if (id != -1)
+            return Material.getMaterial(id);
+
+        for (Material m : Material.values()) {
+            if (m.toString().toLowerCase().replace("_", "").equals(in))
+                return m;
+        }
+
+        return null;
     }
 }
