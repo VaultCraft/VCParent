@@ -194,6 +194,10 @@ public class VCEssentials extends JavaPlugin implements Listener {
                     sender.sendMessage(ChatColor.YELLOW + "Please specify a player to unban!");
                 } else if(args.length == 1) {
                     final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+                    if (offlinePlayer == null) {
+                        sender.sendMessage(ChatColor.RED+"No such player!");
+                        return true;
+                    }
                     final User theUser = new User(offlinePlayer.getPlayer());
                     Bukkit.getScheduler().runTaskLater(this, new Runnable() {
                         public void run() {

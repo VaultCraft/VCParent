@@ -31,6 +31,10 @@ public class VCUnban extends ICommand {
             Form.at(player, Prefix.ERROR, "Format: /unban <player uuid>");
         } else if(args.length == 1) {
             final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+            if (offlinePlayer == null) {
+                Form.at(player, Prefix.ERROR, "No such player!");
+                return;
+            }
             final User theUser = new User(offlinePlayer.getPlayer());
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 public void run() {
