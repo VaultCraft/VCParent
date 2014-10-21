@@ -49,7 +49,7 @@ public class CommonPlayerListener implements Listener {
 
         User thisUser = new User(member);
         int retries = 0;
-        while (!thisUser.isReady()) {
+        /*while (!thisUser.isReady()) {
             try {
                 Thread.sleep(50);
                 retries++;
@@ -60,7 +60,7 @@ public class CommonPlayerListener implements Listener {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
