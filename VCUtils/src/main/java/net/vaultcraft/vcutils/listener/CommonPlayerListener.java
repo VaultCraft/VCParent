@@ -47,7 +47,20 @@ public class CommonPlayerListener implements Listener {
 
         Player member = event.getPlayer();
 
-        new User(member);
+        User thisUser = new User(member);
+        int retries = 0;
+        while (!thisUser.isReady()) {
+            try {
+                Thread.sleep(50);
+                retries++;
+                if(retries > 20) {
+                    event.getPlayer().kickPlayer("We were unable to load your userdata within a short time. Try reconnecting. VCERR 001.");
+                    break;
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
