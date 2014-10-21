@@ -172,17 +172,18 @@ public class User {
         if (user == null)
             return;
 
-        if (user.removed)
+        if (user.isRemoved())
             return;
 
-        user.removed = true;
+        user.setRemoved(true);
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
             if (user.isReady())
                 MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
             async_player_map.remove(player);
             async_uuid_map.remove(player.getUniqueId().toString());
         });
-        user.getTask().cancel();
+        if(user.getTask() != null)
+            user.getTask().cancel();
     }
 
     public static void disable() {
@@ -297,5 +298,13 @@ public class User {
 
     public BukkitTask getTask() {
         return task;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 }
