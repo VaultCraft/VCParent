@@ -10,6 +10,7 @@ import net.minecraft.util.io.netty.channel.socket.nio.NioSocketChannel;
 import net.minecraft.util.io.netty.handler.codec.serialization.ClassResolvers;
 import net.minecraft.util.io.netty.handler.codec.serialization.ObjectDecoder;
 import net.minecraft.util.io.netty.handler.codec.serialization.ObjectEncoder;
+import net.minecraft.util.io.netty.util.concurrent.GenericFutureListener;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.logging.Logger;
 import org.bukkit.Bukkit;
@@ -45,13 +46,15 @@ public class MessageClient {
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true);
-        serverChannel = b.connect(host, port).addListener((ChannelFuture f) -> {
-            if (!f.isSuccess()) {
-                Logger.log(VCUtils.getInstance(), "Could not connect to message server.");
-                f.channel().eventLoop().schedule(this::init, 1L, TimeUnit.SECONDS);
-            } else {
-                Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
-                Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), () -> MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName)), 5l);
+        serverChannel = b.connect(host, port).addListener(new GenericFutureListener<ChannelFuture>() {
+            public void operationComplete(ChannelFuture f) throws Exception {
+                if (!f.isSuccess()) {
+                    Logger.log(VCUtils.getInstance(), "Could not connect to message server.");
+                    f.channel().eventLoop().schedule(MessageClient.this::init, 1L, TimeUnit.SECONDS);
+                } else {
+                    Logger.log(VCUtils.getInstance(), "Connected to Message Server.");
+                    Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), () -> MessageClient.sendPacket(new PacketInStart(VCUtils.uniqueServerName)), 5l);
+                }
             }
         }).awaitUninterruptibly().channel();
         return this;

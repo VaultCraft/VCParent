@@ -208,6 +208,25 @@ public class VCEssentials extends JavaPlugin implements Listener {
                     }, 10);
                 }
             }
+            case "announce": {
+                if (!(sender.isOp())) {
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lERROR&7: &fYou do not have permission to use this command!"));
+                    return true;
+                }
+
+                if (args.length == 0) {
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lERROR&7: &fPlease specify a message to broadcast!"));
+                }
+
+                String msg = "";
+                for (String arg : args) {
+                    msg+=(arg+" ");
+                }
+
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                }
+            }
         }
         return true;
     }
