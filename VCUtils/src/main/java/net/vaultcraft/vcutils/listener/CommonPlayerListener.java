@@ -10,10 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -47,20 +44,16 @@ public class CommonPlayerListener implements Listener {
 
         Player member = event.getPlayer();
 
-        User thisUser = new User(member);
-        int retries = 0;
-        /*while (!thisUser.isReady()) {
-            try {
-                Thread.sleep(50);
-                retries++;
-                if(retries > 100) {
-                    event.getPlayer().kickPlayer("We were unable to load your userdata within a short time. Try reconnecting. VCERR 001.");
-                    break;
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }*/
+        new User(member);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        User theUser = User.fromPlayer(event.getPlayer());
+        if(!theUser.isReady()) {
+            event.setCancelled(true);
+            Form.at(event.getPlayer(), Prefix.WARNING, "Your userdata has not yet been loaded. If this lasts more than a second please rejoin.");
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
