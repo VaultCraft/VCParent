@@ -53,7 +53,7 @@ public class CommonPlayerListener implements Listener {
             try {
                 Thread.sleep(50);
                 retries++;
-                if(retries > 20) {
+                if(retries > 100) {
                     event.getPlayer().kickPlayer("We were unable to load your userdata within a short time. Try reconnecting. VCERR 001.");
                     break;
                 }
