@@ -1,11 +1,14 @@
 package net.vaultcraft.vcessentials.blocks;
 
+import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.item.ItemSerializer;
+import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -27,7 +30,11 @@ import java.util.List;
 /**
  * Enderchest thing. Super untested.
  */
-public class BEnderChest implements Listener {
+public class BEnderChest extends ICommand implements Listener  {
+    public BEnderChest(String name, Group permission, String... aliases) {
+        super(name, permission, aliases);
+    }
+
     private enum EnderChestState {
         CHEST_MENU,
         CHEST_SWITCHING,
@@ -41,9 +48,7 @@ public class BEnderChest implements Listener {
 
         private short glassColor = -1;
 
-        private EnderChestState() {
-
-        }
+        private EnderChestState() {}
 
         private EnderChestState(int glassColor) {
             this.glassColor = (short) glassColor;
@@ -52,13 +57,14 @@ public class BEnderChest implements Listener {
         public short getGlassColor() {
             return glassColor;
         }
-    }
 
+    }
     private static class EnderChestInventory {
 
         public final int INV_SIZE = 27;
 
         private int slot = 0;
+
         private List<ItemStack> contents;
         private User user;
         private EnderChestInventory(int slot, List<ItemStack> contents, User user) {
@@ -66,7 +72,6 @@ public class BEnderChest implements Listener {
             this.contents = contents;
             this.user = user;
         }
-
         public int getItemCount() {
             return contents.size();
         }
@@ -121,6 +126,15 @@ public class BEnderChest implements Listener {
     }
 
     private HashMap<User, EnderChestState> activeUsers = new HashMap<>();
+
+    @Override
+    public void processCommand(Player player, String[] args) {
+        User netUser = User.fromPlayer(player);
+        if(!activeUsers.containsKey(netUser)) {
+            activeUsers.put(netUser, EnderChestState.CHEST_MENU);
+            player.openInventory(getEnderMenuForUser(netUser));
+        }
+    }
 
 
     @EventHandler

@@ -21,6 +21,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,8 +50,9 @@ public class VCEssentials extends JavaPlugin implements Listener {
         initCommands();
         mySQL = VCUtils.getInstance().getMySQL();
         sqlite = VCUtils.getInstance().getSqlite();
-
-        Bukkit.getPluginManager().registerEvents(new BEnderChest(), this);
+        BEnderChest enderChest = new BEnderChest("vault", Group.WOLF, "enderchest");
+        CommandManager.addCommand(enderChest);
+        Bukkit.getPluginManager().registerEvents(enderChest, this);
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new VCHatBugfixListener(), this);
 
