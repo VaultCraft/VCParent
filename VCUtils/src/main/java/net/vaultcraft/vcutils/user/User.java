@@ -66,9 +66,9 @@ public class User {
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
-            userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+            userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
             tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
-            globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get("Global-UserData"));
+            globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData(dbObject.get("Global-UserData").toString());
         } else {
             group.merge(Group.COMMON);
         }
@@ -177,7 +177,7 @@ public class User {
             dbObject.put("Muted", user.isMuted());
             dbObject.put("TempMute", user.getTempMute());
             dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
-            dbObject.put(VCUtils.serverName + "-UserData", user.getAllUserdata());
+            dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
             dbObject.put("Tokens", user.getTokens());
             dbObject.put("Global-UserData", dataToString(user.getAllUserdata()));
             DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
