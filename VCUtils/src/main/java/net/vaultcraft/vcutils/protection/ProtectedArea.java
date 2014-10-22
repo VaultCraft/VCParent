@@ -2,6 +2,8 @@ package net.vaultcraft.vcutils.protection;
 
 import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.user.Group;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.event.Event;
 
 import java.util.HashMap;

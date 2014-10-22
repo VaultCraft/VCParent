@@ -56,7 +56,7 @@ public class User {
         group = new Group.GroupHandler(player);
         DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
         if (dbObject != null) {
-            String groupList = dbObject.get("Group") == null ? "1" : (String) dbObject.get("Group");
+            String groupList = dbObject.get("Group") == null ? "1" : dbObject.get("Group").toString();
             for (int i : parseGroups(groupList))
                 group.merge(Group.fromPermLevel(i));
             banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");

@@ -194,7 +194,8 @@ public class VCEssentials extends JavaPlugin implements Listener {
             case "unban": {
                 if (args.length == 0) {
                     sender.sendMessage(ChatColor.YELLOW + "Please specify a player to unban!");
-                } else if(args.length == 1) {
+                    return true;
+                } else if(args.length >= 1) {
                     final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
                     if (offlinePlayer == null) {
                         sender.sendMessage(ChatColor.RED+"No such player!");
@@ -209,8 +210,10 @@ public class VCEssentials extends JavaPlugin implements Listener {
                         }
                     }, 10);
                 }
+
+                return true;
             }
-            case "announce": {
+            case "broadcast": {
                 if (!(sender.isOp())) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lERROR&7: &fYou do not have permission to use this command!"));
                     return true;
@@ -218,6 +221,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
 
                 if (args.length == 0) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lERROR&7: &fPlease specify a message to broadcast!"));
+                    return true;
                 }
 
                 String msg = "";

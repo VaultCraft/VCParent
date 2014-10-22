@@ -133,6 +133,8 @@ public class ProtectionListener implements Listener {
         }
     }
 
+    //TODO Projectile hit -> pvp
+
     @EventHandler (priority = EventPriority.LOW)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
