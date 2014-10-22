@@ -68,7 +68,7 @@ public class User {
             money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
             userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
             tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
-            globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get("Global-UserData"));
+            globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData(dbObject.get("Global-UserData").toString());
         } else {
             group.merge(Group.COMMON);
         }
