@@ -17,7 +17,7 @@ public enum Group {
     MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 12, false, ChatColor.GOLD, ChatColor.WHITE),
     ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 11, false, ChatColor.BLUE, ChatColor.WHITE),
     MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 10, false, ChatColor.DARK_GREEN, ChatColor.WHITE),
-    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false, ChatColor.getByChar((char)9), ChatColor.WHITE),
+    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false, ChatColor.DARK_AQUA, ChatColor.WHITE),
 
     //DONOR RANKS
     ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 8, 54, true, ChatColor.DARK_PURPLE, ChatColor.WHITE),
