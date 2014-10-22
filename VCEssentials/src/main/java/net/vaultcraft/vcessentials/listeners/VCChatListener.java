@@ -4,6 +4,9 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +29,20 @@ public class VCChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            if(event.getPlayer() == p) {
+                continue;
+            }
+            if(event.getMessage().toLowerCase().contains(p.getDisplayName().toLowerCase())) {
+                p.playSound(p.getLocation(), Sound.NOTE_PIANO, 1, 1);
+                String modifiedMessage = event.getMessage();
+                modifiedMessage = modifiedMessage.replaceAll("(?i)" + p.getDisplayName(), ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + p.getDisplayName() + ChatColor.RESET.toString());
+                p.sendMessage(String.format(event.getFormat(), event.getPlayer().getDisplayName(), modifiedMessage));
+                event.getRecipients().remove(p);
+            }
+        }
+
+
         if(User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER)) {
             return;
         }
