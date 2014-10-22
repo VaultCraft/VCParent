@@ -32,6 +32,9 @@ public class VCCommands extends ICommand {
         }
         for(ICommand command : CommandManager.getCommands().values()) {
             if(commandLists.keySet().contains(command.gerPermission())) {
+                if(commandLists.get(command.gerPermission()).toString().contains(command.getName() + ", ")) {
+                    continue;
+                }
                 commandLists.get(command.gerPermission()).append(command.getName()).append(", ");
                 if(!commandGroups.contains(command.gerPermission())) {
                     commandGroups.add(command.gerPermission());
@@ -45,7 +48,6 @@ public class VCCommands extends ICommand {
             if(theString.toString().contains(", ")) {
                 theString.deleteCharAt(theString.lastIndexOf(", "));
             }
-            if(theString.toString().endsWith(": "))
             player.sendMessage(theString.toString());
         }
     }
