@@ -1,18 +1,15 @@
 package net.vaultcraft.vcutils.user;
 
-import common.network.PacketInUserGet;
-import common.network.PacketInUserSend;
-import common.network.UserInfo;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -57,31 +54,25 @@ public class User {
     public User(final Player player) {
         this.player = player;
         group = new Group.GroupHandler(player);
-        async_player_map.put(player, User.this);
-        async_uuid_map.put(player.getUniqueId().toString(), User.this);
-        MessageClient.sendPacket(new PacketInUserGet(player.getUniqueId().toString(), VCUtils.serverName));
-    }
-
-
-    public void setUserInfo(UserInfo info) {
-        group = new Group.GroupHandler(player);
-        for(int i = 0; i < info.getGroups().size(); i++) {
-            int permLevel = info.getGroups().get(i);
-            if(i == 0) {
-                this.group.merge(Group.fromPermLevel(permLevel));
-                continue;
-            }
-            this.group.merge(Group.fromPermLevel(permLevel));
+        DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+        if (dbObject != null) {
+            String groupList = dbObject.get("Group") == null ? "1" : (String) dbObject.get("Group");
+            for (int i : parseGroups(groupList))
+                group.merge(Group.fromPermLevel(i));
+            banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
+            tempBan = (Date) dbObject.get("TempBan");
+            muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
+            tempMute = (Date) dbObject.get("TempMute");
+            Object o = dbObject.get(VCUtils.serverName + "-Money");
+            double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
+            money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
+            userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+            tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+            globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get("Global-UserData"));
+        } else {
+            group.merge(Group.COMMON);
         }
-        this.banned = info.isBanned();
-        this.tempBan = info.getTempBan();
-        this.muted = info.isMuted();
-        this.tempMute = info.getTempMute();
-        this.money = info.getMoney();
-        this.tokens = info.getTokens();
-        this.globalUserdata = info.getGlobalUserdata();
-        this.userdata = info.getUserdata();
-        //Check if banned
+
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
         UserLoadedEvent event = new UserLoadedEvent(User.this);
         if (banned) {
@@ -100,8 +91,10 @@ public class User {
                 return;
             }
         }
-        Bukkit.getPluginManager().callEvent(event);
+        async_player_map.put(player, User.this);
+        async_uuid_map.put(player.getUniqueId().toString(), User.this);
         this.ready = true;
+        Bukkit.getPluginManager().callEvent(event);
         this.task = new UserSaveTask(player.getUniqueId().toString()).runTaskTimer(VCUtils.getInstance(), 5 * 1200, 5 * 1200);
     }
 
@@ -168,7 +161,6 @@ public class User {
     public static void remove(final Player player) {
         final User user = async_player_map.get(player);
 
-        //banned or something..?
         if (user == null)
             return;
 
@@ -177,13 +169,29 @@ public class User {
 
         user.setRemoved(true);
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
-            if (user.isReady())
-                MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
+            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+            dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
+            dbObject.put("Group", groupsToString(user.getGroup()));
+            dbObject.put("Banned", user.isBanned());
+            dbObject.put("TempBan", user.getTempBan());
+            dbObject.put("Muted", user.isMuted());
+            dbObject.put("TempMute", user.getTempMute());
+            dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
+            dbObject.put(VCUtils.serverName + "-UserData", user.getAllUserdata());
+            dbObject.put("Tokens", user.getTokens());
+            dbObject.put("Global-UserData", dataToString(user.getAllUserdata()));
+            DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+            if (dbObject1 == null)
+                VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+            else
+                VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
             async_player_map.remove(player);
-            async_uuid_map.remove(player.getUniqueId().toString());
+            async_uuid_map.remove(user.getPlayer().getUniqueId().toString());
         });
         if(user.getTask() != null)
-            user.getTask().cancel();
+
+            if (user.getTask() != null)
+                user.getTask().cancel();
     }
 
     public static void disable() {
@@ -191,8 +199,26 @@ public class User {
             try {
                 if (!user.isReady())
                     continue;
-                MessageClient.sendPacket(new PacketInUserSend(user.getPlayer().getUniqueId().toString(), VCUtils.serverName, new UserInfo("", user.getPlayer().getUniqueId().toString())));
-                user.getTask().cancel();
+
+                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+                dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
+                dbObject.put("Group", groupsToString(user.getGroup()));
+                dbObject.put("Banned", user.isBanned());
+                dbObject.put("TempBan", user.getTempBan());
+                dbObject.put("Muted", user.isMuted());
+                dbObject.put("TempMute", user.getTempMute());
+                dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
+                dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
+                dbObject.put("Tokens", user.getTokens());
+                dbObject.put("Global-UserData", dataToString(user.getAllGlobalUserdata()));
+                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+                if (dbObject1 == null)
+                    VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+                else
+                    VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+
+                if(user.getTask() != null)
+                    user.getTask().cancel();
             } catch (Exception e) {
                 e.printStackTrace();
                 continue;
@@ -306,5 +332,57 @@ public class User {
 
     public void setRemoved(boolean removed) {
         this.removed = removed;
+    }
+
+    public static String dataToString(HashMap<String, String> userdata) {
+        StringBuilder sb = new StringBuilder();
+        int counter = 0;
+        for (Map.Entry entry : userdata.entrySet()) {
+            sb.append(entry.getKey()).append("▲").append(entry.getValue());
+            if (userdata.size() - 1 != counter)
+                sb.append("▼");
+            counter++;
+        }
+        return sb.toString();
+    }
+
+    public static HashMap<String, String> parseData(String data) {
+        HashMap<String, String> userdata = new HashMap<>();
+        if (!(data.contains("▲")))
+            return userdata;
+        if (data.contains("▼")) {
+            String[] parts = data.split("▼");
+            for (String s : parts) {
+                String[] entry = s.split("▲");
+                userdata.put(entry[0], entry[1]);
+            }
+        } else {
+            String[] parts = data.split("▲");
+            userdata.put(parts[0], parts[1]);
+        }
+        return userdata;
+    }
+
+    public static List<Integer> parseGroups(String s) {
+        List<Integer> groups = new ArrayList<>();
+        String[] parts = s.split(",");
+        for (String part : parts) {
+            try {
+                groups.add(Integer.parseInt(part));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return groups;
+    }
+
+    public static String groupsToString(Group.GroupHandler groups) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < groups.getAllGroups().size(); i++) {
+            if (i + 1 == groups.getAllGroups().size())
+                sb.append(groups.getAllGroups().get(i).getPermLevel());
+            else
+                sb.append(groups.getAllGroups().get(i).getPermLevel()).append(",");
+        }
+        return sb.toString();
     }
 }
