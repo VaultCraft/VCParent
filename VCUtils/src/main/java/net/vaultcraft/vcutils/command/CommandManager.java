@@ -111,4 +111,8 @@ public class CommandManager implements Listener {
     public static void removePluginWhitelist(String cmd) {
         commandWhitelist.remove(cmd);
     }
+
+    public static HashMap<String, ICommand> getCommands() {
+        return commands;
+    }
 }
