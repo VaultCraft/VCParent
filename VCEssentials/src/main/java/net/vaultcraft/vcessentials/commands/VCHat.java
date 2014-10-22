@@ -17,61 +17,37 @@ import java.util.List;
 
 public class VCHat extends ICommand {
 
-    public static List<Player> hatPlayers = Lists.newArrayList();
-
     public VCHat(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
     }
 
     public void processCommand(Player player, String[] args) {
-        if(hatPlayers.contains(player)) {
-            player.getEquipment().setHelmet(null);
-            hatPlayers.remove(player);
-            Form.at(player, Prefix.WARNING, "You have removed your hat.");
-            return;
-        }
-        if (args.length == 0) {
-            Form.at(player, Prefix.ERROR, "You must specify an item to put on your head!");
+        if (player.getItemInHand() == null || player.getItemInHand().getType().equals(Material.AIR)) {
+            Form.at(player, Prefix.ERROR, "You must be holding an item to put on your head!");
             return;
         }
 
-        Material mat = getMaterial(args[0]);
+        if (player.getEquipment().getHelmet() != null) {
+            if (player.getInventory().firstEmpty() == -1) {
+                player.getWorld().dropItemNaturally(player.getEyeLocation(), player.getEquipment().getHelmet());
+            }
+            else {
+                player.getInventory().addItem(player.getEquipment().getHelmet());
+            }
 
-        if (mat == null) {
-            Form.at(player, Prefix.ERROR, "No such material exists!");
-            return;
+            player.getEquipment().setHelmet(new ItemStack(Material.AIR));
         }
+
+        Material mat = player.getItemInHand().getType();
 
         if (!(mat.isBlock())) {
             Form.at(player, Prefix.ERROR, "This item is not a block!");
             return;
         }
-        if(!hatPlayers.contains(player)) {
-            if(player.getEquipment().getHelmet() != null) {
-                Form.at(player, Prefix.ERROR, "Please remove your current helmet before getting a hat.");
-                return;
-            }
-            player.getEquipment().setHelmet(new ItemStack(mat));
-            hatPlayers.add(player);
-            Form.at(player, Prefix.SUCCESS, "Enjoy your net hat!");
-        }
 
-    }
-
-    private static Material getMaterial(String in) {
-        in = in.toLowerCase();
-
-        int id = -1;
-        try { id = Integer.parseInt(in); } catch (NumberFormatException ex) {}
-
-        if (id != -1)
-            return Material.getMaterial(id);
-
-        for (Material m : Material.values()) {
-            if (m.toString().toLowerCase().replace("_", "").equals(in))
-                return m;
-        }
-
-        return null;
+        player.getEquipment().setHelmet(player.getItemInHand());
+        player.getInventory().removeItem(player.getItemInHand());
+        player.updateInventory();
+        Form.at(player, Prefix.SUCCESS, "Enjoy your net hat!");
     }
 }
