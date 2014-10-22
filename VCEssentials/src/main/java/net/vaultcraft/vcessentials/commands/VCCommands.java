@@ -36,7 +36,9 @@ public class VCCommands extends ICommand {
         Form.at(player, Prefix.VAULT_CRAFT, "You have access to the following commands: ");
         for(Group g : commandLists.keySet()) {
             StringBuilder theString = commandLists.get(g);
-            theString.deleteCharAt(theString.lastIndexOf(", "));
+            if(theString.toString().contains(", ")) {
+                theString.deleteCharAt(theString.lastIndexOf(", "));
+            }
             player.sendMessage(theString.toString());
         }
     }
