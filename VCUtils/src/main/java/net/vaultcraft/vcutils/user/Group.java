@@ -1,6 +1,7 @@
 package net.vaultcraft.vcutils.user;
 
 import com.google.common.collect.Lists;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -11,41 +12,48 @@ import java.util.List;
 public enum Group {
 
     //STAFF RANKS
-    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 14, false),
-    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 13, false),
-    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 12, false),
-    ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 11, false),
-    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 10, false),
-    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false),
+    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 14, false, ChatColor.RED),
+    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 13, false, ChatColor.GOLD),
+    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 12, false, ChatColor.GOLD),
+    ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 11, false, ChatColor.BLUE),
+    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 10, false, ChatColor.DARK_GREEN),
+    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false, ChatColor.getByChar((char)9)),
 
     //DONOR RANKS
-    ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 8, 54, true),
-    WITHER("&f/&e&lWITHER&f/ &e%user%&7: &f%message%", 7, 42, true),
-    ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 30, true),
-    SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 20, true),
-    SLIME("&f/&a&lSLIME&f/ &7%user%&a: &7%message%", 3, 12, true),
-    WOLF("&f/&8&lWOLF&f/ &7%user%&8: &7%message%", 2, 6, true),
+    ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 8, 54, true, ChatColor.DARK_PURPLE),
+    WITHER("&f/&e&lWITHER&f/ &e%user%&7: &f%message%", 7, 42, true, ChatColor.YELLOW),
+    ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 30, true, ChatColor.DARK_PURPLE),
+    SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 20, true, ChatColor.WHITE),
+    SLIME("&f/&a&lSLIME&f/ &7%user%&a: &7%message%", 3, 12, true, ChatColor.GREEN),
+    WOLF("&f/&8&lWOLF&f/ &7%user%&8: &7%message%", 2, 6, true, ChatColor.DARK_GRAY),
 
     //DEFAULT RANK
-    COMMON("&7%user%&f: &7%message%", 1, 1, false),
+    COMMON("&7%user%&f: &7%message%", 1, 1, false, ChatColor.GRAY),
 
     //EXTRA
-    YOUTUBE("&f/&c&lYOU&f&lTUBE&f/ &7%user%&c: &7%message%", 5, 20, true);
+    YOUTUBE("&f/&c&lYOU&f&lTUBE&f/ &7%user%&c: &7%message%", 5, 20, true, ChatColor.DARK_RED);
 
     private String tag;
     private int permLevel;
     private int enderChestSlots = 1;
     private boolean isDonorRank;
 
-    private Group(String tag, int permLevel, boolean isDonorRank) {
-        this(tag, permLevel, 54, isDonorRank);
+    private ChatColor color;
+
+    private Group(String tag, int permLevel, boolean isDonorRank, ChatColor color) {
+        this(tag, permLevel, 54, isDonorRank, color);
     }
 
-    private Group(String tag, int permLevel, int enderChestSlots, boolean isDonorRank) {
+    private Group(String tag, int permLevel, int enderChestSlots, boolean isDonorRank, ChatColor color) {
         this.tag = tag;
         this.permLevel = permLevel;
         this.isDonorRank = isDonorRank;
         this.enderChestSlots = enderChestSlots;
+        this.color = color;
+    }
+
+    public ChatColor getChatColor() {
+        return color;
     }
 
     public int getEnderChestSlots() {
