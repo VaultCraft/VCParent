@@ -8,9 +8,8 @@ import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcessentials.listeners.VCHatBugfixListener;
+import net.vaultcraft.vcessentials.listeners.VCPortalListener;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.chat.Form;
-import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
@@ -21,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,6 +53,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(enderChest, this);
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new VCHatBugfixListener(), this);
+        Bukkit.getPluginManager().registerEvents(new VCPortalListener(), this);
 
         saveDefaultConfig();
     }
