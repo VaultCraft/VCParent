@@ -5,7 +5,6 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
-import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -48,6 +47,10 @@ public class VCHat extends ICommand {
             return;
         }
         if(!hatPlayers.contains(player)) {
+            if(player.getEquipment().getHelmet() != null) {
+                Form.at(player, Prefix.ERROR, "Please remove your current helmet before getting a hat.");
+                return;
+            }
             player.getEquipment().setHelmet(new ItemStack(mat));
             hatPlayers.add(player);
             Form.at(player, Prefix.SUCCESS, "Enjoy your net hat!");

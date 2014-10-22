@@ -65,7 +65,7 @@ public class CommonPlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event) {
-        if (event.getReason() == "Logged in from another location.") {
+        if (event.getReason().equals("Logged in from another location.")) {
             event.setCancelled(true);
         }
 
