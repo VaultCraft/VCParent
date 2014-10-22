@@ -66,7 +66,7 @@ public class User {
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
-            userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get(VCUtils.serverName + "-UserData"));
+            userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData((String) (dbObject.get(VCUtils.serverName + "-UserData")));
             tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
             globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData((String) dbObject.get("Global-UserData"));
         } else {
