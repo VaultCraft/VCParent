@@ -31,9 +31,6 @@ public class VCCommands extends ICommand {
         }
         for(ICommand command : CommandManager.getCommands().values()) {
             if(commandLists.keySet().contains(command.gerPermission())) {
-                if(commandLists.get(command.gerPermission()).toString().contains(command.getName() + ", ")) {
-                    continue;
-                }
                 commandLists.get(command.gerPermission()).append(command.getName()).append(", ");
                 commandCount.put(command.gerPermission(), commandCount.get(command.gerPermission()) + 1);
             }
