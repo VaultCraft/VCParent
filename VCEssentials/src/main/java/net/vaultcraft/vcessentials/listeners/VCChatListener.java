@@ -36,7 +36,7 @@ public class VCChatListener implements Listener {
             if(event.getMessage().toLowerCase().contains(p.getDisplayName().toLowerCase())) {
                 p.playSound(p.getLocation(), Sound.NOTE_PIANO, 1, 1);
                 String modifiedMessage = event.getMessage();
-                modifiedMessage = modifiedMessage.replaceAll("(?i)" + p.getDisplayName(), ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + p.getDisplayName() + ChatColor.RESET.toString());
+                modifiedMessage = modifiedMessage.replaceAll("(?i)" + p.getDisplayName(), ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + p.getDisplayName() + User.fromPlayer(event.getPlayer()).getGroup().getHighest().getMessageColor());
                 p.sendMessage(String.format(event.getFormat(), event.getPlayer().getDisplayName(), modifiedMessage));
                 event.getRecipients().remove(p);
             }

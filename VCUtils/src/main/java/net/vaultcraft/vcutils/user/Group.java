@@ -12,26 +12,26 @@ import java.util.List;
 public enum Group {
 
     //STAFF RANKS
-    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 14, false, ChatColor.RED),
-    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 13, false, ChatColor.GOLD),
-    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 12, false, ChatColor.GOLD),
-    ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 11, false, ChatColor.BLUE),
-    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 10, false, ChatColor.DARK_GREEN),
-    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false, ChatColor.getByChar((char)9)),
+    OWNER("&f/&c&lOWNER&f/ &c%user%&f: &c%message%", 14, false, ChatColor.RED, ChatColor.RED),
+    DEVELOPER("&f/&6&lDEV&f/ &7%user%&6: &f%message%", 13, false, ChatColor.GOLD, ChatColor.WHITE),
+    MANAGER("&f/&6&lMANAGER&f/ &e%user%&6: &f%message%", 12, false, ChatColor.GOLD, ChatColor.WHITE),
+    ADMIN("&f/&b&lADMIN&f/ &7%user%&b: &f%message%", 11, false, ChatColor.BLUE, ChatColor.WHITE),
+    MOD("&f/&2&lMOD&f/ &7%user%&2: &f%message%", 10, false, ChatColor.DARK_GREEN, ChatColor.WHITE),
+    HELPER("&f/&9&lHELPER&f/ &7%user%&9: &f%message%", 9, false, ChatColor.getByChar((char)9), ChatColor.WHITE),
 
     //DONOR RANKS
-    ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 8, 54, true, ChatColor.DARK_PURPLE),
-    WITHER("&f/&e&lWITHER&f/ &e%user%&7: &f%message%", 7, 42, true, ChatColor.YELLOW),
-    ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 30, true, ChatColor.DARK_PURPLE),
-    SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 20, true, ChatColor.WHITE),
-    SLIME("&f/&a&lSLIME&f/ &7%user%&a: &7%message%", 3, 12, true, ChatColor.GREEN),
-    WOLF("&f/&8&lWOLF&f/ &7%user%&8: &7%message%", 2, 6, true, ChatColor.DARK_GRAY),
+    ENDERDRAGON("&f/&5&lENDER&7&lDRAGON&f/ &5%user%&7: &f%message%", 8, 54, true, ChatColor.DARK_PURPLE, ChatColor.WHITE),
+    WITHER("&f/&e&lWITHER&f/ &e%user%&7: &f%message%", 7, 42, true, ChatColor.YELLOW, ChatColor.WHITE),
+    ENDERMAN("&f/&5&lENDERMAN&f/ &7%user%&5: &f%message%", 6, 30, true, ChatColor.DARK_PURPLE, ChatColor.WHITE),
+    SKELETON("&f/&lSKELETON&f/ &7%user%&f: &7%message%", 4, 20, true, ChatColor.WHITE, ChatColor.GRAY),
+    SLIME("&f/&a&lSLIME&f/ &7%user%&a: &7%message%", 3, 12, true, ChatColor.GREEN, ChatColor.GRAY),
+    WOLF("&f/&8&lWOLF&f/ &7%user%&8: &7%message%", 2, 6, true, ChatColor.DARK_GRAY, ChatColor.GRAY),
 
     //DEFAULT RANK
-    COMMON("&7%user%&f: &7%message%", 1, 1, false, ChatColor.GRAY),
+    COMMON("&7%user%&f: &7%message%", 1, 1, false, ChatColor.GRAY, ChatColor.GRAY),
 
     //EXTRA
-    YOUTUBE("&f/&c&lYOU&f&lTUBE&f/ &7%user%&c: &7%message%", 5, 20, true, ChatColor.DARK_RED);
+    YOUTUBE("&f/&c&lYOU&f&lTUBE&f/ &7%user%&c: &7%message%", 5, 20, true, ChatColor.DARK_RED, ChatColor.GRAY);
 
     private String tag;
     private int permLevel;
@@ -39,22 +39,26 @@ public enum Group {
     private boolean isDonorRank;
 
     private ChatColor color;
+    private ChatColor messageColor;
 
-    private Group(String tag, int permLevel, boolean isDonorRank, ChatColor color) {
-        this(tag, permLevel, 54, isDonorRank, color);
+    private Group(String tag, int permLevel, boolean isDonorRank, ChatColor color, ChatColor messageColor) {
+        this(tag, permLevel, 54, isDonorRank, color, messageColor);
     }
 
-    private Group(String tag, int permLevel, int enderChestSlots, boolean isDonorRank, ChatColor color) {
+    private Group(String tag, int permLevel, int enderChestSlots, boolean isDonorRank, ChatColor color, ChatColor messageColor) {
         this.tag = tag;
         this.permLevel = permLevel;
         this.isDonorRank = isDonorRank;
         this.enderChestSlots = enderChestSlots;
         this.color = color;
+        this.messageColor = messageColor;
     }
 
     public ChatColor getChatColor() {
         return color;
     }
+
+    public ChatColor getMessageColor() { return messageColor; }
 
     public int getEnderChestSlots() {
         return enderChestSlots;

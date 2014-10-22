@@ -18,7 +18,7 @@ public class VCCommands extends ICommand {
         StringBuilder sb = new StringBuilder();
         for(ICommand command : CommandManager.getCommands().values()) {
             if(command.checkPerms(User.fromPlayer(player))) {
-                sb.append(command.getName()).append(", ");
+                sb.append(command.gerPermission().getChatColor().toString()).append(command.getName()).append(", ").append(Prefix.VAULT_CRAFT.getChatColor());
             }
         }
         if(sb.length() > 0) {
