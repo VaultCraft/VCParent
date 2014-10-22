@@ -188,6 +188,7 @@ public class User {
             async_player_map.remove(player);
             async_uuid_map.remove(user.getPlayer().getUniqueId().toString());
         });
+
         if(user.getTask() != null)
 
             if (user.getTask() != null)
