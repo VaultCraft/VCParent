@@ -177,7 +177,7 @@ public class User {
             dbObject.put("Muted", user.isMuted());
             dbObject.put("TempMute", user.getTempMute());
             dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
-            dbObject.put(VCUtils.serverName + "-UserData", user.getAllUserdata());
+            dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
             dbObject.put("Tokens", user.getTokens());
             dbObject.put("Global-UserData", dataToString(user.getAllUserdata()));
             DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
