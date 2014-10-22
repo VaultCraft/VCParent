@@ -23,7 +23,7 @@ public class VCCommands extends ICommand {
         for(Group g : Group.values()) {
             if(User.fromPlayer(player).getGroup().hasPermission(g)) {
                 StringBuilder sb = new StringBuilder();
-                sb.append(g.getChatColor()).append(ChatColor.BOLD.toString()).append(g.getName()).append(": ");
+                sb.append(g.getChatColor()).append(ChatColor.BOLD.toString()).append(g.getName()).append(": ").append(ChatColor.RESET).append(g.getChatColor());
                 commandLists.put(g, sb);
             }
         }
