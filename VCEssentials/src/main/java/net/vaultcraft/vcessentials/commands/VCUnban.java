@@ -15,6 +15,7 @@ import java.util.UUID;
 
 /**
  * Created by Sean on 10/18/2014.
+ * Dedicated to UnderTheSee <3
  */
 public class VCUnban extends ICommand {
 
