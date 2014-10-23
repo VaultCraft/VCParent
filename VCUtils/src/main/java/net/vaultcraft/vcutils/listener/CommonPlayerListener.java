@@ -74,7 +74,7 @@ public class CommonPlayerListener implements Listener {
         User.remove(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         User chatter = User.fromPlayer(event.getPlayer());
         String message = event.getMessage();
