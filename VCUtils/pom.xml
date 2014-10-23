@@ -65,16 +65,7 @@
 
                 <configuration>
                     <minimizeJar>true</minimizeJar>
-                    <relocations>
-                        <relocation>
-                            <pattern>com.mongodb</pattern>
-                            <shadedPattern>${project.groupId}.shade.mongodb</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bson</pattern>
-                            <shadedPattern>${project.groupId}.shade.bson</shadedPattern>
-                        </relocation>
-                    </relocations>
+
                     <artifactSet>
                         <includes>
                             <include>org.mongodb:mongo-java-driver</include>

@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.UUIDFetcher;
+import net.vaultcraft.vcutils.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -37,7 +38,7 @@ public class VCUnban extends ICommand {
                 Form.at(player, Prefix.ERROR, "Unable to fetch the UUID for " + args[1]);
                 return;
             }
-            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
+            DBObject dbObject = User.getDBObject(uuid);
 
             if(dbObject == null) {
                 Form.at(player, Prefix.ERROR, args[1] + " does not exist in the database.");
@@ -47,7 +48,7 @@ public class VCUnban extends ICommand {
             if(banned) {
                 dbObject.put("Banned", false);
                 Form.at(player, Prefix.SUCCESS, args[1] + " has been unbanned!");
-                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
+                DBObject dbObject1 = User.getDBObject(uuid);
                 VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
             } else {
                 Form.at(player, Prefix.ERROR, args[1] + " is not banned!");

@@ -386,4 +386,8 @@ public class User {
         }
         return sb.toString();
     }
+
+    public static DBObject getDBObject(UUID uuid) {
+        return VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid.toString());
+    }
 }
