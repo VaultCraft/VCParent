@@ -28,7 +28,7 @@ public class VCMe extends ICommand {
         }
 
         VCChatListener.emotingPlayers.add(player);
-        AsyncPlayerChatEvent chat = new AsyncPlayerChatEvent(false, player, StringUtils.buildFromArray(args), new HashSet<Player>(Bukkit.getOnlinePlayers()));
+        AsyncPlayerChatEvent chat = new AsyncPlayerChatEvent(false, player, StringUtils.buildFromArray(args), new HashSet<>(Bukkit.getOnlinePlayers()));
         Bukkit.getPluginManager().callEvent(chat);
     }
 }

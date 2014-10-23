@@ -38,7 +38,7 @@ public class VCChatListener implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if(emotingPlayers.contains(event.getPlayer())) {
             emotingPlayers.remove(event.getPlayer());
-            event.setFormat("* " + event.getFormat().replaceFirst(":", ""));
+            event.setFormat("* " + event.getFormat().replaceFirst("\\:", ""));
         }
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(event.getPlayer() == p) {
