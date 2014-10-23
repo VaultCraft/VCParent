@@ -96,6 +96,12 @@ public class CommandManager implements Listener {
         commands.remove(cmd.getName());
     }
 
+    public static void removeCommand(String cmdName) {
+        if(commands.containsKey(cmdName)) {
+            removeCommand(commands.get(cmdName));
+        }
+    }
+
     public static void addRedirect(String from, String to) {
         redirect.put(from, to);
     }
