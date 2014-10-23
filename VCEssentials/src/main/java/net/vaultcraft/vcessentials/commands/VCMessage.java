@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.commands;
 
+import net.vaultcraft.vcessentials.listeners.VCChatListener;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
@@ -52,6 +53,10 @@ public class VCMessage extends ICommand {
         if (!User.fromPlayer(find).isPrivateMessaging()) {
             Form.at(player, Prefix.WARNING, "You cannot messages this player as they are not private messaging!");
             return;
+        }
+
+        if(VCChatListener.afkPlayers.contains(find)) {
+            Form.at(player, Prefix.WARNING, find.getName() + " is currently AFK and may not respond to your message!");
         }
 
         String message = StringUtils.buildFromArray(args, 1);
