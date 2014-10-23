@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -27,7 +28,7 @@ public class VCChatListener implements Listener {
         instance = this;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(event.getPlayer() == p) {
