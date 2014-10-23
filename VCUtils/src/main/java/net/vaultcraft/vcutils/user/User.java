@@ -388,6 +388,9 @@ public class User {
     }
 
     public static DBObject getDBObject(UUID uuid) {
+        if(uuid == null) {
+            return null;
+        }
         return VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid.toString());
     }
 }
