@@ -12,13 +12,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class VCChatListener implements Listener {
 
     public int delayTime = 2;
+
+    public static List<Player> afkPlayers = new ArrayList<>();
 
     private HashMap<Player, Long> playerTimes = new HashMap<>();
     private static DecimalFormat df = new DecimalFormat("#,##0.#");
@@ -35,6 +40,9 @@ public class VCChatListener implements Listener {
                 continue;
             }
             if(event.getMessage().toLowerCase().contains(p.getDisplayName().toLowerCase())) {
+                if(afkPlayers.contains(p)) {
+                    Form.at(event.getPlayer(), Prefix.WARNING, p.getName() + " is currently AFK and may not respond to your message!");
+                }
                 p.playSound(p.getLocation(), Sound.NOTE_PIANO, 1, 1);
                 String modifiedMessage = event.getMessage();
                 modifiedMessage = modifiedMessage.replaceAll("(?i)" + p.getDisplayName(), ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + p.getDisplayName() + User.fromPlayer(event.getPlayer()).getGroup().getHighest().getMessageColor());
@@ -75,6 +83,14 @@ public class VCChatListener implements Listener {
             }
         } else {
             playerTimes.put(event.getPlayer(), System.currentTimeMillis());
+        }
+    }
+
+
+    @EventHandler
+    public void onLeave(PlayerQuitEvent event) {
+        if(afkPlayers.contains(event.getPlayer())) {
+            afkPlayers.remove(event.getPlayer());
         }
     }
 
