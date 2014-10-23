@@ -1,5 +1,7 @@
 package net.vaultcraft.vcessentials.commands;
 
+import com.mongodb.DBObject;
+import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
@@ -28,21 +30,29 @@ public class VCUnban extends ICommand {
     @Override
     public void processCommand(final Player player, String[] args) {
         if (args.length == 0) {
-            Form.at(player, Prefix.ERROR, "Format: /unban <player uuid>");
+            Form.at(player, Prefix.ERROR, "Format: /unban <player name>");
         } else if(args.length == 1) {
-            final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-            if (offlinePlayer == null) {
-                Form.at(player, Prefix.ERROR, "No such player!");
+            UUID uuid;
+            try {
+                uuid = UUIDFetcher.getUUIDOf(args[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Form.at(player, Prefix.ERROR, "Unable to fetch the UUID for " + args[1]);
                 return;
             }
-            final User theUser = new User(offlinePlayer.getPlayer());
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                public void run() {
-                    theUser.setBanned(false, null);
-                    User.remove(offlinePlayer.getPlayer());
-                    Form.at(player, Prefix.SUCCESS, offlinePlayer.getName()+" has been successfully unbanned!");
-                }
-            }, 10);
+            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
+
+            if(dbObject == null) {
+                Form.at(player, Prefix.ERROR, args[1] + " does not exist in the database.");
+                return;
+            }
+            boolean banned = (boolean) dbObject.get("Banned");
+            if(banned) {
+                dbObject.put("Banned", false);
+                Form.at(player, Prefix.SUCCESS, args[1] + " has been unbanned!");
+            } else {
+                Form.at(player, Prefix.ERROR, args[1] + " is not banned!");
+            }
         }
     }
 }
