@@ -24,7 +24,6 @@ public class StringUtils {
     }
 
     public static Object type(String input) {
-        input = input;
         if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false"))
             return Boolean.valueOf(input);
 
