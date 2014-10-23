@@ -124,7 +124,7 @@ public class VCBan extends ICommand implements Listener {
 
         boolean banned = (boolean) dbObject.get("Banned");
         if(!banned) {
-            dbObject.put("Banned", false);
+            dbObject.put("Banned", true);
             DBObject dbObject1 = User.getDBObject(uuid);
             VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
             return true;
