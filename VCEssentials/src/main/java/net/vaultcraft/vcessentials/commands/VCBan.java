@@ -54,9 +54,9 @@ public class VCBan extends ICommand implements Listener {
                     return;
                 }
                 if(ban(uuid)) {
-                    Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is banned.");
+                    Form.at(player, Prefix.SUCCESS, "Player: " + args[0] + " is banned.");
                 } else {
-                    Form.at(player, Prefix.ERROR, "Player: " + player1.getName() + " is not in the database or is already banned.");
+                    Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not in the database or is already banned.");
                 }
             }
             if (ban(User.fromPlayer(player1), player, "", null)) {
@@ -123,7 +123,7 @@ public class VCBan extends ICommand implements Listener {
         }
 
         boolean banned = (boolean) dbObject.get("Banned");
-        if(banned) {
+        if(!banned) {
             dbObject.put("Banned", false);
             DBObject dbObject1 = User.getDBObject(uuid);
             VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
