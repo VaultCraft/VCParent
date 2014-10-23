@@ -24,6 +24,7 @@ public class VCChatListener implements Listener {
     public int delayTime = 2;
 
     public static List<Player> afkPlayers = new ArrayList<>();
+    public static List<Player> emotingPlayers = new ArrayList<>();
 
     private HashMap<Player, Long> playerTimes = new HashMap<>();
     private static DecimalFormat df = new DecimalFormat("#,##0.#");
@@ -35,6 +36,10 @@ public class VCChatListener implements Listener {
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if(emotingPlayers.contains(event.getPlayer())) {
+            emotingPlayers.remove(event.getPlayer());
+            event.setFormat("* " + event.getFormat().replaceFirst(":", ""));
+        }
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(event.getPlayer() == p) {
                 continue;
