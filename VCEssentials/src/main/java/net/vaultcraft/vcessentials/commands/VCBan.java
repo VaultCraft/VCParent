@@ -58,6 +58,7 @@ public class VCBan extends ICommand implements Listener {
                 } else {
                     Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not in the database or is already banned.");
                 }
+                return;
             }
             if (ban(User.fromPlayer(player1), player, "", null)) {
                 Form.at(player, Prefix.SUCCESS, "Player: " + player1.getName() + " is banned.");
