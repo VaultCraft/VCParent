@@ -32,26 +32,26 @@ public class VCUnban extends ICommand {
         } else if(args.length == 1) {
             UUID uuid;
             try {
-                uuid = UUIDFetcher.getUUIDOf(args[1]);
+                uuid = UUIDFetcher.getUUIDOf(args[0]);
             } catch (Exception e) {
                 e.printStackTrace();
-                Form.at(player, Prefix.ERROR, "Unable to fetch the UUID for " + args[1]);
+                Form.at(player, Prefix.ERROR, "Unable to fetch the UUID for " + args[0]);
                 return;
             }
             DBObject dbObject = User.getDBObject(uuid);
 
             if(dbObject == null) {
-                Form.at(player, Prefix.ERROR, args[1] + " does not exist in the database.");
+                Form.at(player, Prefix.ERROR, args[0] + " does not exist in the database.");
                 return;
             }
             boolean banned = (boolean) dbObject.get("Banned");
             if(banned) {
                 dbObject.put("Banned", false);
-                Form.at(player, Prefix.SUCCESS, args[1] + " has been unbanned!");
+                Form.at(player, Prefix.SUCCESS, args[0] + " has been unbanned!");
                 DBObject dbObject1 = User.getDBObject(uuid);
                 VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
             } else {
-                Form.at(player, Prefix.ERROR, args[1] + " is not banned!");
+                Form.at(player, Prefix.ERROR, args[0] + " is not banned!");
             }
         }
     }
