@@ -23,6 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -163,6 +164,9 @@ public class BEnderChest extends ICommand implements Listener  {
                         myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
+                activeUsers.remove(User.fromPlayer((Player) e.getPlayer()));
+                e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer())));
+                return;
             }
             activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
         }
