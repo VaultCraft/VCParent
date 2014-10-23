@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.HashSet;
+
 /**
  * Created by Sean on 10/22/2014.
  */
@@ -26,7 +28,7 @@ public class VCMe extends ICommand {
         }
 
         VCChatListener.emotingPlayers.add(player);
-        AsyncPlayerChatEvent chat = new AsyncPlayerChatEvent(false, player, StringUtils.buildFromArray(args), (java.util.Set<Player>) Bukkit.getOnlinePlayers());
+        AsyncPlayerChatEvent chat = new AsyncPlayerChatEvent(false, player, StringUtils.buildFromArray(args), new HashSet<Player>(Bukkit.getOnlinePlayers()));
         Bukkit.getPluginManager().callEvent(chat);
     }
 }
