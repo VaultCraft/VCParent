@@ -50,7 +50,7 @@ public class VCUnban extends ICommand {
                 dbObject.put("Banned", false);
                 Form.at(player, Prefix.SUCCESS, args[0] + " has been unbanned!");
                 DBObject dbObject1 = User.getDBObject(uuid);
-                VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+                VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
             } else {
                 Form.at(player, Prefix.ERROR, args[0] + " is not banned!");
             }
