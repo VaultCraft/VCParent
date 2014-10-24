@@ -167,9 +167,9 @@ public class BEnderChest extends ICommand implements Listener  {
                 activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
                 activeUsers.put(User.fromPlayer((Player) e.getPlayer()), EnderChestState.CHEST_MENU);
                 e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer())));
-                return;
+            } else {
+                activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
             }
-            activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
         }
     }
 
