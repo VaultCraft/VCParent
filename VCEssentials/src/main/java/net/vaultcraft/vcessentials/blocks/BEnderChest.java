@@ -212,7 +212,7 @@ public class BEnderChest extends ICommand implements Listener  {
             short statusColor = thisInv.getCurrState().getGlassColor();
             ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, statusColor);
             ItemMeta glassMeta = glass.getItemMeta();
-            glassMeta.setDisplayName("Ender Vault #"+i);
+            glassMeta.setDisplayName("Ender Vault #" + (i + 1) );
             glassMeta.setLore(new ArrayList<String>() {{
             add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + " Slots filled.");
             }});
