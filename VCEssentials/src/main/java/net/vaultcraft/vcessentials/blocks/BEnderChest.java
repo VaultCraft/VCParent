@@ -97,7 +97,7 @@ public class BEnderChest extends ICommand implements Listener  {
         }
 
         public Inventory getInventory() {
-            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Chest #"+slot); // TODO actually pass owner in
+            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Vault #"+slot); // TODO actually pass owner in
             for(ItemStack i : contents) {
                 inv.addItem(i);
             }
@@ -205,7 +205,7 @@ public class BEnderChest extends ICommand implements Listener  {
     }
 
     private Inventory getEnderMenuForUser(User user) {
-        Inventory base = Bukkit.createInventory(null, 54, "Ender Storage");
+        Inventory base = Bukkit.createInventory(null, 54, "Ender Vault");
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
             short statusColor = thisInv.getCurrState().getGlassColor();
