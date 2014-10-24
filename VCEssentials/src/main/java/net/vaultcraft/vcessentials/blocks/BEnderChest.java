@@ -97,7 +97,7 @@ public class BEnderChest extends ICommand implements Listener  {
         }
 
         public Inventory getInventory() {
-            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Vault #"+slot); // TODO actually pass owner in
+            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Vault #"+ slot + 1); // TODO actually pass owner in
             for(ItemStack i : contents) {
                 inv.addItem(i);
             }
@@ -157,7 +157,7 @@ public class BEnderChest extends ICommand implements Listener  {
                 activeUsers.put(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()), EnderChestState.CHEST_INVENTORY);
                 return;
             } else if(activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer())) == EnderChestState.CHEST_INVENTORY) {
-                int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]); // This feels so hacky
+                int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]) - 1; // This feels so hacky
                 JSONArray myCoolArray = new JSONArray();
                 for(ItemStack i : e.getInventory()) {
                     if (i != null)
