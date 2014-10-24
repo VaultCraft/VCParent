@@ -126,7 +126,7 @@ public class ProtectionFile implements FileController{
                 }
                 rObj.put("flags", arr);
 
-                if (area.getArea().getMax() != null) {
+                if (area.getArea().getMax() != null && area.getArea().getMax().getWorld() != null) {
                     rObj.put("world", area.getArea().getMax().getWorld().getName());
 
                     Location min = area.getArea().getMin();

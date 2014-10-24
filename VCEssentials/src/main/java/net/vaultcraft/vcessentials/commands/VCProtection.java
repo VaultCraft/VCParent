@@ -252,7 +252,7 @@ public class VCProtection extends ICommand {
         say = (say.contains(", ") ? say.substring(0, say.length()-2) : say);
         say+=")";
         Form.at(player, Prefix.NOTHING, say);
-        Form.at(player, Prefix.NOTHING, "  &cMin: &e&n("+minStr+")&r&c, Max: &e&n("+maxStr+")");
+        Form.at(player, Prefix.NOTHING, "  &cMin: &e&n("+minStr+")&r&c, Max: &e&n("+maxStr+")&r&c, World: &e&n("+min.getWorld().getName()+")");
     }
 
     private void listRegions(Player player, String[] args) {
