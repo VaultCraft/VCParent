@@ -165,7 +165,7 @@ public class BEnderChest extends ICommand implements Listener  {
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
                 activeUsers.remove(User.fromPlayer((Player) e.getPlayer()));
-                ((Player) e.getPlayer()).performCommand("/vault");
+                ((Player) e.getPlayer()).performCommand("vault");
                 return;
             }
             activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
