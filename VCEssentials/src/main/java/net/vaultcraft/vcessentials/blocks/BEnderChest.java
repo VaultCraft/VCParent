@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.blocks;
 
+import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
@@ -164,7 +165,7 @@ public class BEnderChest extends ICommand implements Listener  {
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
                 activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
-                e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer())));
+                Bukkit.getScheduler().runTaskLater(VCEssentials.getInstance(), () -> e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer()))), 1);
             } else {
                 activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
             }
