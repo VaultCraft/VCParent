@@ -46,6 +46,8 @@ public class User {
     private double money = 0;
     private int tokens = 0;
 
+    private String prefix;
+
     private HashMap<String, String> globalUserdata = new HashMap<>();
     private HashMap<String, String> userdata = new HashMap<>();
 
@@ -63,6 +65,7 @@ public class User {
             tempBan = (Date) dbObject.get("TempBan");
             muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
             tempMute = (Date) dbObject.get("TempMute");
+            prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
@@ -169,28 +172,12 @@ public class User {
 
         user.setRemoved(true);
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
-            DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
-            dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
-            dbObject.put("Group", groupsToString(user.getGroup()));
-            dbObject.put("Banned", user.isBanned());
-            dbObject.put("TempBan", user.getTempBan());
-            dbObject.put("Muted", user.isMuted());
-            dbObject.put("TempMute", user.getTempMute());
-            dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
-            dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
-            dbObject.put("Tokens", user.getTokens());
-            dbObject.put("Global-UserData", dataToString(user.getAllUserdata()));
-            DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
-            if (dbObject1 == null)
-                VCUtils.getInstance().getMongoDB().insert(VCUtils.mongoDBName, "Users", dbObject);
-            else
-                VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+            update(user);
             async_player_map.remove(player);
             async_uuid_map.remove(user.getPlayer().getUniqueId().toString());
         });
 
         if(user.getTask() != null)
-
             if (user.getTask() != null)
                 user.getTask().cancel();
     }
@@ -201,22 +188,7 @@ public class User {
                 if (!user.isReady())
                     continue;
 
-                DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
-                dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
-                dbObject.put("Group", groupsToString(user.getGroup()));
-                dbObject.put("Banned", user.isBanned());
-                dbObject.put("TempBan", user.getTempBan());
-                dbObject.put("Muted", user.isMuted());
-                dbObject.put("TempMute", user.getTempMute());
-                dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
-                dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
-                dbObject.put("Tokens", user.getTokens());
-                dbObject.put("Global-UserData", dataToString(user.getAllGlobalUserdata()));
-                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
-                if (dbObject1 == null)
-                    VCUtils.getInstance().getMongoDB().insert(VCUtils.mongoDBName, "Users", dbObject);
-                else
-                    VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+                update(user);
 
                 if(user.getTask() != null)
                     user.getTask().cancel();
@@ -226,6 +198,26 @@ public class User {
             }
         }
         async_player_map.clear();
+    }
+
+    static void update(User user) {
+        DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
+        dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
+        dbObject.put("Group", groupsToString(user.getGroup()));
+        dbObject.put("Banned", user.isBanned());
+        dbObject.put("TempBan", user.getTempBan());
+        dbObject.put("Muted", user.isMuted());
+        dbObject.put("TempMute", user.getTempMute());
+        dbObject.put("Prefix", user.getPrefix());
+        dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
+        dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
+        dbObject.put("Tokens", user.getTokens());
+        dbObject.put("Global-UserData", dataToString(user.getAllGlobalUserdata()));
+        DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
+        if (dbObject1 == null)
+            VCUtils.getInstance().getMongoDB().insert(VCUtils.mongoDBName, "Users", dbObject);
+        else
+            VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
     }
 
     public void addGroup(Group group) {
@@ -297,6 +289,10 @@ public class User {
 
     public int getTokens() {
         return tokens;
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 
     public void setMoney(double money) {
