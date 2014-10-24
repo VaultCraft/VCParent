@@ -97,7 +97,7 @@ public class BEnderChest extends ICommand implements Listener  {
         }
 
         public Inventory getInventory() {
-            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Vault #"+ slot + 1); // TODO actually pass owner in
+            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Vault #"+ (slot + 1)); // TODO actually pass owner in
             for(ItemStack i : contents) {
                 inv.addItem(i);
             }
@@ -164,8 +164,8 @@ public class BEnderChest extends ICommand implements Listener  {
                         myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
-                activeUsers.put(User.fromPlayer((Player) e.getPlayer()), EnderChestState.CHEST_MENU);
-                e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer())));
+                activeUsers.remove(User.fromPlayer((Player) e.getPlayer()));
+                ((Player) e.getPlayer()).performCommand("/vault");
                 return;
             }
             activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
@@ -211,7 +211,7 @@ public class BEnderChest extends ICommand implements Listener  {
             short statusColor = thisInv.getCurrState().getGlassColor();
             ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, statusColor);
             ItemMeta glassMeta = glass.getItemMeta();
-            glassMeta.setDisplayName("Ender Inventory #"+i);
+            glassMeta.setDisplayName("Ender Vault #"+i);
             glassMeta.setLore(new ArrayList<String>() {{
             add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + " Slots filled.");
             }});
