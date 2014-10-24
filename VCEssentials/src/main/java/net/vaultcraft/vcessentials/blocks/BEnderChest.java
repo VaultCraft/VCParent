@@ -164,6 +164,7 @@ public class BEnderChest extends ICommand implements Listener  {
                         myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
+                activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
                 activeUsers.put(User.fromPlayer((Player) e.getPlayer()), EnderChestState.CHEST_MENU);
                 e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer())));
                 return;
