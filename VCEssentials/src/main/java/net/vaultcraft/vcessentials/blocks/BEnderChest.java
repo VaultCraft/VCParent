@@ -144,7 +144,6 @@ public class BEnderChest extends ICommand implements Listener  {
             User networkUser = User.fromPlayer(e.getPlayer());
             if (!activeUsers.containsKey(networkUser)) {
                 e.setCancelled(true);
-                activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
                 e.getPlayer().openInventory(getEnderMenuForUser(networkUser));
             }
         }
@@ -165,7 +164,6 @@ public class BEnderChest extends ICommand implements Listener  {
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
                 activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
-                activeUsers.put(User.fromPlayer((Player) e.getPlayer()), EnderChestState.CHEST_MENU);
                 e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer())));
             } else {
                 activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
@@ -206,6 +204,7 @@ public class BEnderChest extends ICommand implements Listener  {
     }
 
     private Inventory getEnderMenuForUser(User user) {
+        activeUsers.put(user, EnderChestState.CHEST_MENU);
         Inventory base = Bukkit.createInventory(null, 54, "Ender Vault");
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
