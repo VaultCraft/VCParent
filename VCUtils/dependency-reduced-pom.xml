@@ -91,14 +91,22 @@
       <artifactId>bukkit</artifactId>
       <version>1.7.10-R0.1-SNAPSHOT</version>
       <scope>system</scope>
+<<<<<<< HEAD
       <systemPath>C:\Users\Connor\Desktop\VaultCraft\VCUtils\VCUtils/src/main/resources/bukkit.jar</systemPath>
+=======
+      <systemPath>C:\Users\tacticalsk8er\Documents\CODE\VaulCraft\vcutils\VCUtils/src/main/resources/bukkit.jar</systemPath>
+>>>>>>> 81dedc627cf82c7df5efef205ee5940112498a4b
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
       <version>1.7.10-R0.1-SNAPSHOT</version>
       <scope>system</scope>
+<<<<<<< HEAD
       <systemPath>C:\Users\Connor\Desktop\VaultCraft\VCUtils\VCUtils/src/main/resources/spigot.jar</systemPath>
+=======
+      <systemPath>C:\Users\tacticalsk8er\Documents\CODE\VaulCraft\vcutils\VCUtils/src/main/resources/spigot.jar</systemPath>
+>>>>>>> 81dedc627cf82c7df5efef205ee5940112498a4b
     </dependency>
     <dependency>
       <groupId>com.sk89q</groupId>

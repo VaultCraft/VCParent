@@ -31,6 +31,11 @@ public class VCReply extends ICommand {
             return;
         }
 
+        if(User.fromPlayer(player).isMuted()) {
+            Form.at(player, Prefix.WARNING, "You cannot private message while you are muted!");
+            return;
+        }
+
         User user = User.fromPlayer(player);
         if (user.modifyConversation(null) == null) {
             Form.at(player, Prefix.ERROR, "You are not chatting with anyone!");

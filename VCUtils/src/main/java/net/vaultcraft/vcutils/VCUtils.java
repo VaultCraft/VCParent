@@ -38,6 +38,8 @@ public class VCUtils extends JavaPlugin {
     private MongoDB mongoDB;
     private SQLite sqlite;
 
+    @ClassConfig.Config(path = "MongoDBName")
+    public static String mongoDBName = "VaultCraft";
     @ClassConfig.Config(path = "ServerName")
     public static String serverName = "Lobby";
     @ClassConfig.Config(path = "UniqueServerName")

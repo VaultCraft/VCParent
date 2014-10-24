@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.blocks;
 
+import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
@@ -23,6 +24,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +98,7 @@ public class BEnderChest extends ICommand implements Listener  {
         }
 
         public Inventory getInventory() {
-            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Chest #"+slot); // TODO actually pass owner in
+            Inventory inv = Bukkit.createInventory(null, INV_SIZE, "Ender Vault #"+ (slot + 1)); // TODO actually pass owner in
             for(ItemStack i : contents) {
                 inv.addItem(i);
             }
@@ -143,7 +145,6 @@ public class BEnderChest extends ICommand implements Listener  {
             User networkUser = User.fromPlayer(e.getPlayer());
             if (!activeUsers.containsKey(networkUser)) {
                 e.setCancelled(true);
-                activeUsers.put(networkUser, EnderChestState.CHEST_MENU);
                 e.getPlayer().openInventory(getEnderMenuForUser(networkUser));
             }
         }
@@ -156,15 +157,18 @@ public class BEnderChest extends ICommand implements Listener  {
                 activeUsers.put(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()), EnderChestState.CHEST_INVENTORY);
                 return;
             } else if(activeUsers.get(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer())) == EnderChestState.CHEST_INVENTORY) {
-                int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]); // This feels so hacky
+                int invNum = Integer.parseInt(e.getInventory().getName().split("#")[1]) - 1; // This feels so hacky
                 JSONArray myCoolArray = new JSONArray();
                 for(ItemStack i : e.getInventory()) {
                     if (i != null)
                         myCoolArray.add(ItemSerializer.fromStack(i));
                 }
                 User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()).addUserdata("EChestInv"+invNum, myCoolArray.toJSONString());
+                activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
+                Bukkit.getScheduler().runTaskLater(VCEssentials.getInstance(), () -> e.getPlayer().openInventory(getEnderMenuForUser(User.fromPlayer((Player) e.getPlayer()))), 1);
+            } else {
+                activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
             }
-            activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
         }
     }
 
@@ -201,13 +205,14 @@ public class BEnderChest extends ICommand implements Listener  {
     }
 
     private Inventory getEnderMenuForUser(User user) {
-        Inventory base = Bukkit.createInventory(null, 54, "Ender Storage");
+        activeUsers.put(user, EnderChestState.CHEST_MENU);
+        Inventory base = Bukkit.createInventory(null, 54, "Ender Vault");
         for (int i = 0; i < 54; i++) {
             final EnderChestInventory thisInv = EnderChestInventory.getForUser(i, user);
             short statusColor = thisInv.getCurrState().getGlassColor();
             ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, statusColor);
             ItemMeta glassMeta = glass.getItemMeta();
-            glassMeta.setDisplayName("Ender Inventory #"+i);
+            glassMeta.setDisplayName("Ender Vault #"+i);
             glassMeta.setLore(new ArrayList<String>() {{
             add(thisInv.getItemCount() + " / " + thisInv.INV_SIZE + " Slots filled.");
             }});

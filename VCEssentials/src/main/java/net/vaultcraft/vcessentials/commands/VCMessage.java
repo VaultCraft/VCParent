@@ -39,6 +39,11 @@ public class VCMessage extends ICommand {
             return;
         }
 
+        if(User.fromPlayer(player).isMuted()) {
+            Form.at(player, Prefix.WARNING, "You cannot private message while you are muted!");
+            return;
+        }
+
         Player find = Bukkit.getPlayer(args[0]);
         if (find == null) {
             Form.at(player, Prefix.ERROR, "No such player! Format: /msg <user> <message>");
@@ -54,6 +59,8 @@ public class VCMessage extends ICommand {
             Form.at(player, Prefix.WARNING, "You cannot messages this player as they are not private messaging!");
             return;
         }
+
+
 
         if(VCChatListener.afkPlayers.contains(find)) {
             Form.at(player, Prefix.WARNING, find.getName() + " is currently AFK and may not respond to your message!");

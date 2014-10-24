@@ -1,10 +1,13 @@
 package net.vaultcraft.vcessentials.commands;
 
+import com.mongodb.DBObject;
+import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.UUIDFetcher;
 import net.vaultcraft.vcutils.user.User;
 import net.vaultcraft.vcutils.util.DateUtil;
 import org.bukkit.Bukkit;
@@ -13,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by tacticalsk8er on 7/22/2014.
@@ -37,7 +41,23 @@ public class VCBan extends ICommand implements Listener {
         if (args.length == 1) {
             Player player1 = Bukkit.getPlayer(args[0]);
             if (player1 == null) {
-                Form.at(player, Prefix.ERROR, "No such player");
+                UUID uuid = null;
+                try {
+                    uuid = UUIDFetcher.getUUIDOf(args[0]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Form.at(player, Prefix.ERROR, "No such player");
+                    return;
+                }
+                if(uuid == null) {
+                    Form.at(player, Prefix.ERROR, "No such player");
+                    return;
+                }
+                if(ban(uuid)) {
+                    Form.at(player, Prefix.SUCCESS, "Player: " + args[0] + " is banned.");
+                } else {
+                    Form.at(player, Prefix.ERROR, "Player: " + args[0] + " is not in the database or is already banned.");
+                }
                 return;
             }
             if (ban(User.fromPlayer(player1), player, "", null)) {
@@ -51,8 +71,8 @@ public class VCBan extends ICommand implements Listener {
         if (args.length > 1) {
             Player player1 = Bukkit.getPlayer(args[0]);
             if (player1 == null) {
-                Form.at(player, Prefix.ERROR, "No such player");
-                return;
+               Form.at(player, Prefix.ERROR, "No such player");
+               return;
             }
 
             StringBuilder reason = new StringBuilder();
@@ -93,6 +113,24 @@ public class VCBan extends ICommand implements Listener {
         } else {
             banned.setBanned(true, temp);
             return true;
+        }
+    }
+
+    private boolean ban(UUID uuid) {
+        DBObject dbObject = User.getDBObject(uuid);
+
+        if(dbObject == null) {
+            return false;
+        }
+
+        boolean banned = (boolean) dbObject.get("Banned");
+        if(!banned) {
+            dbObject.put("Banned", true);
+            DBObject dbObject1 = User.getDBObject(uuid);
+            VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+            return true;
+        } else {
+            return false;
         }
     }
 }

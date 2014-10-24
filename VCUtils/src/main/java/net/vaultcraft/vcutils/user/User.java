@@ -54,7 +54,7 @@ public class User {
     public User(final Player player) {
         this.player = player;
         group = new Group.GroupHandler(player);
-        DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+        DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", player.getUniqueId().toString());
         if (dbObject != null) {
             String groupList = dbObject.get("Group") == null ? "1" : dbObject.get("Group").toString();
             for (int i : parseGroups(groupList))
@@ -169,7 +169,7 @@ public class User {
 
         user.setRemoved(true);
         Bukkit.getScheduler().runTaskAsynchronously(VCUtils.getInstance(), () -> {
-            DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+            DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
             dbObject.put("Group", groupsToString(user.getGroup()));
             dbObject.put("Banned", user.isBanned());
@@ -180,11 +180,11 @@ public class User {
             dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
             dbObject.put("Tokens", user.getTokens());
             dbObject.put("Global-UserData", dataToString(user.getAllUserdata()));
-            DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+            DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
             if (dbObject1 == null)
-                VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+                VCUtils.getInstance().getMongoDB().insert(VCUtils.mongoDBName, "Users", dbObject);
             else
-                VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+                VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
             async_player_map.remove(player);
             async_uuid_map.remove(user.getPlayer().getUniqueId().toString());
         });
@@ -201,7 +201,7 @@ public class User {
                 if (!user.isReady())
                     continue;
 
-                DBObject dbObject = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+                DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
                 dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
                 dbObject.put("Group", groupsToString(user.getGroup()));
                 dbObject.put("Banned", user.isBanned());
@@ -212,11 +212,11 @@ public class User {
                 dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
                 dbObject.put("Tokens", user.getTokens());
                 dbObject.put("Global-UserData", dataToString(user.getAllGlobalUserdata()));
-                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+                DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
                 if (dbObject1 == null)
-                    VCUtils.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+                    VCUtils.getInstance().getMongoDB().insert(VCUtils.mongoDBName, "Users", dbObject);
                 else
-                    VCUtils.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+                    VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
 
                 if(user.getTask() != null)
                     user.getTask().cancel();
@@ -391,6 +391,6 @@ public class User {
         if(uuid == null) {
             return null;
         }
-        return VCUtils.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid.toString());
+        return VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", uuid.toString());
     }
 }
