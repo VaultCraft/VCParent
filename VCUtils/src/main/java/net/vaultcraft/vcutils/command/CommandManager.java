@@ -68,30 +68,6 @@ public class CommandManager implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
-    public void onTabExecute(PlayerChatTabCompleteEvent event) {
-        Collection<String> tabCompletions = event.getTabCompletions();
-        tabCompletions.clear();
-
-        String partialMessage = event.getChatMessage().replaceFirst("/", "");
-        if(partialMessage.split(" ").length == 1) { // They are entering a command
-            LinkedList<ICommand> commands = getCommandsForGroup(User.fromPlayer(event.getPlayer()).getGroup().getHighest());
-            for(ICommand c : commands) {
-                if(c.getName().startsWith(partialMessage)) {
-                    tabCompletions.add(c.getName());
-                }
-            }
-        } else {
-            //get last arg...
-            String lastArg = partialMessage.split(" ")[partialMessage.split(" ").length - 1];
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                if(p.getDisplayName().startsWith(lastArg)) {
-                    tabCompletions.add(p.getDisplayName());
-                }
-            }
-        }
-    }
-
     private static void processCommand(Player player, String command, String[] args) {
         ICommand find = commands.get(command.toLowerCase());
 
