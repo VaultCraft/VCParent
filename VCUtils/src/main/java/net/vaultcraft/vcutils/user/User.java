@@ -389,4 +389,8 @@ public class User {
         }
         return VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", uuid.toString());
     }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 }
