@@ -188,8 +188,10 @@ public class BEnderChest extends ICommand implements Listener  {
                 e.setCancelled(true);
                 return;
             }
+
             User clickingUser = User.fromPlayer((org.bukkit.entity.Player) e.getWhoClicked());
             EnderChestInventory clickedInv = EnderChestInventory.getForUser(e.getRawSlot(), clickingUser);
+
             switch (clickedInv.getCurrState()) {
                 default:
                     activeUsers.put(clickingUser, EnderChestState.CHEST_SWITCHING);
