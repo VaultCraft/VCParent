@@ -5,15 +5,19 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.logging.Logger;
+import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -61,6 +65,30 @@ public class CommandManager implements Listener {
             Logger.error(VCUtils.getInstance(), ex);
             ex.printStackTrace();
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onTabExecute(PlayerChatTabCompleteEvent event) {
+        Collection<String> tabCompletions = event.getTabCompletions();
+        tabCompletions.clear();
+
+        String partialMessage = event.getChatMessage().replaceFirst("/", "");
+        if(partialMessage.split(" ").length == 1) { // They are entering a command
+            LinkedList<ICommand> commands = getCommandsForGroup(User.fromPlayer(event.getPlayer()).getGroup().getHighest());
+            for(ICommand c : commands) {
+                if(c.getName().startsWith(partialMessage)) {
+                    tabCompletions.add(c.getName());
+                }
+            }
+        } else {
+            //get last arg...
+            String lastArg = partialMessage.split(" ")[partialMessage.split(" ").length - 1];
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                if(p.getDisplayName().startsWith(lastArg)) {
+                    tabCompletions.add(p.getDisplayName());
+                }
+            }
         }
     }
 
@@ -120,5 +148,16 @@ public class CommandManager implements Listener {
 
     public static HashMap<String, ICommand> getCommands() {
         return commands;
+    }
+
+    public static LinkedList<ICommand> getCommandsForGroup(Group g) {
+        LinkedList<ICommand> theCommands = new LinkedList<ICommand>();
+        for(ICommand command : getCommands().values()) {
+            if(Group.hasPermission(g, command.gerPermission())) {
+                theCommands.add(command);
+            }
+        }
+
+       return theCommands;
     }
 }
