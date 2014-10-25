@@ -57,7 +57,7 @@ public class VCChatListener implements Listener {
         }
 
 
-        if(User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER)) {
+        if(User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER) || User.fromPlayer(event.getPlayer()).getGroup().getAllGroups().contains(Group.YOUTUBE)) {
             return;
         }
 
