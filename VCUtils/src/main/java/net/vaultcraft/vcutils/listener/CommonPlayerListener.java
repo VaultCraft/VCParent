@@ -81,6 +81,9 @@ public class CommonPlayerListener implements Listener {
 
         //original format <%1$s> %2$s
         String format = chatter.getGroup().getHighest().getTag();
+        if (chatter.getPrefix() != null)
+            format = chatter.getPrefix();
+
         format = format.replace("%user%", "%1$s").replace("%message%", "%2$s");
         event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
 
