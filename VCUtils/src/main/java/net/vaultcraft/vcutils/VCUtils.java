@@ -1,5 +1,6 @@
 package net.vaultcraft.vcutils;
 
+import net.vaultcraft.vcutils.bossbar.BarAPI;
 import net.vaultcraft.vcutils.command.CommandManager;
 import net.vaultcraft.vcutils.config.ClassConfig;
 import net.vaultcraft.vcutils.database.mongo.MongoDB;
@@ -45,6 +46,7 @@ public class VCUtils extends JavaPlugin {
     @ClassConfig.Config(path = "UniqueServerName")
     public static String uniqueServerName = "Lobby1";
 
+    private BarAPI barAPI;
     private static GhostFactory factory; public static GhostFactory getGhostFactory() { return factory; }
 
     public void onEnable() {
@@ -61,6 +63,8 @@ public class VCUtils extends JavaPlugin {
 
         saveConfig();
 
+        barAPI = new BarAPI();
+        barAPI.onEnable();
         factory = new GhostFactory(this);
 
         try {
@@ -101,6 +105,8 @@ public class VCUtils extends JavaPlugin {
             Logger.error(this, e);
         }
 
+        barAPI.onDisable();
+
         for (InnerPlugin plugin : VCPluginManager.getPlugins().values()) {
             plugin.onDisable();
         }
@@ -109,6 +115,10 @@ public class VCUtils extends JavaPlugin {
         mongoDB.close();
 
         SignLoader.getInstance().save();
+    }
+
+    public BarAPI getBarAPI() {
+        return barAPI;
     }
 
     public void initListeners() {
