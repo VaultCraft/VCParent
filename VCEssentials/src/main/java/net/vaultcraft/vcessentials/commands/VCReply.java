@@ -48,7 +48,12 @@ public class VCReply extends ICommand {
             return;
         }
 
-        if (!User.fromPlayer(find).isPrivateMessaging()) {
+        User findUser = User.fromPlayer(find);
+        if(findUser == null) {
+            return;
+        }
+
+        if (!findUser.isPrivateMessaging()) {
             Form.at(player, Prefix.WARNING, "The player you were talking to is no longer receiving private messages!");
             return;
         }
