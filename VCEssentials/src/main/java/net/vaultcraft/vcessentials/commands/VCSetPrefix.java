@@ -25,6 +25,18 @@ public class VCSetPrefix extends ICommand {
             return;
         }
 
+        if (args[0].equalsIgnoreCase("clear")) {
+            Player find = Bukkit.getPlayer(args[1]);
+            if (find == null) {
+                Form.at(player, Prefix.ERROR, args[0] + " is not a valid player!");
+                return;
+            }
+
+            User.fromPlayer(find).setPrefix(null);
+            Form.at(player, Prefix.SUCCESS, "You cleared " + find.getName() + "'s prefix!");
+            return;
+        }
+
         Player find = Bukkit.getPlayer(args[0]);
         if (find == null) {
             Form.at(player, Prefix.ERROR, args[0] + " is not a valid player!");
@@ -32,8 +44,6 @@ public class VCSetPrefix extends ICommand {
         }
 
         String prefix = StringUtils.buildFromArray(args,1);
-        if (prefix.toLowerCase().equals("nothing") || prefix.toLowerCase().equals("null"))
-            prefix = null;
 
         User.fromPlayer(find).setPrefix(prefix);
         Form.at(player, Prefix.SUCCESS, "You set " + find.getName() + "'s prefix to " + prefix);
