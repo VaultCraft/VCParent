@@ -3,6 +3,7 @@ package net.vaultcraft.vcessentials.commands;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
+import net.vaultcraft.vcutils.string.StringUtils;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
@@ -30,7 +31,7 @@ public class VCSetPrefix extends ICommand {
             return;
         }
 
-        String prefix = args[1];
+        String prefix = StringUtils.buildFromArray(args,1);
         if (prefix.toLowerCase().equals("nothing") || prefix.toLowerCase().equals("null"))
             prefix = null;
 
