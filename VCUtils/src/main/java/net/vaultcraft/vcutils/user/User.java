@@ -177,9 +177,8 @@ public class User {
             async_uuid_map.remove(user.getPlayer().getUniqueId().toString());
         });
 
-        if(user.getTask() != null)
-            if (user.getTask() != null)
-                user.getTask().cancel();
+        if (user.getTask() != null)
+            user.getTask().cancel();
     }
 
     public static void disable() {
@@ -190,7 +189,7 @@ public class User {
 
                 update(user);
 
-                if(user.getTask() != null)
+                if (user.getTask() != null)
                     user.getTask().cancel();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -384,7 +383,7 @@ public class User {
     }
 
     public static DBObject getDBObject(UUID uuid) {
-        if(uuid == null) {
+        if (uuid == null) {
             return null;
         }
         return VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", uuid.toString());
