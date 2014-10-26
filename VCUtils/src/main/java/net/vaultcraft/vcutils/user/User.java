@@ -200,7 +200,7 @@ public class User {
         async_player_map.clear();
     }
 
-    static void update(User user) {
+    public static void update(User user) {
         DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
         dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
         dbObject.put("Group", groupsToString(user.getGroup()));
