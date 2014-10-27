@@ -192,7 +192,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 ((Player)sender).chat("/"+send);
                 return true;
             }
-            case "unban": {
+            case "vcunban": {
                 if (args.length == 0) {
                     sender.sendMessage(ChatColor.YELLOW + "Please specify a player to unban!");
                     return true;
