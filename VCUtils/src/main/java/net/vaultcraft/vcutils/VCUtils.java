@@ -20,6 +20,7 @@ import net.vaultcraft.vcutils.network.NetworkInfo;
 import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.uncommon.GhostFactory;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -62,6 +63,9 @@ public class VCUtils extends JavaPlugin {
         ClassConfig.updateConfig(VCUtils.class, getConfig());
 
         saveConfig();
+
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeUtil());
 
         barAPI = new BarAPI();
         barAPI.onEnable();

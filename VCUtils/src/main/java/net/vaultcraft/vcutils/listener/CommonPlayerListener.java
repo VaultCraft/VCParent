@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.listener;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
+import net.vaultcraft.vcutils.network.PacketReceivedEvent;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.ChatColor;
@@ -116,5 +117,12 @@ public class CommonPlayerListener implements Listener {
         } catch (Exception err) {
             err.printStackTrace();
         }
+    }
+
+    @EventHandler
+    public void onPacket(PacketReceivedEvent event) {
+        if(!event.getChannel().equals("update-user"))
+            return;
+
     }
 }

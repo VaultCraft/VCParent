@@ -85,14 +85,14 @@
       <artifactId>bukkit</artifactId>
       <version>1.7.10-R0.1-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>C:\Users\Sean\Github\vcutils\VCEssentials/src/main/resources/bukkit.jar</systemPath>
+      <systemPath>C:\Users\Nick\Documents\CODE\VaultCraft\vcutils\VCEssentials/src/main/resources/bukkit.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
       <version>1.7.10-R0.1-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>C:\Users\Sean\Github\vcutils\VCEssentials/src/main/resources/spigot.jar</systemPath>
+      <systemPath>C:\Users\Nick\Documents\CODE\VaultCraft\vcutils\VCEssentials/src/main/resources/spigot.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.vaultcraft</groupId>

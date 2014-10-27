@@ -2,6 +2,7 @@ package net.vaultcraft.vcutils.user;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.sk89q.wepif.GroupManagerResolver;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
@@ -230,6 +231,10 @@ public class User {
     public void setGroup(Group group) {
         this.group = new Group.GroupHandler(player);
         this.group.merge(group);
+    }
+
+    public void setGroup(Group.GroupHandler group) {
+        this.group = group;
     }
 
     public Group.GroupHandler getGroup() {

@@ -25,7 +25,7 @@ public class VCMoney extends ICommand{
     @Override
     public void processCommand(Player player, String[] args) {
         if(args.length == 0) {
-            Form.at(player, Prefix.NOTHING, "&a&lMoney&f: $" + Form.at(User.fromPlayer(player).getMoney()));
+            Form.at(player, Prefix.NOTHING, "&a&lMoney&f: $" + Form.at(User.fromPlayer(player).getMoney(), true));
             return;
         }
 
