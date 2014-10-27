@@ -3,6 +3,8 @@ package net.vaultcraft.vcutils.database.mongo;
 import com.mongodb.*;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * WARNING: This class has not been tested!
@@ -98,6 +100,30 @@ public class MongoDB {
         return null;
     }
 
+
+    /**
+     * Queries the MongoDB server and returns all objects.
+     *
+     * @param db             DB object to modify.
+     * @param collectionName Name of "table" in SQL terms.
+     * @param primaryKey     The primary key you want to look for in the collection's documents, or "rows" in SQL terms.
+     * @param ID             What the primary key's value should be.
+     * @param retrieveKey    The key of the object you want to retrieve from the document found if there is one.
+     * @return The object tied to the retrieveKey. If there is no document found to have the primaryKey tied to the ID, then it will return null.
+     */
+    public ArrayList<DBObject> queryMutiple(DB db, String collectionName, String primaryKey, Object ID, String retrieveKey) {
+        ArrayList<DBObject> objects = new ArrayList<>();
+        DBCollection dbCollection = db.getCollection(collectionName);
+        BasicDBObject dbObject = new BasicDBObject();
+        dbObject.put(primaryKey, ID);
+        DBCursor dbCursor = dbCollection.find(dbObject);
+        while (dbCursor.hasNext()) {
+            DBObject dbObject1 = dbCursor.next();
+            objects.add(dbObject1);
+        }
+        return objects;
+    }
+
     /**
      * Queries the MongoDB server and returns a Object.
      *
@@ -112,6 +138,23 @@ public class MongoDB {
         DB db = getDB(dbName);
         return query(db, collectionName, primaryKey, ID, retrieveKey);
     }
+
+
+    /**
+     * Queries the MongoDB server and returns a Object.
+     *
+     * @param dbName         The name of the database you want to modify.
+     * @param collectionName Name of "table" in SQL terms.
+     * @param primaryKey     The primary key you want to look for in the collection's documents, or "rows" in SQL terms.
+     * @param ID             What the primary key's value should be.
+     * @param retrieveKey    The key of the object you want to retrieve from the document found if there is one.
+     * @return The object tied to the retrieveKey. If there is no document found to have the primaryKey tied to the ID, then it will return null.
+     */
+    public List<DBObject> queryMutiple(String dbName, String collectionName, String primaryKey, Object ID, String retrieveKey) {
+        DB db = getDB(dbName);
+        return queryMutiple(db, collectionName, primaryKey, ID, retrieveKey);
+    }
+
 
 
     /**

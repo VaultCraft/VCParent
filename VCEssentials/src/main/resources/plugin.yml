@@ -14,5 +14,5 @@ main: net.vaultcraft.vcessentials.VCEssentials
 commands:
   promote: {}
   redir: {}
-  unban: {}
+  vcunban: {}
   broadcast: {}
