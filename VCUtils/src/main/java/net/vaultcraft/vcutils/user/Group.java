@@ -68,7 +68,7 @@ public enum Group {
         return tag;
     }
 
-    private boolean hasPermission(Group me, Group other) {
+    public static boolean hasPermission(Group me, Group other) {
         int level = other.permLevel;
         boolean donor = other.isDonorRank;
 
