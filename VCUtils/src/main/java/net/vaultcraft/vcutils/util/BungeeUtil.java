@@ -1,12 +1,12 @@
 package net.vaultcraft.vcutils.util;
 
+import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.vaultcraft.vcutils.VCUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -66,16 +66,20 @@ public class BungeeUtil implements PluginMessageListener {
     }
 
     @Override
-    public void onPluginMessageReceived(String channel, Player player, byte[] data) {
+    public void onPluginMessageReceived(String c, Player player, byte[] data) {
+        if(!c.equalsIgnoreCase("bungeecord"))
+            return;
+        ByteArrayDataInput in = ByteStreams.newDataInput(data);
+        String channel = in.readUTF();
         if(!responseMap.containsKey(channel))
             return;
         Response response = responseMap.get(channel).isEmpty() ? null : responseMap.get(channel).pop();
         if(response == null)
             return;
-        response.response(data);
+        response.response(in);
     }
 
     public interface Response {
-        public void response(byte[] data);
+        public void response(ByteArrayDataInput data);
     }
 }

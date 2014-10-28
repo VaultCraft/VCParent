@@ -4,8 +4,10 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -90,7 +92,19 @@ public class VCToken extends ICommand {
                     }
 
                     if (player1 == null) {
-                        Form.at(player, Prefix.ERROR, "No such player");
+                        //Offline Support
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        if(offlinePlayer == null) {
+                            Form.at(player, Prefix.ERROR, "No such player");
+                            return;
+                        }
+                        OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                        if(user.getTokensOld() < -amount) {
+                            amount = -user.getTokensOld();
+                        }
+
+                        user.addTokens(amount);
+                        Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " now has " + (user.getTokensOld() + amount) + " tokens.");
                         return;
                     }
 

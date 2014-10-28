@@ -97,6 +97,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCAfk("afk", Group.COMMON, "away"));
         CommandManager.addCommand(new VCMe("me", Group.WOLF, "emote"));
         CommandManager.addCommand(new VCSetPrefix("setprefix", Group.MANAGER));
+        CommandManager.addCommand(new VCList("list", Group.COMMON));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
@@ -188,6 +189,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
                 for (String arg : args) {
                     send+=arg+" ";
                 }
+
                 System.out.println("Redirecting command to chat="+send);
                 ((Player)sender).chat("/"+send);
                 return true;

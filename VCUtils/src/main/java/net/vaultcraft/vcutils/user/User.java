@@ -2,7 +2,6 @@ package net.vaultcraft.vcutils.user;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.sk89q.wepif.GroupManagerResolver;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
 import org.bukkit.Bukkit;
@@ -68,8 +67,7 @@ public class User {
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
             Object o = dbObject.get(VCUtils.serverName + "-Money");
-            double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
-            money = dbObject.get(VCUtils.serverName + "-Money") == null ? 0 : value;
+            money = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
             tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
             globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData(dbObject.get("Global-UserData").toString());
