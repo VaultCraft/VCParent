@@ -8,7 +8,7 @@ import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class OfflineUser {
 
     private String prefix;
 
-    private BukkitRunnable runnable;
+    private BukkitTask task;
 
     public static OfflineUser getOfflineUser(OfflinePlayer player) {
         if(userMap.containsKey(player)) {
@@ -72,13 +72,7 @@ public class OfflineUser {
             group.merge(Group.COMMON);
             prefix = null;
         }
-        runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                update();
-            }
-        };
-        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
+        task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
 
     private void update() {
@@ -183,34 +177,34 @@ public class OfflineUser {
 
     public void addMoney(int amount) {
         money += amount;
-        runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
+        task.cancel();
+        task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
 
     public void addTokens(int amount) {
         tokens += tokens;
-        runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
+        task.cancel();
+        task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
 
     public void setBanned(boolean banned, Date tempBan) {
         this.banned = banned;
         this.tempBan = tempBan;
-        runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
+        task.cancel();
+        task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
 
     public void setMuted(boolean muted, Date tempMute) {
         this.muted = muted;
         this.tempMute = tempMute;
-        runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
+        task.cancel();
+        task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-        runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
+        task.cancel();
+        task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
 
     public class UpdatedUserData {
