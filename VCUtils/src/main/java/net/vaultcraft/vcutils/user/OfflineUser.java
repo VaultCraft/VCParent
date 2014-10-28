@@ -88,6 +88,7 @@ public class OfflineUser {
             user.addMoney(money);
             user.addTokens(tokens);
             user.setPrefix(prefix);
+            return;
         }
         Logger.debug(VCUtils.getInstance(), "User is not online");
         BungeeUtil.serverPlayerList(new ArrayList<>(Bukkit.getOnlinePlayers()).get(0), "ALL", data -> {
@@ -226,47 +227,5 @@ public class OfflineUser {
         this.prefix = prefix;
         task.cancel();
         task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
-    }
-
-    public class UpdatedUserData {
-
-        public String playerUUID;
-        private String groups;
-        private boolean banned;
-        private Date tempBan;
-        private boolean muted;
-        private Date tempMute;
-
-        private double money;
-        private int tokens;
-
-        private String prefix;
-
-
-        public UpdatedUserData(OfflineUser user) {
-            playerUUID = user.getPlayerUUID();
-            groups = User.groupsToString(user.getGroup());
-            banned = user.isBanned();
-            tempBan = user.getTempBan();
-            muted = user.isMuted();
-            tempMute = user.getTempMute();
-            money = user.getChangeInMoney();
-            tokens = user.getChangeInTokens();
-            prefix = user.getPrefix();
-        }
-
-        public void updateUser(User user) {
-            List<Integer> groupLevels = User.parseGroups(groups);
-            user.setGroup(Group.fromPermLevel(groupLevels.get(0)));
-            groupLevels.remove(0);
-            for(int i : groupLevels) {
-                user.getGroup().merge(Group.fromPermLevel(i));
-            }
-            user.setBanned(banned, tempBan);
-            user.setMuted(muted, tempMute);
-            user.addMoney(money);
-            user.addTokens(tokens);
-            user.setPrefix(prefix);
-        }
     }
 }
