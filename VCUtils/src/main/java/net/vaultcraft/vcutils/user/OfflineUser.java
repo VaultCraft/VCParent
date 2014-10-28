@@ -114,8 +114,19 @@ public class OfflineUser {
                     Object o = dbObject.get(VCUtils.serverName + "-Money");
                     double moneyNew = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
                     int tokensNew = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+                    String userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? "" : dbObject.get(VCUtils.serverName + "-UserData").toString();
+                    String globalUserdata = dbObject.get("Global-UserData") == null ? "" : dbObject.get("Global-UserData").toString();
+
+                    Logger.debug(VCUtils.getInstance(), "Old: " + moneyNew);
+                    Logger.debug(VCUtils.getInstance(), "Old: " + tokensNew);
+                    Logger.debug(VCUtils.getInstance(), "Add: " + money);
+                    Logger.debug(VCUtils.getInstance(), "Add: " + tokens);
+
                     moneyNew += money;
                     tokensNew += tokens;
+
+                    Logger.debug(VCUtils.getInstance(), "New: " + moneyNew);
+                    Logger.debug(VCUtils.getInstance(), "New: " + tokensNew);
 
                     //Update Mongo
                     dbObject.put("UUID", playerUUID);
@@ -126,10 +137,14 @@ public class OfflineUser {
                     dbObject.put("TempMute", tempMute);
                     dbObject.put("Prefix", prefix);
                     dbObject.put(VCUtils.serverName + "-Money", moneyNew);
+                    dbObject.put(VCUtils.serverName + "-UserData", userdata);
                     dbObject.put("Tokens", tokensNew);
-                    DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID",playerUUID);
-                    if (dbObject1 != null)
+                    dbObject.put("Global-UserData", globalUserdata);
+                    DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
+                    if (dbObject1 != null) {
                         VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+                        Logger.debug(VCUtils.getInstance(), "User updated on mongo!");
+                    }
                 }
             }
             Logger.debug(VCUtils.getInstance(), "User updated!");
