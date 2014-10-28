@@ -20,7 +20,7 @@ public class VCList extends ICommand {
     }
 
     public void processCommand(Player player, String[] args) {
-        Form.at(player, Prefix.VAULT_CRAFT, "Online players...");
+        Form.at(player, Prefix.VAULT_CRAFT, "Online players ( " + ChatColor.RED + Bukkit.getOnlinePlayers().size() + Prefix.VAULT_CRAFT.getChatColor() + ")");
 
         String online = "";
 
@@ -30,6 +30,9 @@ public class VCList extends ICommand {
 
             online+=(c+p.getName() + ChatColor.GRAY + ", ");
         }
+
+        if (online.endsWith(", "))
+            online = online.substring(0, online.length()-2);
 
         Form.at(player, Prefix.VAULT_CRAFT, online);
     }
