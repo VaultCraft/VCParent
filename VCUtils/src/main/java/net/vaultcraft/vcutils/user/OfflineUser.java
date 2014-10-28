@@ -19,6 +19,8 @@ import java.util.*;
  * Created by tacticalsk8er on 10/26/2014.
  */
 public class OfflineUser {
+    
+    private static final int SAVE_DELAY = 15; 
 
     private static HashMap<OfflinePlayer, OfflineUser> userMap = new HashMap<>();
 
@@ -76,7 +78,7 @@ public class OfflineUser {
                 update();
             }
         };
-        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
+        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
     }
 
     private void update() {
@@ -182,33 +184,33 @@ public class OfflineUser {
     public void addMoney(int amount) {
         money += amount;
         runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), 10 * 20l);
+        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
     }
 
     public void addTokens(int amount) {
         tokens += tokens;
         runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
+        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
     }
 
     public void setBanned(boolean banned, Date tempBan) {
         this.banned = banned;
         this.tempBan = tempBan;
         runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
+        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
     }
 
     public void setMuted(boolean muted, Date tempMute) {
         this.muted = muted;
         this.tempMute = tempMute;
         runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
+        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
     }
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         runnable.cancel();
-        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
+        runnable.runTaskLater(VCUtils.getInstance(), SAVE_DELAY * 20l);
     }
 
     public class UpdatedUserData {
