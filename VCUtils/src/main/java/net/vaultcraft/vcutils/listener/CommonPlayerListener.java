@@ -88,10 +88,14 @@ public class CommonPlayerListener implements Listener {
             format = chatter.getPrefix();
 
         format = format.replace("%user%", "%1$s").replace("%message%", "%2$s");
+
         event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
 
         if (chatter.getGroup().hasPermission(Group.HELPER))
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
+
+        if (chatter.getNick() != null)
+            format = format.replace("%1$s", chatter.getNick());
 
         //hide for invis players
         if (!chatter.isChatVisible()) {
