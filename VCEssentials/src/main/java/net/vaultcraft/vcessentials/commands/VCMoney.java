@@ -4,8 +4,10 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -25,7 +27,7 @@ public class VCMoney extends ICommand{
     @Override
     public void processCommand(Player player, String[] args) {
         if(args.length == 0) {
-            Form.at(player, Prefix.NOTHING, "&a&lMoney&f: $" + Form.at(User.fromPlayer(player).getMoney(), true));
+            Form.at(player, Prefix.NOTHING, "&a&lMoney&f: $" + Form.at(User.fromPlayer(player).getMoney(), false));
             return;
         }
 
@@ -55,20 +57,28 @@ public class VCMoney extends ICommand{
                         return;
                     }
 
-                    if (player1 == null) {
-                        Form.at(player, Prefix.ERROR, "No such player");
-                        return;
-                    }
-
                     if(User.fromPlayer(player).getMoney() < amount) {
                         Form.at(player, Prefix.ERROR, "You don't have enough money.");
                         return;
                     }
 
+                    if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            User.fromPlayer(player).addMoney(-amount);
+                            user.addMoney(amount);
+                            Form.at(player, Prefix.SUCCESS, "You sent " + offlinePlayer.getName() + " $" + Form.at(amount, false) + ".");
+                            return;
+                        }
+                        Form.at(player, Prefix.ERROR, "No such player");
+                        return;
+                    }
+
                     User.fromPlayer(player).addMoney(-amount);
                     User.fromPlayer(player1).addMoney(amount);
-                    Form.at(player, Prefix.SUCCESS, "You sent " + player1.getName() + " $" + amount + ".");
-                    Form.at(player1, Prefix.VAULT_CRAFT, player.getName() + " sent you $" + amount + ".");
+                    Form.at(player, Prefix.SUCCESS, "You sent " + player1.getName() + " $" + Form.at(amount, false) + ".");
+                    Form.at(player1, Prefix.VAULT_CRAFT, player.getName() + " sent you $" + Form.at(amount, false) + ".");
                     break;
                 case "add":
                     if(!User.fromPlayer(player).getGroup().hasPermission(Group.ADMIN)) {
@@ -90,6 +100,15 @@ public class VCMoney extends ICommand{
                     }
 
                     if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            if(user.getMoneyOld() < -amount)
+                                amount = -user.getMoneyOld();
+                            user.addMoney(amount);
+                            Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " now has $" + Form.at((user.getMoneyOld() - amount), false) + ".");
+                            return;
+                        }
                         Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
@@ -99,7 +118,7 @@ public class VCMoney extends ICommand{
                     }
 
                     User.fromPlayer(player1).addMoney(amount);
-                    Form.at(player, Prefix.SUCCESS, player1.getName() + " now has $" + User.fromPlayer(player1).getMoney() + ".");
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " now has $" + Form.at(User.fromPlayer(player1).getMoney(), false) + ".");
                     break;
                 case "set":
                     if(!User.fromPlayer(player).getGroup().hasPermission(Group.ADMIN)) {
@@ -120,26 +139,40 @@ public class VCMoney extends ICommand{
                         return;
                     }
 
-                    if (player1 == null) {
-                        Form.at(player, Prefix.ERROR, "No such player");
-                        return;
-                    }
-
                     if(amount <= 0) {
                         Form.at(player, Prefix.ERROR, "Argument 3 needs to be a positive integer.");
                         return;
                     }
 
+                    if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            double change = amount - user.getMoneyOld();
+                            user.addMoney(change);
+                            Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " now has $" + Form.at((user.getMoneyOld() + change), false) + ".");
+                            return;
+                        }
+                        Form.at(player, Prefix.ERROR, "No such player");
+                        return;
+                    }
+
                     User.fromPlayer(player1).setMoney(amount);
-                    Form.at(player, Prefix.SUCCESS, player1.getName() + " now has $" + User.fromPlayer(player1).getMoney() + ".");
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " now has $" + Form.at(User.fromPlayer(player1).getMoney(), false) + ".");
                     break;
                 default:
                     player1 = Bukkit.getPlayer(args[0]);
                     if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            Form.at(player, Prefix.VAULT_CRAFT,  offlinePlayer.getName() + " has &a$" + Form.at((user.getMoneyOld() + user.getChangeInMoney()), false) + ".");
+                            return;
+                        }
                         Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
-                    Form.at(player, Prefix.VAULT_CRAFT,  player1.getName() + " has &a$" + User.fromPlayer(player1).getMoney() + ".");
+                    Form.at(player, Prefix.VAULT_CRAFT,  player1.getName() + " has &a$" + Form.at(User.fromPlayer(player1).getMoney(), false) + ".");
                     break;
             }
         }
