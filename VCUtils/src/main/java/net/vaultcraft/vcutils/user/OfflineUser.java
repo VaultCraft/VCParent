@@ -8,6 +8,7 @@ import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,6 +20,8 @@ import java.util.*;
  */
 public class OfflineUser {
 
+    private static HashMap<OfflinePlayer, OfflineUser> userMap = new HashMap<>();
+
     private String playerUUID = "";
     
     private Group.GroupHandler group;
@@ -28,12 +31,26 @@ public class OfflineUser {
     private boolean muted = false;
     private Date tempMute = null;
 
+    private double moneyOld = 0;
+    private int tokensOld = 0;
+
     private double money = 0;
     private int tokens = 0;
 
     private String prefix;
 
-    public OfflineUser(OfflinePlayer player) {
+    private BukkitRunnable runnable;
+
+    public static OfflineUser getOfflineUser(OfflinePlayer player) {
+        if(userMap.containsKey(player)) {
+            return userMap.get(player);
+        }
+        OfflineUser user = new OfflineUser(player);
+        userMap.put(player, user);
+        return user;
+    }
+
+    private OfflineUser(OfflinePlayer player) {
         playerUUID = player.getUniqueId().toString();
         group = new Group.GroupHandler(player.getPlayer());
         DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", player.getUniqueId().toString());
@@ -46,13 +63,24 @@ public class OfflineUser {
             muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
+            Object o = dbObject.get(VCUtils.serverName + "-Money");
+            moneyOld = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
+            tokensOld = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
         } else {
             group.merge(Group.COMMON);
             prefix = null;
         }
+        runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        };
+        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
     }
 
-    public void update() {
+    private void update() {
+        userMap.remove(Bukkit.getOfflinePlayer(UUID.fromString(this.playerUUID)));
         Player player = Bukkit.getPlayer(UUID.fromString(this.playerUUID));
         if(player != null) {
             User user = User.fromPlayer(player);
@@ -83,10 +111,10 @@ public class OfflineUser {
                 if(dbObject != null) {
                     //Get old money and token values
                     Object o = dbObject.get(VCUtils.serverName + "-Money");
-                    double moneyOld = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
-                    double tokensOld = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
-                    moneyOld += money;
-                    tokensOld += tokens;
+                    double moneyNew = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
+                    double tokensNew = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+                    moneyNew += money;
+                    tokensNew += tokens;
 
                     //Update Mongo
                     dbObject.put("UUID", playerUUID);
@@ -96,8 +124,8 @@ public class OfflineUser {
                     dbObject.put("Muted", muted);
                     dbObject.put("TempMute", tempMute);
                     dbObject.put("Prefix", prefix);
-                    dbObject.put(VCUtils.serverName + "-Money", moneyOld);
-                    dbObject.put("Tokens", tokensOld);
+                    dbObject.put(VCUtils.serverName + "-Money", moneyNew);
+                    dbObject.put("Tokens", tokensNew);
                     DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID",playerUUID);
                     if (dbObject1 != null)
                         VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
@@ -108,6 +136,7 @@ public class OfflineUser {
 
     public String getPlayerUUID() {
         return playerUUID;
+
     }
 
     public Group.GroupHandler getGroup() {
@@ -137,31 +166,49 @@ public class OfflineUser {
     public double getChangeInMoney() {
         return money;
     }
-    
+
+    public double getMoneyOld() {
+        return moneyOld;
+    }
+
     public int getChangeInTokens() {
         return tokens;
     }
-    
+
+    public int getTokensOld() {
+        return tokensOld;
+    }
+
     public void addMoney(int amount) {
         money += amount;
+        runnable.cancel();
+        runnable.runTaskLater(VCUtils.getInstance(), 10 * 20l);
     }
 
     public void addTokens(int amount) {
         tokens += tokens;
+        runnable.cancel();
+        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
     }
 
     public void setBanned(boolean banned, Date tempBan) {
         this.banned = banned;
         this.tempBan = tempBan;
+        runnable.cancel();
+        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
     }
 
     public void setMuted(boolean muted, Date tempMute) {
         this.muted = muted;
         this.tempMute = tempMute;
+        runnable.cancel();
+        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
     }
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+        runnable.cancel();
+        runnable.runTaskLater(VCUtils.getInstance(), 30 * 20l);
     }
 
     public class UpdatedUserData {
