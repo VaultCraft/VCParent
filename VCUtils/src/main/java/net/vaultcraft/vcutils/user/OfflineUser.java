@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.DBObject;
 import common.network.PacketInSendAll;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
@@ -76,6 +77,7 @@ public class OfflineUser {
     }
 
     private void update() {
+        Logger.debug(VCUtils.getInstance(), "Updating user...");
         userMap.remove(Bukkit.getOfflinePlayer(UUID.fromString(this.playerUUID)));
         Player player = Bukkit.getPlayer(UUID.fromString(this.playerUUID));
         if(player != null) {
@@ -87,11 +89,13 @@ public class OfflineUser {
             user.addTokens(tokens);
             user.setPrefix(prefix);
         }
-
+        Logger.debug(VCUtils.getInstance(), "User is not online");
         BungeeUtil.serverPlayerList(new ArrayList<>(Bukkit.getOnlinePlayers()).get(0), "ALL", data -> {
             String server = data.readUTF();
+            Logger.debug(VCUtils.getInstance(), server);
             List<String> playerNames = new ArrayList<>(Arrays.asList(data.readUTF().split(", ")));
             if(playerNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(playerUUID)).getName())) {
+                Logger.debug(VCUtils.getInstance(), "USer is on another server");
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {
                     ObjectOutputStream objOut = new ObjectOutputStream(out);
@@ -103,6 +107,7 @@ public class OfflineUser {
                 PacketInSendAll packet = new PacketInSendAll("update-user", out);
                 MessageClient.sendPacket(packet);
             } else {
+                Logger.debug(VCUtils.getInstance(), "User is not online updating mongo");
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
                 if(dbObject != null) {
                     //Get old money and token values
@@ -127,6 +132,7 @@ public class OfflineUser {
                         VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
                 }
             }
+            Logger.debug(VCUtils.getInstance(), "User updated!");
         });
     }
 
