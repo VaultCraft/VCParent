@@ -98,6 +98,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCMe("me", Group.WOLF, "emote"));
         CommandManager.addCommand(new VCSetPrefix("setprefix", Group.MANAGER));
         CommandManager.addCommand(new VCList("list", Group.COMMON));
+        CommandManager.addCommand(new VCNick("nick", Group.WITHER, "nickname"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));

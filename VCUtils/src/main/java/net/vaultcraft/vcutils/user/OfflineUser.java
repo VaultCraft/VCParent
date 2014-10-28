@@ -3,7 +3,6 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.DBObject;
 import common.network.PacketInSendAll;
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
@@ -41,6 +40,7 @@ public class OfflineUser {
     private int tokens = 0;
 
     private String prefix;
+    private String nick;
 
     private BukkitTask task;
 
@@ -66,6 +66,7 @@ public class OfflineUser {
             muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
+            nick = dbObject.get("Nick") == null ? null : dbObject.get("Nick").toString();
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             moneyOld = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             tokensOld = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
@@ -77,30 +78,29 @@ public class OfflineUser {
     }
 
     private void update() {
-        Logger.debug(VCUtils.getInstance(), "Updating user...");
         userMap.remove(Bukkit.getOfflinePlayer(UUID.fromString(this.playerUUID)));
         Player player = Bukkit.getPlayer(UUID.fromString(this.playerUUID));
         if(player != null) {
             User user = User.fromPlayer(player);
             user.setGroup(group);
             user.setBanned(banned, tempBan);
+            if(banned)
+                player.kickPlayer("You have been banned! You can post an appeal on our forums.");
             user.setMuted(banned, tempBan);
             user.addMoney(money);
             user.addTokens(tokens);
             user.setPrefix(prefix);
             return;
         }
-        Logger.debug(VCUtils.getInstance(), "User is not online");
+
         BungeeUtil.serverPlayerList(new ArrayList<>(Bukkit.getOnlinePlayers()).get(0), "ALL", data -> {
             String server = data.readUTF();
-            Logger.debug(VCUtils.getInstance(), server);
             List<String> playerNames = new ArrayList<>(Arrays.asList(data.readUTF().split(", ")));
             if(playerNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(playerUUID)).getName())) {
-                Logger.debug(VCUtils.getInstance(), "USer is on another server");
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {
                     ObjectOutputStream objOut = new ObjectOutputStream(out);
-                    objOut.writeObject(new UpdatedUserData(this));
+                    objOut.writeObject(new UpdatedUserData(this, VCUtils.serverName));
                     objOut.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -108,7 +108,6 @@ public class OfflineUser {
                 PacketInSendAll packet = new PacketInSendAll("update-user", out);
                 MessageClient.sendPacket(packet);
             } else {
-                Logger.debug(VCUtils.getInstance(), "User is not online updating mongo");
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
                 if(dbObject != null) {
                     //Get old money and token values
@@ -118,16 +117,8 @@ public class OfflineUser {
                     String userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? "" : dbObject.get(VCUtils.serverName + "-UserData").toString();
                     String globalUserdata = dbObject.get("Global-UserData") == null ? "" : dbObject.get("Global-UserData").toString();
 
-                    Logger.debug(VCUtils.getInstance(), "Old: " + moneyNew);
-                    Logger.debug(VCUtils.getInstance(), "Old: " + tokensNew);
-                    Logger.debug(VCUtils.getInstance(), "Add: " + money);
-                    Logger.debug(VCUtils.getInstance(), "Add: " + tokens);
-
                     moneyNew += money;
                     tokensNew += tokens;
-
-                    Logger.debug(VCUtils.getInstance(), "New: " + moneyNew);
-                    Logger.debug(VCUtils.getInstance(), "New: " + tokensNew);
 
                     //Update Mongo
                     dbObject.put("UUID", playerUUID);
@@ -144,11 +135,9 @@ public class OfflineUser {
                     DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
                     if (dbObject1 != null) {
                         VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
-                        Logger.debug(VCUtils.getInstance(), "User updated on mongo!");
                     }
                 }
             }
-            Logger.debug(VCUtils.getInstance(), "User updated!");
         });
     }
 
@@ -180,7 +169,11 @@ public class OfflineUser {
     public String getPrefix() {
         return prefix;
     }
-    
+
+    public String getNick() {
+        return nick;
+    }
+
     public double getChangeInMoney() {
         return money;
     }
@@ -197,7 +190,7 @@ public class OfflineUser {
         return tokensOld;
     }
 
-    public void addMoney(int amount) {
+    public void addMoney(double amount) {
         money += amount;
         task.cancel();
         task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
@@ -227,5 +220,9 @@ public class OfflineUser {
         this.prefix = prefix;
         task.cancel();
         task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 }

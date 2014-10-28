@@ -47,6 +47,7 @@ public class User {
     private int tokens = 0;
 
     private String prefix;
+    private String nick;
 
     private HashMap<String, String> globalUserdata = new HashMap<>();
     private HashMap<String, String> userdata = new HashMap<>();
@@ -66,6 +67,7 @@ public class User {
             muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
+            nick = dbObject.get("Nick") == null ? null : dbObject.get("Nick").toString();
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             money = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
@@ -207,6 +209,7 @@ public class User {
         dbObject.put("Muted", user.isMuted());
         dbObject.put("TempMute", user.getTempMute());
         dbObject.put("Prefix", user.getPrefix());
+        dbObject.put("Nick", user.getNick());
         dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
         dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
         dbObject.put("Tokens", user.getTokens());
@@ -394,5 +397,13 @@ public class User {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public String getNick() {
+        return nick;
     }
 }
