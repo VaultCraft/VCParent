@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.user;
 import com.mongodb.DBObject;
 import common.network.PacketInSendAll;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
@@ -76,6 +77,7 @@ public class OfflineUser {
     }
 
     private void update() {
+        Logger.debug(VCUtils.getInstance(), "Updating user...");
         userMap.remove(Bukkit.getOfflinePlayer(UUID.fromString(this.playerUUID)));
         Player player = Bukkit.getPlayer(UUID.fromString(this.playerUUID));
         if(player != null) {
@@ -86,12 +88,15 @@ public class OfflineUser {
             user.addMoney(money);
             user.addTokens(tokens);
             user.setPrefix(prefix);
+            return;
         }
-
+        Logger.debug(VCUtils.getInstance(), "User is not online");
         BungeeUtil.serverPlayerList(new ArrayList<>(Bukkit.getOnlinePlayers()).get(0), "ALL", data -> {
             String server = data.readUTF();
+            Logger.debug(VCUtils.getInstance(), server);
             List<String> playerNames = new ArrayList<>(Arrays.asList(data.readUTF().split(", ")));
             if(playerNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(playerUUID)).getName())) {
+                Logger.debug(VCUtils.getInstance(), "USer is on another server");
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try {
                     ObjectOutputStream objOut = new ObjectOutputStream(out);
@@ -103,14 +108,26 @@ public class OfflineUser {
                 PacketInSendAll packet = new PacketInSendAll("update-user", out);
                 MessageClient.sendPacket(packet);
             } else {
+                Logger.debug(VCUtils.getInstance(), "User is not online updating mongo");
                 DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
                 if(dbObject != null) {
                     //Get old money and token values
                     Object o = dbObject.get(VCUtils.serverName + "-Money");
                     double moneyNew = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
                     int tokensNew = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+                    String userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? "" : dbObject.get(VCUtils.serverName + "-UserData").toString();
+                    String globalUserdata = dbObject.get("Global-UserData") == null ? "" : dbObject.get("Global-UserData").toString();
+
+                    Logger.debug(VCUtils.getInstance(), "Old: " + moneyNew);
+                    Logger.debug(VCUtils.getInstance(), "Old: " + tokensNew);
+                    Logger.debug(VCUtils.getInstance(), "Add: " + money);
+                    Logger.debug(VCUtils.getInstance(), "Add: " + tokens);
+
                     moneyNew += money;
                     tokensNew += tokens;
+
+                    Logger.debug(VCUtils.getInstance(), "New: " + moneyNew);
+                    Logger.debug(VCUtils.getInstance(), "New: " + tokensNew);
 
                     //Update Mongo
                     dbObject.put("UUID", playerUUID);
@@ -121,12 +138,17 @@ public class OfflineUser {
                     dbObject.put("TempMute", tempMute);
                     dbObject.put("Prefix", prefix);
                     dbObject.put(VCUtils.serverName + "-Money", moneyNew);
+                    dbObject.put(VCUtils.serverName + "-UserData", userdata);
                     dbObject.put("Tokens", tokensNew);
-                    DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID",playerUUID);
-                    if (dbObject1 != null)
+                    dbObject.put("Global-UserData", globalUserdata);
+                    DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
+                    if (dbObject1 != null) {
                         VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+                        Logger.debug(VCUtils.getInstance(), "User updated on mongo!");
+                    }
                 }
             }
+            Logger.debug(VCUtils.getInstance(), "User updated!");
         });
     }
 
@@ -182,7 +204,7 @@ public class OfflineUser {
     }
 
     public void addTokens(int amount) {
-        tokens += tokens;
+        tokens += amount;
         task.cancel();
         task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
@@ -205,47 +227,5 @@ public class OfflineUser {
         this.prefix = prefix;
         task.cancel();
         task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
-    }
-
-    public class UpdatedUserData {
-
-        public String playerUUID;
-        private String groups;
-        private boolean banned;
-        private Date tempBan;
-        private boolean muted;
-        private Date tempMute;
-
-        private double money;
-        private int tokens;
-
-        private String prefix;
-
-
-        public UpdatedUserData(OfflineUser user) {
-            playerUUID = user.getPlayerUUID();
-            groups = User.groupsToString(user.getGroup());
-            banned = user.isBanned();
-            tempBan = user.getTempBan();
-            muted = user.isMuted();
-            tempMute = user.getTempMute();
-            money = user.getChangeInMoney();
-            tokens = user.getChangeInTokens();
-            prefix = user.getPrefix();
-        }
-
-        public void updateUser(User user) {
-            List<Integer> groupLevels = User.parseGroups(groups);
-            user.setGroup(Group.fromPermLevel(groupLevels.get(0)));
-            groupLevels.remove(0);
-            for(int i : groupLevels) {
-                user.getGroup().merge(Group.fromPermLevel(i));
-            }
-            user.setBanned(banned, tempBan);
-            user.setMuted(muted, tempMute);
-            user.addMoney(money);
-            user.addTokens(tokens);
-            user.setPrefix(prefix);
-        }
     }
 }
