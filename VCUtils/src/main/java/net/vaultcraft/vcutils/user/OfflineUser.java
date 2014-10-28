@@ -108,7 +108,7 @@ public class OfflineUser {
                     //Get old money and token values
                     Object o = dbObject.get(VCUtils.serverName + "-Money");
                     double moneyNew = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
-                    double tokensNew = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+                    int tokensNew = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
                     moneyNew += money;
                     tokensNew += tokens;
 
