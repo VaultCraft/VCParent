@@ -49,13 +49,13 @@ public class Form {
     public static String at(double value, boolean more) {
         if(!more)
             return $form.format(value);
-        if(value / 1000000000d > 9999)
+        if(value / 1000000000d > 999)
             return $form.format(value / 1000000000000d) + " tril";
-        if(value / 1000000d > 9999)
+        if(value / 1000000d > 999)
             return $form.format(value / 1000000000d) + " bil";
-        if(value / 1000d > 9999)
+        if(value / 1000d > 999)
             return $form.format(value / 1000000d) + " mil";
-        if( value > 9999)
+        if( value > 999)
             return $form.format(value / 1000d) + "k";
         return $form.format(value);
     }

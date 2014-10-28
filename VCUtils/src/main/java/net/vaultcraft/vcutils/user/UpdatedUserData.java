@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by tacticalsk8er on 10/27/2014.
  */
-public class UpdatedUserData implements Serializable{
+public class UpdatedUserData implements Serializable {
 
     public String playerUUID;
     private String groups;
