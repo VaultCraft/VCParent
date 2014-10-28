@@ -1,12 +1,13 @@
 package net.vaultcraft.vcutils.user;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by tacticalsk8er on 10/27/2014.
  */
-public class UpdatedUserData {
+public class UpdatedUserData implements Serializable{
 
     public String playerUUID;
     private String groups;
