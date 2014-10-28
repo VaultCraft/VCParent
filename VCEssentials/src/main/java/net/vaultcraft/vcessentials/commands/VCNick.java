@@ -40,6 +40,6 @@ public class VCNick extends ICommand {
         }
 
         user.setNick(args[0]);
-        Form.at(player, Prefix.SUCCESS, "Your nickname was changed to &e " + args[0] + Prefix.SUCCESS.getChatColor()+"!");
+        Form.at(player, Prefix.SUCCESS, "Your nickname was changed to &e" + args[0] + Prefix.SUCCESS.getChatColor()+"!");
     }
 }
