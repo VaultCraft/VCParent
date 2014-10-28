@@ -203,7 +203,7 @@ public class OfflineUser {
     }
 
     public void addTokens(int amount) {
-        tokens += tokens;
+        tokens += amount;
         task.cancel();
         task = Bukkit.getScheduler().runTaskLater(VCUtils.getInstance(), this::update, SAVE_DELAY * 20l);
     }
