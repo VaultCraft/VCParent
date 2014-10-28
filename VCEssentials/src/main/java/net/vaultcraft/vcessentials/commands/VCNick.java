@@ -5,6 +5,7 @@ import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -32,6 +33,16 @@ public class VCNick extends ICommand {
             return;
         }
 
+        if (args[0].length() > 16) {
+            Form.at(player, Prefix.ERROR, "Your nickname can only be 16 characters long!");
+            return;
+        }
+
+        if (Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
+            Form.at(player, Prefix.ERROR, "You cannot spoof another player!");
+            return;
+        }
+        
         for (char c : args[0].toCharArray()) {
             if (!(Character.isLetterOrDigit(c)) && !(c == '_')) {
                 Form.at(player, Prefix.ERROR, "Your nickname must be numbers and letters only!");
