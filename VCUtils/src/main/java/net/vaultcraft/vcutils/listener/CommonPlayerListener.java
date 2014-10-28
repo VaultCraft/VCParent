@@ -5,7 +5,7 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.network.PacketReceivedEvent;
 import net.vaultcraft.vcutils.user.Group;
-import net.vaultcraft.vcutils.user.OfflineUser;
+import net.vaultcraft.vcutils.user.UpdatedUserData;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -126,7 +126,7 @@ public class CommonPlayerListener implements Listener {
         if(!event.getChannel().equals("update-user"))
             return;
         try {
-            OfflineUser.UpdatedUserData userData = (OfflineUser.UpdatedUserData) event.getStream().readObject();
+            UpdatedUserData userData = (UpdatedUserData) event.getStream().readObject();
             if(User.fromUUID(userData.playerUUID) == null)
                 return;
             userData.updateUser(User.fromUUID(userData.playerUUID));
