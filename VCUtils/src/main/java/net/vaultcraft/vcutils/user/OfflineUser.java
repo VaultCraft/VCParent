@@ -1,12 +1,17 @@
 package net.vaultcraft.vcutils.user;
 
 import com.mongodb.DBObject;
+import common.network.PacketInSendAll;
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.util.BungeeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.*;
 
 /**
@@ -28,10 +33,6 @@ public class OfflineUser {
 
     private String prefix;
 
-    private HashMap<String, String> globalUserdata = new HashMap<>();
-    private HashMap<String, String> userdata = new HashMap<>();
-
-
     public OfflineUser(OfflinePlayer player) {
         playerUUID = player.getUniqueId().toString();
         group = new Group.GroupHandler(player.getPlayer());
@@ -45,10 +46,9 @@ public class OfflineUser {
             muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
-            userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : User.parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
-            globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : User.parseData(dbObject.get("Global-UserData").toString());
         } else {
             group.merge(Group.COMMON);
+            prefix = null;
         }
     }
 
@@ -62,16 +62,47 @@ public class OfflineUser {
             user.addMoney(money);
             user.addTokens(tokens);
             user.setPrefix(prefix);
-            for(Map.Entry<String, String> entry : userdata.entrySet()) {
-                user.addUserdata(entry.getKey(), entry.getValue());
-            }
-            for(Map.Entry<String, String> entry : globalUserdata.entrySet()) {
-                user.addGlobalUserdata(entry.getKey(), entry.getValue());
-            }
         }
 
         BungeeUtil.serverPlayerList(new ArrayList<>(Bukkit.getOnlinePlayers()).get(0), "ALL", data -> {
+            String server = data.readUTF();
+            List<String> playerNames = new ArrayList<>(Arrays.asList(data.readUTF().split(", ")));
+            if(playerNames.contains(Bukkit.getOfflinePlayer(UUID.fromString(playerUUID)).getName())) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                try {
+                    ObjectOutputStream objOut = new ObjectOutputStream(out);
+                    objOut.writeObject(new UpdatedUserData(this));
+                    objOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                PacketInSendAll packet = new PacketInSendAll("update-user", out);
+                MessageClient.sendPacket(packet);
+            } else {
+                DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", playerUUID);
+                if(dbObject != null) {
+                    //Get old money and token values
+                    Object o = dbObject.get(VCUtils.serverName + "-Money");
+                    double moneyOld = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
+                    double tokensOld = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+                    moneyOld += money;
+                    tokensOld += tokens;
 
+                    //Update Mongo
+                    dbObject.put("UUID", playerUUID);
+                    dbObject.put("Group", User.groupsToString(group));
+                    dbObject.put("Banned", banned);
+                    dbObject.put("TempBan", tempBan);
+                    dbObject.put("Muted", muted);
+                    dbObject.put("TempMute", tempMute);
+                    dbObject.put("Prefix", prefix);
+                    dbObject.put(VCUtils.serverName + "-Money", moneyOld);
+                    dbObject.put("Tokens", tokensOld);
+                    DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID",playerUUID);
+                    if (dbObject1 != null)
+                        VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+                }
+            }
         });
     }
 
@@ -111,26 +142,6 @@ public class OfflineUser {
         return tokens;
     }
     
-    public String getUserdata(String key) {
-        return userdata.get(key);
-    }
-    
-    public void addUserdata(String key, String value) {
-        if(userdata.containsKey(key))
-            userdata.remove(key);
-        userdata.put(key, value);
-    }
-    
-    public String getGlobalUserdata(String key) {
-        return globalUserdata.get(key);
-    }
-
-    public void addGlobalUserdata(String key, String value) {
-        if(globalUserdata.containsKey(key))
-            globalUserdata.remove(key);
-        globalUserdata.put(key, value);
-    }
-
     public void addMoney(int amount) {
         money += amount;
     }
@@ -151,5 +162,47 @@ public class OfflineUser {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public class UpdatedUserData {
+
+        public String playerUUID;
+        private String groups;
+        private boolean banned;
+        private Date tempBan;
+        private boolean muted;
+        private Date tempMute;
+
+        private double money;
+        private int tokens;
+
+        private String prefix;
+
+
+        public UpdatedUserData(OfflineUser user) {
+            playerUUID = user.getPlayerUUID();
+            groups = User.groupsToString(user.getGroup());
+            banned = user.isBanned();
+            tempBan = user.getTempBan();
+            muted = user.isMuted();
+            tempMute = user.getTempMute();
+            money = user.getChangeInMoney();
+            tokens = user.getChangeInTokens();
+            prefix = user.getPrefix();
+        }
+
+        public void updateUser(User user) {
+            List<Integer> groupLevels = User.parseGroups(groups);
+            user.setGroup(Group.fromPermLevel(groupLevels.get(0)));
+            groupLevels.remove(0);
+            for(int i : groupLevels) {
+                user.getGroup().merge(Group.fromPermLevel(i));
+            }
+            user.setBanned(banned, tempBan);
+            user.setMuted(muted, tempMute);
+            user.addMoney(money);
+            user.addTokens(tokens);
+            user.setPrefix(prefix);
+        }
     }
 }
