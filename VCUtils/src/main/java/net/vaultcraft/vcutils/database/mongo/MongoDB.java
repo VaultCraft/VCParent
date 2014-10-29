@@ -228,6 +228,24 @@ public class MongoDB {
     }
 
     /**
+     * Queries the MongoDB server for all objects in a collection.
+     * @param dbName Name of the database.
+     * @param collectionName Name of the question
+     * @return Arraylist of the DBObjects
+     */
+    public ArrayList<DBObject> getAll(String dbName, String collectionName) {
+        DB db = getDB(dbName);
+        ArrayList<DBObject> objects = new ArrayList<>();
+        DBCollection dbCollection = db.getCollection(collectionName);
+        DBCursor dbCursor = dbCollection.find();
+        while (dbCursor.hasNext()) {
+            objects.add(dbCursor.next());
+        }
+        return objects;
+    }
+
+
+    /**
      * Closes the connection to the MongoDB server.
      */
     public void close() {
