@@ -39,7 +39,7 @@ public class VCMessage extends ICommand {
             return;
         }
 
-        if(User.fromPlayer(player).isMuted()) {
+        if (User.fromPlayer(player).isMuted()) {
             Form.at(player, Prefix.WARNING, "You cannot private message while you are muted!");
             return;
         }
@@ -61,8 +61,7 @@ public class VCMessage extends ICommand {
         }
 
 
-
-        if(VCChatListener.afkPlayers.contains(find)) {
+        if (VCChatListener.afkPlayers.contains(find)) {
             Form.at(player, Prefix.WARNING, find.getName() + " is currently AFK and may not respond to your message!");
         }
 
@@ -71,13 +70,14 @@ public class VCMessage extends ICommand {
         Form.at(player, Prefix.NOTHING, "&5&l[&7&ome &5&l-> &7&o{to}&5&l] &7{message}"
                 .replace("{message}", message)
                 .replace("{to}", find.getName()));
-        for(String s : VCSocialSpy.getSpyList()) {
+        for (String s : VCSocialSpy.getSpyList()) {
             Player spy = Bukkit.getPlayer(s);
-            if(spy != null)
-                Form.at(spy, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&o{to}&5&l] &7{message}"
-                        .replace("{message}", message)
-                        .replace("{to}", find.getName())
-                        .replace("{from}", player.getName()));
+            if (spy != null)
+                if (!spy.equals(player) && !spy.equals(find))
+                    Form.at(spy, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&o{to}&5&l] &7{message}"
+                            .replace("{message}", message)
+                            .replace("{to}", find.getName())
+                            .replace("{from}", player.getName()));
         }
         Form.at(find, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&ome&5&l] &7{message}"
                 .replace("{message}", message)
