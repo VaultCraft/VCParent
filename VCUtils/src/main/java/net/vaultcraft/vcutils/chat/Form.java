@@ -66,4 +66,9 @@ public class Form {
         $intForm.setMaximumFractionDigits(0);
         return $intForm.format(value);
     }
+
+    public static String at(long value) {
+        $intForm.setMaximumFractionDigits(0);
+        return $intForm.format(value);
+    }
 }
