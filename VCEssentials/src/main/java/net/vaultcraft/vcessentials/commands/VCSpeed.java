@@ -25,9 +25,9 @@ public class VCSpeed extends ICommand {
 
         if(args.length == 1) {
             try {
-                speed = Integer.parseInt(args[1]);
+                speed = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                Form.at(player, Prefix.ERROR, "Argument 2 needs to be an integer.");
+                Form.at(player, Prefix.ERROR, "Argument 1 needs to be an integer.");
                 return;
             }
 
