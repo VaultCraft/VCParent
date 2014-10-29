@@ -11,8 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,7 +28,7 @@ public class VCTempMute extends ICommand{
     public void processCommand(Player player, String[] args) {
         if(args.length < 2) {
             Form.at(player, Prefix.ERROR, "Format: /tempmute <player> <time> (reason)");
-            Form.at(player, Prefix.ERROR, "Time Format: y = year, mo = month, d = day, h = hour, m = minute, s = second." +
+            Form.at(player, Prefix.ERROR, "Time Format: y = year, mo = month, d = day, h = hour, m = minute, s = second. " +
                     "Example: 1h30m = 1 hour 30 minutes.");
         }
 
