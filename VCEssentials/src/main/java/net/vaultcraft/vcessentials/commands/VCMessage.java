@@ -74,7 +74,7 @@ public class VCMessage extends ICommand {
         for(String s : VCSocialSpy.getSpyList()) {
             Player spy = Bukkit.getPlayer(s);
             if(spy != null)
-                Form.at(player, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&o{to}&5&l] &7{message}"
+                Form.at(spy, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&o{to}&5&l] &7{message}"
                         .replace("{message}", message)
                         .replace("{to}", find.getName())
                         .replace("{from}", player.getName()));
