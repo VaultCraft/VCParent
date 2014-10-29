@@ -85,18 +85,22 @@ public class User {
                 Date now = new Date();
                 if (now.after(tempBan)) {
                     setBanned(false, null);
+                    async_player_map.put(player, this);
+                    async_uuid_map.put(player.getUniqueId().toString(), this);
+                    this.ready = true;
                     Bukkit.getPluginManager().callEvent(event);
+                    this.task = new UserSaveTask(player.getUniqueId().toString()).runTaskTimer(VCUtils.getInstance(), 5 * 1200, 5 * 1200);
                     return;
                 }
-                Bukkit.getScheduler().runTask(VCUtils.getInstance(), () -> player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan)));
+                player.kickPlayer("You are banned! You can join on " + sdf.format(tempBan));
                 return;
             } else {
-                Bukkit.getScheduler().runTask(VCUtils.getInstance(), () -> player.kickPlayer("You are banned!"));
+                player.kickPlayer("You are banned!");
                 return;
             }
         }
-        async_player_map.put(player, User.this);
-        async_uuid_map.put(player.getUniqueId().toString(), User.this);
+        async_player_map.put(player, this);
+        async_uuid_map.put(player.getUniqueId().toString(), this);
         this.ready = true;
         Bukkit.getPluginManager().callEvent(event);
         this.task = new UserSaveTask(player.getUniqueId().toString()).runTaskTimer(VCUtils.getInstance(), 5 * 1200, 5 * 1200);
