@@ -74,9 +74,12 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCFeed("feed", Group.ADMIN));
         CommandManager.addCommand(new VCGod(this, "god", Group.ADMIN, "godmode"));
         CommandManager.addCommand(new VCKick("kick", Group.HELPER));
-        CommandManager.addCommand(new VCMute(this, "mute", Group.HELPER));
-        CommandManager.addCommand(new VCBan(this, "ban", Group.MOD));
-        CommandManager.addCommand(new VCUnban(this, "unban", Group.MOD));
+        CommandManager.addCommand(new VCMute("mute", Group.HELPER));
+        CommandManager.addCommand(new VCTempMute("tempmute", Group.HELPER));
+        CommandManager.addCommand(new VCUnmute("unmute", Group.HELPER));
+        CommandManager.addCommand(new VCBan("ban", Group.MOD));
+        CommandManager.addCommand(new VCTempBan("tempban", Group.MOD));
+        CommandManager.addCommand(new VCUnban("unban", Group.MOD));
         CommandManager.addCommand(new VCMoney("money", Group.COMMON, "bal", "balance"));
         CommandManager.addCommand(new VCToken("tokens", Group.COMMON));
         CommandManager.addCommand(new VCTeleportHere("tphere", Group.MOD, "teleporthere"));
@@ -99,6 +102,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCSetPrefix("setprefix", Group.MANAGER));
         CommandManager.addCommand(new VCList("list", Group.COMMON));
         CommandManager.addCommand(new VCNick("nick", Group.WITHER, "nickname"));
+        CommandManager.addCommand(new VCSocialSpy("socialspy", Group.MOD, "ss"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
