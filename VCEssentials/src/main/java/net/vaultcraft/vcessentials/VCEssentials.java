@@ -103,6 +103,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCList("list", Group.COMMON));
         CommandManager.addCommand(new VCNick("nick", Group.WITHER, "nickname"));
         CommandManager.addCommand(new VCSocialSpy("socialspy", Group.MOD, "ss"));
+        CommandManager.addCommand(new VCVanish("vanish", Group.MOD, "v"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
