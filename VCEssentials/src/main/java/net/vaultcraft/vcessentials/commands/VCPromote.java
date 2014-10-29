@@ -4,8 +4,10 @@ import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -33,15 +35,22 @@ public class VCPromote extends ICommand {
                 return;
             }
 
-            Player wrapped = Bukkit.getPlayer(args[1]);
-            if (wrapped == null) {
-                Form.at(player, Prefix.ERROR, "No such player! Format: /setgroup add <user> <rank>");
-                return;
-            }
-
             Group add = Group.fromString(args[2]);
             if (add == null) {
                 Form.at(player, Prefix.ERROR, "No such group! Format: /setgroup add <user> <rank>");
+                return;
+            }
+
+            Player wrapped = Bukkit.getPlayer(args[1]);
+            if (wrapped == null) {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                if(offlinePlayer != null) {
+                    OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                    user.getGroup().merge(add);
+                    Form.at(player, Prefix.SUCCESS, "Added group: &e" + add.getName() + Prefix.SUCCESS.getChatColor()+" to player &e " + offlinePlayer.getName() + Prefix.SUCCESS.getChatColor()+ "!");
+                    return;
+                }
+                Form.at(player, Prefix.ERROR, "No such player! Format: /setgroup add <user> <rank>");
                 return;
             }
 
@@ -54,15 +63,22 @@ public class VCPromote extends ICommand {
                 return;
             }
 
-            Player wrapped = Bukkit.getPlayer(args[1]);
-            if (wrapped == null) {
-                Form.at(player, Prefix.ERROR, "No such player! Format: /setgroup remove <user> <rank>");
-                return;
-            }
-
             Group add = Group.fromString(args[2]);
             if (add == null) {
                 Form.at(player, Prefix.ERROR, "No such group! Format: /setgroup remove <user> <rank>");
+                return;
+            }
+
+            Player wrapped = Bukkit.getPlayer(args[1]);
+            if (wrapped == null) {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                if(offlinePlayer != null) {
+                    OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                    user.getGroup().remove(add);
+                    Form.at(player, Prefix.SUCCESS, "Removed group: &e" + add.getName() + Prefix.SUCCESS.getChatColor()+" from player &e " + offlinePlayer.getName() + Prefix.SUCCESS.getChatColor()+ "!");
+                    return;
+                }
+                Form.at(player, Prefix.ERROR, "No such player! Format: /setgroup remove <user> <rank>");
                 return;
             }
 
@@ -71,15 +87,22 @@ public class VCPromote extends ICommand {
             return;
         }
 
-        Player wrapped = Bukkit.getPlayer(args[0]);
-        if (wrapped == null) {
-            Form.at(player, Prefix.ERROR, "No such player! Format: /setgroup <user> <rank>");
-            return;
-        }
-
         Group select = Group.fromString(args[1]);
         if (select == null) {
             Form.at(player, Prefix.ERROR, "No such group! Format: /setgroup <user> <rank>");
+            return;
+        }
+
+        Player wrapped = Bukkit.getPlayer(args[0]);
+        if (wrapped == null) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+            if(offlinePlayer != null) {
+                OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                user.setGroup(select);
+                Form.at(player, Prefix.SUCCESS, "&e" + offlinePlayer.getName() + Prefix.SUCCESS.getChatColor() + " promoted to &e" + select.getName() + Prefix.SUCCESS.getChatColor() + "!");
+                return;
+            }
+            Form.at(player, Prefix.ERROR, "No such player! Format: /setgroup <user> <rank>");
             return;
         }
 

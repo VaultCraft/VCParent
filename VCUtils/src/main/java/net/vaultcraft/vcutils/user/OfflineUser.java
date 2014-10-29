@@ -190,6 +190,12 @@ public class OfflineUser {
         return tokensOld;
     }
 
+    public void setGroup(Group group) {
+        List<Group> copy = new ArrayList<>(this.group.getAllGroups());
+        copy.forEach(this.group::remove);
+        this.group.merge(group);
+    }
+
     public void addMoney(double amount) {
         money += amount;
         task.cancel();
