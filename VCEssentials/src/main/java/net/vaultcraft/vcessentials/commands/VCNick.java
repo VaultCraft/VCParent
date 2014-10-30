@@ -42,7 +42,7 @@ public class VCNick extends ICommand {
             Form.at(player, Prefix.ERROR, "You cannot spoof another player!");
             return;
         }
-        
+
         for (char c : args[0].toCharArray()) {
             if (!(Character.isLetterOrDigit(c)) && !(c == '_')) {
                 Form.at(player, Prefix.ERROR, "Your nickname must be numbers and letters only!");
