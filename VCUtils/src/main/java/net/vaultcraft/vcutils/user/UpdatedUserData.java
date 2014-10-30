@@ -1,15 +1,22 @@
 package net.vaultcraft.vcutils.user;
 
+import com.mongodb.DBObject;
+import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by tacticalsk8er on 10/27/2014.
  */
-public class UpdatedUserData implements Serializable{
+public class UpdatedUserData implements Serializable {
 
     public String playerUUID;
+    private String serverName;
     private String groups;
     private boolean banned;
     private Date tempBan;
@@ -21,9 +28,10 @@ public class UpdatedUserData implements Serializable{
 
     private String prefix;
 
-
-    public UpdatedUserData(OfflineUser user) {
+    //TODO Check if User is on same type of server.
+    public UpdatedUserData(OfflineUser user, String serverName) {
         playerUUID = user.getPlayerUUID();
+        this.serverName = serverName;
         groups = User.groupsToString(user.getGroup());
         banned = user.isBanned();
         tempBan = user.getTempBan();
@@ -42,8 +50,19 @@ public class UpdatedUserData implements Serializable{
             user.getGroup().merge(Group.fromPermLevel(i));
         }
         user.setBanned(banned, tempBan);
+        if(banned)
+            user.getPlayer().kickPlayer("You have been banned! You can post an appeal on our forums.");
         user.setMuted(muted, tempMute);
-        user.addMoney(money);
+        if(VCUtils.serverName.equals(this.serverName)) {
+            user.addMoney(money);
+        } else {
+            DBObject dbObject = User.getDBObject(UUID.fromString(playerUUID));
+            double oldMoney = dbObject.get(serverName + "-Money") == null ? 0.0 : (double) dbObject.get(serverName + "-Money");
+            oldMoney += money;
+            dbObject.put(serverName + "-Money", oldMoney);
+            DBObject dbObject1 = User.getDBObject(UUID.fromString(playerUUID));
+            VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+        }
         user.addTokens(tokens);
         user.setPrefix(prefix);
     }

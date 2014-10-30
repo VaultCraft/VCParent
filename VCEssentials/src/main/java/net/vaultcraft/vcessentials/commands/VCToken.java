@@ -57,20 +57,27 @@ public class VCToken extends ICommand {
                         return;
                     }
 
-                    if (player1 == null) {
-                        Form.at(player, Prefix.ERROR, "No such player");
-                        return;
-                    }
-
                     if(User.fromPlayer(player).getTokens() < amount) {
                         Form.at(player, Prefix.ERROR, "You don't have enough tokens.");
                         return;
                     }
 
+                    if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            user.addTokens(amount);
+                            Form.at(player, Prefix.SUCCESS, "You sent " + offlinePlayer.getName() + " " + Form.at(amount) + " tokens.");
+                            return;
+                        }
+                        Form.at(player, Prefix.ERROR, "No such player");
+                        return;
+                    }
+
                     User.fromPlayer(player).addTokens(-amount);
                     User.fromPlayer(player1).addTokens(amount);
-                    Form.at(player, Prefix.SUCCESS, "You sent " + player1.getName() + " " + amount + " tokens.");
-                    Form.at(player1, Prefix.VAULT_CRAFT, player.getName() + " sent you " + amount + " tokens.");
+                    Form.at(player, Prefix.SUCCESS, "You sent " + player1.getName() + " " + Form.at(amount) + " tokens.");
+                    Form.at(player1, Prefix.VAULT_CRAFT, player.getName() + " sent you " + Form.at(amount) + " tokens.");
                     break;
                 case "add":
                     if(!User.fromPlayer(player).getGroup().hasPermission(Group.OWNER)) {
@@ -104,7 +111,7 @@ public class VCToken extends ICommand {
                         }
 
                         user.addTokens(amount);
-                        Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " now has " + (user.getTokensOld() + amount) + " tokens.");
+                        Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " now has " + Form.at((user.getTokensOld() + amount)) + " tokens.");
                         return;
                     }
 
@@ -113,7 +120,7 @@ public class VCToken extends ICommand {
                     }
 
                     User.fromPlayer(player1).addTokens(amount);
-                    Form.at(player, Prefix.SUCCESS, player1.getName() + " now has " + User.fromPlayer(player1).getTokens() + " tokens.");
+                    Form.at(player, Prefix.SUCCESS, player1.getName() + " now has " + Form.at(User.fromPlayer(player1).getTokens()) + " tokens.");
                     break;
                 case "set":
                     if(!User.fromPlayer(player).getGroup().hasPermission(Group.OWNER)) {
@@ -134,13 +141,21 @@ public class VCToken extends ICommand {
                         return;
                     }
 
-                    if (player1 == null) {
-                        Form.at(player, Prefix.ERROR, "No such player");
+                    if(amount <= 0) {
+                        Form.at(player, Prefix.ERROR, "Argument 3 needs to be a positive integer.");
                         return;
                     }
 
-                    if(amount <= 0) {
-                        Form.at(player, Prefix.ERROR, "Argument 3 needs to be a positive integer.");
+                    if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            int change = amount - user.getTokensOld();
+                            user.addTokens(change);
+                            Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " now has $" + Form.at((user.getTokensOld() + change)) + ".");
+                            return;
+                        }
+                        Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }
 
@@ -150,6 +165,12 @@ public class VCToken extends ICommand {
                 default:
                     player1 = Bukkit.getPlayer(args[0]);
                     if (player1 == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+                        if(offlinePlayer != null) {
+                            OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                            Form.at(player, Prefix.VAULT_CRAFT,  offlinePlayer.getName() + " has &a$" + Form.at((user.getTokensOld() + user.getChangeInTokens())) + ".");
+                            return;
+                        }
                         Form.at(player, Prefix.ERROR, "No such player");
                         return;
                     }

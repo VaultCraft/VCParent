@@ -16,12 +16,35 @@ public class VCSpeed extends ICommand {
 
     @Override
     public void processCommand(Player player, String[] args) {
-        if(args.length == 0 || args.length == 1){
+        if(args.length == 0){
             Form.at(player, Prefix.ERROR, "Format: /speed <fly/walk> <speed>");
             return;
         }
 
         float speed;
+
+        if(args.length == 1) {
+            try {
+                speed = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                Form.at(player, Prefix.ERROR, "Argument 1 needs to be an integer.");
+                return;
+            }
+
+            if (speed < 0 || speed > 10.0) {
+                Form.at(player, Prefix.ERROR, "Speed must be between 1 and 10!");
+                return;
+            }
+
+            if(player.isFlying()) {
+                player.setFlySpeed(speed/10f);
+                Form.at(player, Prefix.SUCCESS, "Fly speed: " + speed);
+            } else {
+                player.setWalkSpeed(speed/10f);
+                Form.at(player, Prefix.SUCCESS, "Walk speed: " + speed);
+            }
+            return;
+        }
 
         try {
             speed = Integer.parseInt(args[1]);

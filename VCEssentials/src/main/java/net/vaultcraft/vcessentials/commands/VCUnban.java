@@ -19,11 +19,9 @@ import java.util.UUID;
  */
 public class VCUnban extends ICommand {
 
-    private Plugin plugin;
 
-    public VCUnban(Plugin plugin, String name, Group permission, String... aliases) {
+    public VCUnban(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
-        this.plugin = plugin;
     }
 
     @Override
@@ -48,6 +46,7 @@ public class VCUnban extends ICommand {
             boolean banned = (boolean) dbObject.get("Banned");
             if(banned) {
                 dbObject.put("Banned", false);
+                dbObject.put("TempBan", false);
                 Form.at(player, Prefix.SUCCESS, args[0] + " has been unbanned!");
                 DBObject dbObject1 = User.getDBObject(uuid);
                 VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);

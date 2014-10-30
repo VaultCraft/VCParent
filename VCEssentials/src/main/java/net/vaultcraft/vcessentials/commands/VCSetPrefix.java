@@ -5,8 +5,10 @@ import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.string.StringUtils;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -28,7 +30,13 @@ public class VCSetPrefix extends ICommand {
         if (args[0].equalsIgnoreCase("clear")) {
             Player find = Bukkit.getPlayer(args[1]);
             if (find == null) {
-                Form.at(player, Prefix.ERROR, args[0] + " is not a valid player!");
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                if(offlinePlayer != null) {
+                    OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                    user.setPrefix(null);
+                    Form.at(player, Prefix.SUCCESS, "You cleared " + offlinePlayer.getName() + "'s prefix!");
+                }
+                Form.at(player, Prefix.ERROR, "No such player! Format: /prefix [player] [prefix]");
                 return;
             }
 
@@ -37,13 +45,19 @@ public class VCSetPrefix extends ICommand {
             return;
         }
 
+        String prefix = StringUtils.buildFromArray(args,1);
+
         Player find = Bukkit.getPlayer(args[0]);
         if (find == null) {
-            Form.at(player, Prefix.ERROR, args[0] + " is not a valid player!");
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+            if(offlinePlayer != null) {
+                OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
+                user.setPrefix(prefix);
+                Form.at(player, Prefix.SUCCESS, "You set " + offlinePlayer.getName() + "'s prefix to " + prefix);
+            }
+            Form.at(player, Prefix.ERROR, "No such player! Format: /prefix [player] [prefix]");
             return;
         }
-
-        String prefix = StringUtils.buildFromArray(args,1);
 
         User.fromPlayer(find).setPrefix(prefix);
         Form.at(player, Prefix.SUCCESS, "You set " + find.getName() + "'s prefix to " + prefix);

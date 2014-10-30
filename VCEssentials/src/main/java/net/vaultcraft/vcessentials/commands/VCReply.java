@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.string.StringUtils;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -67,6 +68,15 @@ public class VCReply extends ICommand {
         Form.at(player, Prefix.NOTHING, "&5&l[&7&ome &5&l-> &7&o{to}&5&l] &7{message}"
                 .replace("{message}", message)
                 .replace("{to}", find.getName()));
+        for (String s : VCSocialSpy.getSpyList()) {
+            Player spy = Bukkit.getPlayer(s);
+            if (spy != null)
+                if (!spy.equals(player) && !spy.equals(find))
+                    Form.at(spy, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&o{to}&5&l] &7{message}"
+                            .replace("{message}", message)
+                            .replace("{to}", find.getName())
+                            .replace("{from}", player.getName()));
+        }
         Form.at(find, Prefix.NOTHING, "&5&l[&7&o{from} &5&l-> &7&ome&5&l] &7{message}"
                 .replace("{message}", message)
                 .replace("{from}", player.getName()));
