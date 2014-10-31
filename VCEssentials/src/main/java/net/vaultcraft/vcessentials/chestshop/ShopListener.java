@@ -36,7 +36,7 @@ public class ShopListener implements Listener {
     public void onSignPlace(SignChangeEvent event) {
         Sign sign = (Sign) event.getBlock().getState().getData();
         int index = 0;
-        if(!event.getLine(0).equalsIgnoreCase("[Buy]") && !event.getLine(0).equalsIgnoreCase("[Sell]")) {
+        if (!event.getLine(0).equalsIgnoreCase("[Buy]") && !event.getLine(0).equalsIgnoreCase("[Sell]")) {
             index = 1;
             if (!event.getLine(1).equalsIgnoreCase("[Buy]") && !event.getLine(1).equalsIgnoreCase("[Sell]")) {
                 index = 2;
@@ -48,7 +48,7 @@ public class ShopListener implements Listener {
 
         Block attachedBlock = event.getBlock().getRelative(sign.getAttachedFace());
 
-        if(!attachedBlock.getType().equals(Material.CHEST)) {
+        if (!attachedBlock.getType().equals(Material.CHEST)) {
             Form.at(event.getPlayer(), Prefix.ERROR, "A shop sign needs to be placed on a chest.");
             event.getBlock().breakNaturally();
             return;
@@ -58,13 +58,13 @@ public class ShopListener implements Listener {
         String price = event.getLine(index + 1);
         String[] priceParts = price.split(" ");
 
-        if(priceParts.length > 2) {
+        if (priceParts.length > 2) {
             Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price! Example: 1234.34, 145.56 mil, 45.567 bil");
             event.getBlock().breakNaturally();
             return;
         }
 
-        if(priceParts.length > 0) {
+        if (priceParts.length > 0) {
             try {
                 Double.parseDouble(priceParts[0]);
             } catch (NumberFormatException e) {
@@ -74,8 +74,8 @@ public class ShopListener implements Listener {
             }
         }
 
-        if(priceParts.length == 2) {
-            if(!priceParts[1].equalsIgnoreCase("mil") && !priceParts[1].equalsIgnoreCase("bil")) {
+        if (priceParts.length == 2) {
+            if (!priceParts[1].equalsIgnoreCase("mil") && !priceParts[1].equalsIgnoreCase("bil")) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price modifier! Example: mil or bil.");
                 event.getBlock().breakNaturally();
                 return;
@@ -85,7 +85,7 @@ public class ShopListener implements Listener {
         Chest chest = (Chest) attachedBlock.getState();
         ItemStack item = chest.getInventory().getItem(0);
 
-        if(item == null) {
+        if (item == null) {
             Form.at(event.getPlayer(), Prefix.ERROR, "Sell item missing from the chest! Place the item and the " +
                     "amount of the item you want to sell in the upper right hand corner.");
             event.getBlock().breakNaturally();
@@ -93,7 +93,7 @@ public class ShopListener implements Listener {
         }
 
         event.setLine(0, event.getPlayer().getName());
-        if(sellOrBuy.toLowerCase().contains("buy"))
+        if (sellOrBuy.toLowerCase().contains("buy"))
             event.setLine(1, ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "[Buy]");
         else
             event.setLine(1, ChatColor.WHITE.toString() + ChatColor.BOLD + "[Sell]");
@@ -106,34 +106,34 @@ public class ShopListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
 
-        if(event.getClickedBlock() == null)
+        if (event.getClickedBlock() == null)
             return;
-        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
             return;
-        if(!event.getClickedBlock().getType().equals(Material.WALL_SIGN))
+        if (!event.getClickedBlock().getType().equals(Material.WALL_SIGN))
             return;
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
-        if(!ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[buy]") && !ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[sell]"))
+        if (!ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[buy]") && !ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[sell]"))
             return;
-        if(sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Buy]")) {
+        if (ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[buy]")) {
             String[] priceParts = ChatColor.stripColor(sign.getLine(2)).replace("$", "").split(" ");
             double price = 0;
-            if(priceParts.length > 0)
+            if (priceParts.length > 0)
                 price = Double.parseDouble(priceParts[0]);
 
-            if(priceParts.length > 1) {
-                if(priceParts[1].equalsIgnoreCase("mil"))
+            if (priceParts.length > 1) {
+                if (priceParts[1].equalsIgnoreCase("mil"))
                     price *= 1000000;
-                else if(priceParts[1].equalsIgnoreCase("bil"))
+                else if (priceParts[1].equalsIgnoreCase("bil"))
                     price *= 100000000;
             }
 
             User user = User.fromPlayer(event.getPlayer());
 
-            if(user.getMoney() < price)  {
+            if (user.getMoney() < price) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "You don't have enough money to purchase.");
                 return;
             }
@@ -145,14 +145,15 @@ public class ShopListener implements Listener {
 
 
             boolean contains = false;
-            for(ItemStack stack : event.getPlayer().getInventory().getContents()) {
-                if(stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
-                    if(stack.getDurability() == Short.parseShort(itemData[1]))
-                        if(stack.getAmount() >= Integer.parseInt(itemParts[1]))
-                            contains = true;
+            for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
+                if (stack != null)
+                    if (stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
+                        if (stack.getDurability() == Short.parseShort(itemData[1]))
+                            if (stack.getAmount() >= Integer.parseInt(itemParts[1]))
+                                contains = true;
             }
 
-            if(!contains) {
+            if (!contains) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Chest does not contain the selling item.");
                 return;
             }
@@ -160,7 +161,7 @@ public class ShopListener implements Listener {
             chest.getInventory().remove(itemStack);
             HashMap<Integer, ItemStack> lostItems = event.getPlayer().getInventory().addItem(itemStack);
 
-            if(!lostItems.isEmpty()) {
+            if (!lostItems.isEmpty()) {
                 for (ItemStack stack : lostItems.values())
                     event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), stack);
                 Form.at(event.getPlayer(), Prefix.WARNING, "You did not have enough room in your inventory. Items will appear next to you.");
@@ -171,9 +172,9 @@ public class ShopListener implements Listener {
             Form.at(event.getPlayer(), Prefix.SUCCESS, "You bought " + itemStack.getAmount() + " " + itemStack.getType().name() + " from " + sign.getLine(0));
 
             Player player = Bukkit.getPlayer(sign.getLine(0));
-            if(player == null) {
+            if (player == null) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(sign.getLine(0));
-                if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
+                if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user1 = OfflineUser.getOfflineUser(offlinePlayer);
                     user1.addMoney(price);
                     return;
@@ -187,13 +188,13 @@ public class ShopListener implements Listener {
 
             String[] priceParts = ChatColor.stripColor(sign.getLine(2)).replace("$", "").split(" ");
             double price = 0;
-            if(priceParts.length > 0)
+            if (priceParts.length > 0)
                 price = Double.parseDouble(priceParts[0]);
 
-            if(priceParts.length > 1) {
-                if(priceParts[1].equalsIgnoreCase("mil"))
+            if (priceParts.length > 1) {
+                if (priceParts[1].equalsIgnoreCase("mil"))
                     price *= 1000000;
-                else if(priceParts[1].equalsIgnoreCase("bil"))
+                else if (priceParts[1].equalsIgnoreCase("bil"))
                     price *= 100000000;
             }
 
@@ -203,42 +204,43 @@ public class ShopListener implements Listener {
             ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
 
             boolean contains = false;
-            for(ItemStack stack : event.getPlayer().getInventory().getContents()) {
-                if(stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
-                    if(stack.getDurability() == Short.parseShort(itemData[1]))
-                        if(stack.getAmount() >= Integer.parseInt(itemParts[1]))
-                            contains = true;
+            for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
+                if (stack != null)
+                    if (stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
+                        if (stack.getDurability() == Short.parseShort(itemData[1]))
+                            if (stack.getAmount() >= Integer.parseInt(itemParts[1]))
+                                contains = true;
             }
 
-            if(!contains) {
+            if (!contains) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "You don't have the buying item.");
                 return;
             }
 
-            if(chest.getInventory().firstEmpty() == -1) {
+            if (chest.getInventory().firstEmpty() == -1) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "The chest doesn't have enough room!");
                 return;
             }
 
             Player player = Bukkit.getPlayer(sign.getLine(0));
 
-            if(player == null) {
+            if (player == null) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(sign.getLine(0));
 
-                if(offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
+                if (offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
                     Form.at(event.getPlayer(), Prefix.ERROR, "Something went wrong...");
                     return;
                 }
 
                 OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
-                if(user.getMoneyOld() < price) {
+                if (user.getMoneyOld() < price) {
                     Form.at(event.getPlayer(), Prefix.ERROR, offlinePlayer.getName() + " doesn't have enough money to pay you.");
                     return;
                 }
                 user.addMoney(-price);
             } else {
                 User user = User.fromPlayer(player);
-                if(user.getMoney() < price) {
+                if (user.getMoney() < price) {
                     Form.at(event.getPlayer(), Prefix.ERROR, player.getName() + " doesn't have enough money to pay you.");
                     return;
                 }
