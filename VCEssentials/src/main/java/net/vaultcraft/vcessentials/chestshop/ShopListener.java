@@ -110,7 +110,7 @@ public class ShopListener implements Listener {
         if(!event.getClickedBlock().getType().equals(Material.WALL_SIGN))
             return;
 
-        org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock();
+        org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
