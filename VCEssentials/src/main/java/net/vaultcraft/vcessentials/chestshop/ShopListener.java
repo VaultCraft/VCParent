@@ -185,7 +185,7 @@ public class ShopListener implements Listener {
             user1.addMoney(price);
         } else {
 
-            String[] priceParts = ChatColor.stripColor(sign.getLine(2)).split(" ");
+            String[] priceParts = ChatColor.stripColor(sign.getLine(2)).replace("$", "").split(" ");
             double price = 0;
             if(priceParts.length > 0)
                 price = Double.parseDouble(priceParts[0]);
