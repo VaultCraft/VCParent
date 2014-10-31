@@ -211,12 +211,10 @@ public class VCEssentials extends JavaPlugin implements Listener {
                         return true;
                     }
                     final User theUser = new User(offlinePlayer.getPlayer());
-                    Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-                        public void run() {
-                            theUser.setBanned(false, null);
-                            User.remove(offlinePlayer.getPlayer());
-                            sender.sendMessage(ChatColor.YELLOW+"You unbanned " + offlinePlayer.getName() + " from the server!");
-                        }
+                    Bukkit.getScheduler().runTaskLater(this, () -> {
+                        theUser.setBanned(false, null);
+                        User.remove(offlinePlayer.getPlayer());
+                        sender.sendMessage(ChatColor.YELLOW+"You unbanned " + offlinePlayer.getName() + " from the server!");
                     }, 10);
                 }
 
