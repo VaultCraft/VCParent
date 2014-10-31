@@ -64,7 +64,7 @@ public class VCMoney extends ICommand{
 
                     if (player1 == null) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if(offlinePlayer != null) {
+                        if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                             OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                             User.fromPlayer(player).addMoney(-amount);
                             user.addMoney(amount);
@@ -101,7 +101,7 @@ public class VCMoney extends ICommand{
 
                     if (player1 == null) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if(offlinePlayer != null) {
+                        if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                             OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                             if(user.getMoneyOld() < -amount)
                                 amount = -user.getMoneyOld();
@@ -146,7 +146,7 @@ public class VCMoney extends ICommand{
 
                     if (player1 == null) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if(offlinePlayer != null) {
+                        if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                             OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                             double change = amount - user.getMoneyOld();
                             user.addMoney(change);

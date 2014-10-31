@@ -4,19 +4,15 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
-import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
-import net.vaultcraft.vcutils.util.DateUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,7 +41,7 @@ public class VCMute extends ICommand implements Listener {
             if (player1 == null) {
                 //Offline
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (offlinePlayer != null) {
+                if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                     user.setMuted(true, null);
                     Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " has been muted!");
@@ -67,7 +63,7 @@ public class VCMute extends ICommand implements Listener {
             if (player1 == null) {
                 //Offline
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (offlinePlayer != null) {
+                if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                     user.setMuted(true, null);
                     Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " has been muted!");
