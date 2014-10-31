@@ -170,6 +170,9 @@ public class BEnderChest extends ICommand implements Listener  {
                 activeUsers.remove(User.fromPlayer((org.bukkit.entity.Player) e.getPlayer()));
                 Bukkit.getScheduler().runTaskLater(VCEssentials.getInstance(), () -> {
                     for(ItemStack i : e.getPlayer().getInventory()) {
+                        if(i == null) {
+                            continue;
+                        }
                         if(i.getType().equals(Material.STAINED_GLASS_PANE)) {
                             e.getPlayer().getInventory().remove(i);
                         }
