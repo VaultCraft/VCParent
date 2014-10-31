@@ -141,17 +141,18 @@ public class ShopListener implements Listener {
             }
 
             int[] parts = getParts(sign.getLine(3));
-            ItemStack itemStack = new ItemStack(Material.getMaterial(parts[0]), parts[2], (short)0, (byte)parts[1]);
+            ItemStack itemStack = new ItemStack(Material.getMaterial(parts[0]), parts[2], (short)parts[1]);
+            ItemStack singleton = itemStack.clone();
+            singleton.setAmount(1);
 
             boolean contains = false;
-            for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
-                if (stack != null) {
-                    if (stack.getType().equals(Material.getMaterial(parts[0]))) {
-                        if (stack.getData().getData() == (byte) parts[1]) {
-                            if (stack.getAmount() >= parts[2])
-                                contains = true;
-                        }
-                    }
+            for (ItemStack i : event.getPlayer().getInventory().getContents()) {
+                ItemStack clone = i.clone();
+                clone.setAmount(1);
+
+                if (singleton.equals(clone) && i.getAmount() >= itemStack.getAmount()) {
+                    contains = true;
+                    break;
                 }
             }
 
@@ -201,17 +202,18 @@ public class ShopListener implements Listener {
             }
 
             int[] parts = getParts(sign.getLine(3));
-            ItemStack itemStack = new ItemStack(Material.getMaterial(parts[0]), parts[2], (short)0, (byte)parts[1]);
+            ItemStack itemStack = new ItemStack(Material.getMaterial(parts[0]), parts[2], (byte)parts[1]);
+            ItemStack singleton = itemStack.clone();
+            singleton.setAmount(1);
 
             boolean contains = false;
-            for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
-                if (stack != null) {
-                    if (stack.getType().equals(Material.getMaterial(parts[0]))) {
-                        if (stack.getData().getData() == (byte) parts[1]) {
-                            if (stack.getAmount() >= parts[2])
-                                contains = true;
-                        }
-                    }
+            for (ItemStack i : event.getPlayer().getInventory().getContents()) {
+                ItemStack clone = i.clone();
+                clone.setAmount(1);
+
+                if (singleton.equals(clone) && i.getAmount() >= itemStack.getAmount()) {
+                    contains = true;
+                    break;
                 }
             }
 
