@@ -125,6 +125,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addPluginWhitelist("buy");
         CommandManager.addPluginWhitelist("buycraft");
         CommandManager.addPluginWhitelist("plugins");
+        CommandManager.addPluginWhitelist("ncp");
 
         //LOL
         CommandManager.addCommand(new VCSpamFunStuff("spam", Group.OWNER, "funny", "bots"));
