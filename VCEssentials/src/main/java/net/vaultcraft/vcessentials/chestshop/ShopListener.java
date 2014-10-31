@@ -82,7 +82,7 @@ public class ShopListener implements Listener {
             }
         }
 
-        Chest chest = (Chest) event.getBlock().getRelative(sign.getAttachedFace());
+        Chest chest = (Chest) attachedBlock.getState();
         ItemStack item = chest.getInventory().getItem(0);
 
         if(item == null) {
@@ -112,7 +112,7 @@ public class ShopListener implements Listener {
 
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock();
         Sign signData = (Sign) sign.getData();
-        Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace());
+        Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
         if(!sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Buy]") && !sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Sell]"))
             return;
