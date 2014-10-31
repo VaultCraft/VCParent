@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.vaultcraft.vcessentials.announce.AnnounceManager;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
+import net.vaultcraft.vcessentials.chestshop.ShopListener;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
@@ -52,6 +53,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(enderChest, this);
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new VCPortalListener(), this);
+        new ShopListener();
 
         saveDefaultConfig();
     }
@@ -212,12 +214,10 @@ public class VCEssentials extends JavaPlugin implements Listener {
                         return true;
                     }
                     final User theUser = new User(offlinePlayer.getPlayer());
-                    Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-                        public void run() {
-                            theUser.setBanned(false, null);
-                            User.remove(offlinePlayer.getPlayer());
-                            sender.sendMessage(ChatColor.YELLOW+"You unbanned " + offlinePlayer.getName() + " from the server!");
-                        }
+                    Bukkit.getScheduler().runTaskLater(this, () -> {
+                        theUser.setBanned(false, null);
+                        User.remove(offlinePlayer.getPlayer());
+                        sender.sendMessage(ChatColor.YELLOW+"You unbanned " + offlinePlayer.getName() + " from the server!");
                     }, 10);
                 }
 

@@ -46,7 +46,7 @@ public class VCTempMute extends ICommand{
             if (player1 == null) {
                 //Offline
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (offlinePlayer != null) {
+                if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                     user.setMuted(true, date);
                     Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " has been muted!");
@@ -76,7 +76,7 @@ public class VCTempMute extends ICommand{
             if (player1 == null) {
                 //Offline
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                if (offlinePlayer != null) {
+                if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                     user.setMuted(true, date);
                     Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " has been muted!");

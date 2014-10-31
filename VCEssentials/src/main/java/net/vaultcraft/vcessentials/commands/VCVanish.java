@@ -1,6 +1,8 @@
 package net.vaultcraft.vcessentials.commands;
 
 import net.vaultcraft.vcessentials.VCEssentials;
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
@@ -33,6 +35,7 @@ public class VCVanish extends ICommand implements Listener {
             for(Player player1 : Bukkit.getOnlinePlayers()) {
                 player1.showPlayer(player);
             }
+            Form.at(player, Prefix.SUCCESS, "You are no longer invisible");
         } else {
             vanishList.add(player.getName());
             for(Player player1 : Bukkit.getOnlinePlayers()) {
@@ -40,6 +43,7 @@ public class VCVanish extends ICommand implements Listener {
                     continue;
                 player1.hidePlayer(player);
             }
+            Form.at(player, Prefix.SUCCESS, "You are now invisible");
         }
     }
 

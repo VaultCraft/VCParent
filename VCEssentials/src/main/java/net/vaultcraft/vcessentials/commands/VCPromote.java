@@ -44,7 +44,7 @@ public class VCPromote extends ICommand {
             Player wrapped = Bukkit.getPlayer(args[1]);
             if (wrapped == null) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                if(offlinePlayer != null) {
+                if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                     user.getGroup().merge(add);
                     Form.at(player, Prefix.SUCCESS, "Added group: &e" + add.getName() + Prefix.SUCCESS.getChatColor()+" to player &e " + offlinePlayer.getName() + Prefix.SUCCESS.getChatColor()+ "!");
@@ -72,7 +72,7 @@ public class VCPromote extends ICommand {
             Player wrapped = Bukkit.getPlayer(args[1]);
             if (wrapped == null) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                if(offlinePlayer != null) {
+                if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                     OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                     user.getGroup().remove(add);
                     Form.at(player, Prefix.SUCCESS, "Removed group: &e" + add.getName() + Prefix.SUCCESS.getChatColor()+" from player &e " + offlinePlayer.getName() + Prefix.SUCCESS.getChatColor()+ "!");
@@ -96,7 +96,7 @@ public class VCPromote extends ICommand {
         Player wrapped = Bukkit.getPlayer(args[0]);
         if (wrapped == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-            if(offlinePlayer != null) {
+            if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                 OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                 user.setGroup(select);
                 Form.at(player, Prefix.SUCCESS, "&e" + offlinePlayer.getName() + Prefix.SUCCESS.getChatColor() + " promoted to &e" + select.getName() + Prefix.SUCCESS.getChatColor() + "!");

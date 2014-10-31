@@ -29,7 +29,7 @@ public class VCUnmute extends ICommand {
 
         if(player1 == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-            if(offlinePlayer != null) {
+            if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                 OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                 user.setMuted(false, null);
                 Form.at(player, Prefix.SUCCESS, offlinePlayer.getName() + " has been un-muted.");
