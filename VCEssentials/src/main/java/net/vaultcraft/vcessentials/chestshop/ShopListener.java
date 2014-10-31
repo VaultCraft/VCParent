@@ -114,6 +114,8 @@ public class ShopListener implements Listener {
             return;
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
+        if(!event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.CHEST))
+            return;
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
         if (!ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[buy]") && !ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[sell]"))
