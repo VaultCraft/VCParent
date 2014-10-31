@@ -3,6 +3,7 @@ package net.vaultcraft.vcessentials.chestshop;
 import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
+import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
@@ -109,14 +110,14 @@ public class ShopListener implements Listener {
             return;
         if(!event.getClickedBlock().getType().equals(Material.WALL_SIGN))
             return;
-
+        Logger.debug(VCEssentials.getInstance(), "Clicked a sign.");
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
-        if(!sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Buy]") && !sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Sell]"))
+        if(!sign.getLine(1).toLowerCase().equals(ChatColor.BLUE + "[buy]") && !sign.getLine(1).toLowerCase().equals(ChatColor.BLUE + "[sell]"))
             return;
-
+        Logger.debug(VCEssentials.getInstance(), "Sign has buy or sell");
         if(sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Buy]")) {
 
             String[] priceParts = sign.getLine(2).split(" ");
