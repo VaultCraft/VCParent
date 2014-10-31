@@ -139,7 +139,7 @@ public class ShopListener implements Listener {
             String[] itemParts = sign.getLine(3).split(" ");
             String[] itemData = itemParts[0].split(":");
 
-            ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[2]), Short.parseShort(itemData[1]));
+            ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
 
             if(!chest.getInventory().contains(itemStack)) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Chest does not contain the selling item.");
@@ -189,7 +189,7 @@ public class ShopListener implements Listener {
             String[] itemParts = sign.getLine(3).split(" ");
             String[] itemData = itemParts[0].split(":");
 
-            ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[2]), Short.parseShort(itemData[1]));
+            ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
 
             if(!event.getPlayer().getInventory().contains(itemStack)) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "You don't have the buying item.");
