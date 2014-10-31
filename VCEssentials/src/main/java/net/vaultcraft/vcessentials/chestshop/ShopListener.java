@@ -197,7 +197,7 @@ public class ShopListener implements Listener {
                     price *= 100000000;
             }
 
-            String[] itemParts = sign.getLine(3).replace("ID:", "").split(" ");
+            String[] itemParts = sign.getLine(3).replace("ID:", "").split("@");
             String[] itemData = itemParts[0].split(":");
 
             ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
