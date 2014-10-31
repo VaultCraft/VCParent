@@ -116,10 +116,9 @@ public class ShopListener implements Listener {
         Sign signData = (Sign) sign.getData();
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
-        if(!sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[buy]") && !sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[sell]"))
+        if(!ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[buy]") && !ChatColor.stripColor(sign.getLine(1)).equalsIgnoreCase("[sell]"))
             return;
         if(sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Buy]")) {
-
             String[] priceParts = ChatColor.stripColor(sign.getLine(2)).replace("$", "").split(" ");
             double price = 0;
             if(priceParts.length > 0)
