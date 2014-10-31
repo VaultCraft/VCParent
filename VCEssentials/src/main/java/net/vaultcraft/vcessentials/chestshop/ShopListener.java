@@ -140,18 +140,15 @@ public class ShopListener implements Listener {
                 return;
             }
 
-            String[] itemParts = sign.getLine(3).replace("ID:", "").split("@");
-            String[] itemData = itemParts[0].split(":");
-
-            ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
-
+            int[] parts = getParts(sign.getLine(3));
+            ItemStack itemStack = new ItemStack(Material.getMaterial(parts[0]), parts[2], (short)0, (byte)parts[1]);
 
             boolean contains = false;
             for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
                 if (stack != null)
-                    if (stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
-                        if (stack.getDurability() == Short.parseShort(itemData[1]))
-                            if (stack.getAmount() >= Integer.parseInt(itemParts[1]))
+                    if (stack.getType().equals(Material.getMaterial(parts[0])))
+                        if (stack.getDurability() == (byte)parts[1]);
+                            if (stack.getAmount() >= parts[2])
                                 contains = true;
             }
 
@@ -200,18 +197,16 @@ public class ShopListener implements Listener {
                     price *= 100000000;
             }
 
-            String[] itemParts = sign.getLine(3).replace("ID:", "").split("@");
-            String[] itemData = itemParts[0].split(":");
-
-            ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
+            int[] parts = getParts(sign.getLine(3));
+            ItemStack itemStack = new ItemStack(Material.getMaterial(parts[0]), parts[2], (short)0, (byte)parts[1]);
 
             boolean contains = false;
             for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
                 if (stack != null)
-                    if (stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
-                        if (stack.getDurability() == Short.parseShort(itemData[1]))
-                            if (stack.getAmount() >= Integer.parseInt(itemParts[1]))
-                                contains = true;
+                    if (stack.getType().equals(Material.getMaterial(parts[0])))
+                        if (stack.getDurability() == (byte)parts[1]);
+                if (stack.getAmount() >= parts[2])
+                    contains = true;
             }
 
             if (!contains) {
@@ -255,5 +250,17 @@ public class ShopListener implements Listener {
             User.fromPlayer(event.getPlayer()).addMoney(price);
             Form.at(event.getPlayer(), Prefix.SUCCESS, "You sold " + itemStack.getAmount() + " " + itemStack.getType().name() + " to " + sign.getLine(0));
         }
+    }
+
+    private static int[] getParts(String x) {
+        String[] splitAt = x.split("@");
+        String[] splitColon = splitAt[0].split(":");
+
+        int id = Integer.parseInt(splitColon[1]);
+        byte data = (byte)Integer.parseInt(splitColon[2]);
+
+        int amount = Integer.parseInt(splitAt[1]);
+
+        return new int[] {id, data, amount};
     }
 }
