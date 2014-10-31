@@ -146,7 +146,7 @@ public class ShopListener implements Listener {
             for(ItemStack stack : event.getPlayer().getInventory().getContents()) {
                 if(stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
                     if(stack.getDurability() == Short.parseShort(itemData[1]))
-                        if(stack.getAmount() >= Integer.parseInt(itemParts[0]))
+                        if(stack.getAmount() >= Integer.parseInt(itemParts[1]))
                             contains = true;
             }
 
@@ -204,7 +204,7 @@ public class ShopListener implements Listener {
             for(ItemStack stack : event.getPlayer().getInventory().getContents()) {
                 if(stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
                     if(stack.getDurability() == Short.parseShort(itemData[1]))
-                        if(stack.getAmount() >= Integer.parseInt(itemParts[0]))
+                        if(stack.getAmount() >= Integer.parseInt(itemParts[1]))
                             contains = true;
             }
 
