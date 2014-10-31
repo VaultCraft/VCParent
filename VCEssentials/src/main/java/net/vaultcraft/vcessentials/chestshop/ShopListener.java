@@ -48,7 +48,7 @@ public class ShopListener implements Listener {
 
         Block attachedBlock = event.getBlock().getRelative(sign.getAttachedFace());
 
-        if (!attachedBlock.getType().equals(Material.CHEST)) {
+        if (!attachedBlock.getType().equals(Material.CHEST) && !attachedBlock.getType().equals(Material.TRAPPED_CHEST)) {
             Form.at(event.getPlayer(), Prefix.ERROR, "A shop sign needs to be placed on a chest.");
             event.getBlock().breakNaturally();
             return;
@@ -123,7 +123,7 @@ public class ShopListener implements Listener {
             return;
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
-        if(!event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.CHEST))
+        if(!event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.CHEST) && !event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.TRAPPED_CHEST))
             return;
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
