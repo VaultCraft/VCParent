@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.vaultcraft.vcessentials.announce.AnnounceManager;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
+import net.vaultcraft.vcessentials.chestshop.ShopListener;
 import net.vaultcraft.vcessentials.commands.*;
 import net.vaultcraft.vcessentials.file.ProtectionFile;
 import net.vaultcraft.vcessentials.listeners.VCChatListener;
@@ -52,6 +53,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(enderChest, this);
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new VCPortalListener(), this);
+        new ShopListener();
 
         saveDefaultConfig();
     }
