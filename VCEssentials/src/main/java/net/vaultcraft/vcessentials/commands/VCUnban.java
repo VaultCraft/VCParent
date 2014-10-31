@@ -9,7 +9,6 @@ import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.UUIDFetcher;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
@@ -46,7 +45,7 @@ public class VCUnban extends ICommand {
             boolean banned = (boolean) dbObject.get("Banned");
             if(banned) {
                 dbObject.put("Banned", false);
-                dbObject.put("TempBan", false);
+                dbObject.put("TempBan", null);
                 Form.at(player, Prefix.SUCCESS, args[0] + " has been unbanned!");
                 DBObject dbObject1 = User.getDBObject(uuid);
                 VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
