@@ -75,7 +75,7 @@ public class ShopListener implements Listener {
         }
 
         if(priceParts.length == 2) {
-            if(!priceParts[1].equalsIgnoreCase("mil") || !priceParts[1].equalsIgnoreCase("bil")) {
+            if(!priceParts[1].equalsIgnoreCase("mil") && !priceParts[1].equalsIgnoreCase("bil")) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price modifier! Example: mil or bil.");
                 event.getBlock().breakNaturally();
                 return;
@@ -93,9 +93,12 @@ public class ShopListener implements Listener {
         }
 
         event.setLine(0, event.getPlayer().getName());
-        event.setLine(1, ChatColor.BLUE + sellOrBuy);
-        event.setLine(2, ChatColor.GREEN + price);
-        event.setLine(3, item.getType().getId() + ":" + item.getDurability() + " " + item.getAmount());
+        if(sellOrBuy.toLowerCase().contains("buy"))
+            event.setLine(1, ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "[Buy]");
+        else
+            event.setLine(1, ChatColor.WHITE.toString() + ChatColor.BOLD + "[Sell]");
+        event.setLine(2, ChatColor.GREEN + "$" + price);
+        event.setLine(3, "ID:" + item.getType().getId() + ":" + item.getDurability() + "@" + item.getAmount());
 
         Form.at(event.getPlayer(), Prefix.SUCCESS, "Shop has been created!");
     }
@@ -117,7 +120,7 @@ public class ShopListener implements Listener {
             return;
         if(sign.getLine(1).equalsIgnoreCase(ChatColor.BLUE + "[Buy]")) {
 
-            String[] priceParts = ChatColor.stripColor(sign.getLine(2)).split(" ");
+            String[] priceParts = ChatColor.stripColor(sign.getLine(2)).replace("$", "").split(" ");
             double price = 0;
             if(priceParts.length > 0)
                 price = Double.parseDouble(priceParts[0]);
@@ -136,7 +139,7 @@ public class ShopListener implements Listener {
                 return;
             }
 
-            String[] itemParts = sign.getLine(3).split(" ");
+            String[] itemParts = sign.getLine(3).split("@");
             String[] itemData = itemParts[0].split(":");
 
             ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
