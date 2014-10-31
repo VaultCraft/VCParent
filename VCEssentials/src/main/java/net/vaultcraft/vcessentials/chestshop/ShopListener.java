@@ -164,8 +164,10 @@ public class ShopListener implements Listener {
                 return;
             }
 
-            chest.getInventory().remove(itemStack);
+            chest.getInventory().removeItem(itemStack);
             HashMap<Integer, ItemStack> lostItems = event.getPlayer().getInventory().addItem(itemStack);
+
+            chest.update();
 
             if (!lostItems.isEmpty()) {
                 for (ItemStack stack : lostItems.values())
@@ -190,8 +192,8 @@ public class ShopListener implements Listener {
 
             User user1 = User.fromPlayer(player);
             user1.addMoney(price);
+            event.getPlayer().updateInventory();
         } else {
-
             String[] priceParts = ChatColor.stripColor(sign.getLine(2)).replace("$", "").split(" ");
             double price = 0;
             if (priceParts.length > 0)
@@ -258,8 +260,11 @@ public class ShopListener implements Listener {
                 user.addMoney(-price);
             }
 
-            event.getPlayer().getInventory().remove(itemStack);
+            event.getPlayer().getInventory().removeItem(itemStack);
             chest.getInventory().addItem(itemStack);
+
+            event.getPlayer().updateInventory();
+            chest.update();
 
             User.fromPlayer(event.getPlayer()).addMoney(price);
             Form.at(event.getPlayer(), Prefix.SUCCESS, "You sold " + itemStack.getAmount() + " " + itemStack.getType().name() + " to " + sign.getLine(0));
