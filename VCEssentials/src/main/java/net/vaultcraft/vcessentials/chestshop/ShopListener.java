@@ -145,11 +145,14 @@ public class ShopListener implements Listener {
 
             boolean contains = false;
             for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
-                if (stack != null)
-                    if (stack.getType().equals(Material.getMaterial(parts[0])))
-                        if (stack.getDurability() == (byte)parts[1]);
+                if (stack != null) {
+                    if (stack.getType().equals(Material.getMaterial(parts[0]))) {
+                        if (stack.getData().getData() == (byte) parts[1]) {
                             if (stack.getAmount() >= parts[2])
                                 contains = true;
+                        }
+                    }
+                }
             }
 
             if (!contains) {
@@ -202,11 +205,14 @@ public class ShopListener implements Listener {
 
             boolean contains = false;
             for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
-                if (stack != null)
-                    if (stack.getType().equals(Material.getMaterial(parts[0])))
-                        if (stack.getDurability() == (byte)parts[1]);
-                if (stack.getAmount() >= parts[2])
-                    contains = true;
+                if (stack != null) {
+                    if (stack.getType().equals(Material.getMaterial(parts[0]))) {
+                        if (stack.getData().getData() == (byte) parts[1]) {
+                            if (stack.getAmount() >= parts[2])
+                                contains = true;
+                        }
+                    }
+                }
             }
 
             if (!contains) {
