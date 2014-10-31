@@ -64,9 +64,11 @@ public class ShopListener implements Listener {
             return;
         }
 
+        double priceD = 0.0;
+
         if (priceParts.length > 0) {
             try {
-                Double.parseDouble(priceParts[0]);
+                priceD = Double.parseDouble(priceParts[0]);
             } catch (NumberFormatException e) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price number! Example: 14323.34");
                 event.getBlock().breakNaturally();
@@ -75,11 +77,18 @@ public class ShopListener implements Listener {
         }
 
         if (priceParts.length == 2) {
-            if (!priceParts[1].equalsIgnoreCase("mil") && !priceParts[1].equalsIgnoreCase("bil")) {
-                Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price modifier! Example: mil or bil.");
+            if (!priceParts[1].equalsIgnoreCase("mil")) {
+                Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price modifier! Example: mil.");
                 event.getBlock().breakNaturally();
                 return;
             }
+            priceD *= 1000000;
+        }
+
+        if(priceD > 15000000) {
+            Form.at(event.getPlayer(), Prefix.ERROR, "Price can not be higher than 15,000,000.");
+            event.getBlock().breakNaturally();
+            return;
         }
 
         Chest chest = (Chest) attachedBlock.getState();
@@ -129,8 +138,6 @@ public class ShopListener implements Listener {
             if (priceParts.length > 1) {
                 if (priceParts[1].equalsIgnoreCase("mil"))
                     price *= 1000000;
-                else if (priceParts[1].equalsIgnoreCase("bil"))
-                    price *= 100000000;
             }
 
             User user = User.fromPlayer(event.getPlayer());
@@ -202,8 +209,6 @@ public class ShopListener implements Listener {
             if (priceParts.length > 1) {
                 if (priceParts[1].equalsIgnoreCase("mil"))
                     price *= 1000000;
-                else if (priceParts[1].equalsIgnoreCase("bil"))
-                    price *= 100000000;
             }
 
             int[] parts = getParts(sign.getLine(3));
