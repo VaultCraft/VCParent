@@ -83,7 +83,7 @@ public class VCMute extends ICommand implements Listener {
             for (int i = 1; i < args.length; i++)
                 sb.append(args[i]).append(" ");
             Form.at(player1, Prefix.WARNING, "You have been Muted! Reason: " + sb.toString() + ".");
-            Form.at(player, Prefix.SUCCESS, player1.getName() + " has been banned!");
+            Form.at(player, Prefix.SUCCESS, player1.getName() + " has been muted!");
         }
     }
 
