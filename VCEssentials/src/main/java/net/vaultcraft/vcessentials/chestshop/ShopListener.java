@@ -147,6 +147,9 @@ public class ShopListener implements Listener {
 
             boolean contains = false;
             for (ItemStack i : event.getPlayer().getInventory().getContents()) {
+                if (i == null)
+                    continue;
+
                 ItemStack clone = i.clone();
                 clone.setAmount(1);
 
@@ -208,6 +211,9 @@ public class ShopListener implements Listener {
 
             boolean contains = false;
             for (ItemStack i : event.getPlayer().getInventory().getContents()) {
+                if (i == null)
+                    continue;
+                
                 ItemStack clone = i.clone();
                 clone.setAmount(1);
 
