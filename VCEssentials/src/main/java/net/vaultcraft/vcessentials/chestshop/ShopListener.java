@@ -141,7 +141,16 @@ public class ShopListener implements Listener {
 
             ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
 
-            if(!chest.getInventory().contains(itemStack)) {
+
+            boolean contains = false;
+            for(ItemStack stack : event.getPlayer().getInventory().getContents()) {
+                if(stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
+                    if(stack.getDurability() == Short.parseShort(itemData[1]))
+                        if(stack.getAmount() >= Integer.parseInt(itemParts[0]))
+                            contains = true;
+            }
+
+            if(!contains) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Chest does not contain the selling item.");
                 return;
             }
@@ -191,7 +200,15 @@ public class ShopListener implements Listener {
 
             ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(itemData[0])), Integer.parseInt(itemParts[1]), Short.parseShort(itemData[1]));
 
-            if(!event.getPlayer().getInventory().contains(itemStack)) {
+            boolean contains = false;
+            for(ItemStack stack : event.getPlayer().getInventory().getContents()) {
+                if(stack.getType().equals(Material.getMaterial(Integer.parseInt(itemData[0]))))
+                    if(stack.getDurability() == Short.parseShort(itemData[1]))
+                        if(stack.getAmount() >= Integer.parseInt(itemParts[0]))
+                            contains = true;
+            }
+
+            if(!contains) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "You don't have the buying item.");
                 return;
             }
