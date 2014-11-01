@@ -96,7 +96,7 @@ public class ShopListener implements Listener {
 
         if (item == null) {
             Form.at(event.getPlayer(), Prefix.ERROR, "Sell item missing from the chest! Place the item and the " +
-                    "amount of the item you want to sell in the upper right hand corner.");
+                    "amount of the item you want to sell in the upper left hand corner.");
             event.getBlock().breakNaturally();
             return;
         }
@@ -114,13 +114,15 @@ public class ShopListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-
         if (event.getClickedBlock() == null)
             return;
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
             return;
         if (!event.getClickedBlock().getType().equals(Material.WALL_SIGN))
             return;
+
+        event.setCancelled(true);
+
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
         if(!event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.CHEST) && !event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.TRAPPED_CHEST))

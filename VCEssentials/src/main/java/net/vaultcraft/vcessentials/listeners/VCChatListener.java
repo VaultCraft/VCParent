@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.listeners;
 
+import net.vaultcraft.vcessentials.commands.VCIgnore;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.user.Group;
@@ -42,6 +43,10 @@ public class VCChatListener implements Listener {
         }
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(event.getPlayer() == p) {
+                continue;
+            }
+            if(VCIgnore.isIgnored(p, event.getPlayer()) && !User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER)) {
+                event.getRecipients().remove(p);
                 continue;
             }
             if(event.getMessage().toLowerCase().contains(p.getDisplayName().toLowerCase())) {
