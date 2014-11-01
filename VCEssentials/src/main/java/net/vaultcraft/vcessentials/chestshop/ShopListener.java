@@ -96,7 +96,7 @@ public class ShopListener implements Listener {
 
         if (item == null) {
             Form.at(event.getPlayer(), Prefix.ERROR, "Sell item missing from the chest! Place the item and the " +
-                    "amount of the item you want to sell in the upper right hand corner.");
+                    "amount of the item you want to sell in the upper left hand corner.");
             event.getBlock().breakNaturally();
             return;
         }
