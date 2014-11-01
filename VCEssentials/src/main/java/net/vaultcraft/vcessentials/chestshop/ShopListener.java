@@ -251,7 +251,7 @@ public class ShopListener implements Listener {
                 }
 
                 OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
-                if (user.getMoneyOld() < price) {
+                if ((user.getMoneyOld() + user.getChangeInMoney()) < price) {
                     Form.at(event.getPlayer(), Prefix.ERROR, offlinePlayer.getName() + " doesn't have enough money to pay you.");
                     return;
                 }
