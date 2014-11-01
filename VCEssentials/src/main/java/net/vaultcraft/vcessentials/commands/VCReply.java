@@ -63,6 +63,11 @@ public class VCReply extends ICommand {
             Form.at(player, Prefix.WARNING, find.getName() + " is currently AFK and may not respond to your message!");
         }
 
+        if(VCIgnore.isIgnored(find, player) && !User.fromPlayer(find).getGroup().hasPermission(Group.HELPER)) {
+            Form.at(player, Prefix.WARNING, find.getName() + " is ignoring you and will not receive this message.");
+            return;
+        }
+
         String message = StringUtils.buildFromArray(args);
 
         Form.at(player, Prefix.NOTHING, "&5&l[&7&ome &5&l-> &7&o{to}&5&l] &7{message}"

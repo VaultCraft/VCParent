@@ -48,7 +48,7 @@ public class ShopListener implements Listener {
 
         Block attachedBlock = event.getBlock().getRelative(sign.getAttachedFace());
 
-        if (!attachedBlock.getType().equals(Material.CHEST)) {
+        if (!attachedBlock.getType().equals(Material.CHEST) && !attachedBlock.getType().equals(Material.TRAPPED_CHEST)) {
             Form.at(event.getPlayer(), Prefix.ERROR, "A shop sign needs to be placed on a chest.");
             event.getBlock().breakNaturally();
             return;
@@ -64,9 +64,11 @@ public class ShopListener implements Listener {
             return;
         }
 
+        double priceD = 0.0;
+
         if (priceParts.length > 0) {
             try {
-                Double.parseDouble(priceParts[0]);
+                priceD = Double.parseDouble(priceParts[0]);
             } catch (NumberFormatException e) {
                 Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price number! Example: 14323.34");
                 event.getBlock().breakNaturally();
@@ -75,11 +77,18 @@ public class ShopListener implements Listener {
         }
 
         if (priceParts.length == 2) {
-            if (!priceParts[1].equalsIgnoreCase("mil") && !priceParts[1].equalsIgnoreCase("bil")) {
-                Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price modifier! Example: mil or bil.");
+            if (!priceParts[1].equalsIgnoreCase("mil")) {
+                Form.at(event.getPlayer(), Prefix.ERROR, "Invalid price modifier! Example: mil.");
                 event.getBlock().breakNaturally();
                 return;
             }
+            priceD *= 1000000;
+        }
+
+        if(priceD > 15000000) {
+            Form.at(event.getPlayer(), Prefix.ERROR, "Price can not be higher than 15,000,000.");
+            event.getBlock().breakNaturally();
+            return;
         }
 
         Chest chest = (Chest) attachedBlock.getState();
@@ -87,7 +96,7 @@ public class ShopListener implements Listener {
 
         if (item == null) {
             Form.at(event.getPlayer(), Prefix.ERROR, "Sell item missing from the chest! Place the item and the " +
-                    "amount of the item you want to sell in the upper right hand corner.");
+                    "amount of the item you want to sell in the upper left hand corner.");
             event.getBlock().breakNaturally();
             return;
         }
@@ -116,7 +125,7 @@ public class ShopListener implements Listener {
 
         org.bukkit.block.Sign sign = (org.bukkit.block.Sign) event.getClickedBlock().getState();
         Sign signData = (Sign) sign.getData();
-        if(!event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.CHEST))
+        if(!event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.CHEST) && !event.getClickedBlock().getRelative(signData.getAttachedFace()).getType().equals(Material.TRAPPED_CHEST))
             return;
         Chest chest = (Chest) event.getClickedBlock().getRelative(signData.getAttachedFace()).getState();
 
@@ -131,8 +140,6 @@ public class ShopListener implements Listener {
             if (priceParts.length > 1) {
                 if (priceParts[1].equalsIgnoreCase("mil"))
                     price *= 1000000;
-                else if (priceParts[1].equalsIgnoreCase("bil"))
-                    price *= 100000000;
             }
 
             User user = User.fromPlayer(event.getPlayer());
@@ -204,8 +211,6 @@ public class ShopListener implements Listener {
             if (priceParts.length > 1) {
                 if (priceParts[1].equalsIgnoreCase("mil"))
                     price *= 1000000;
-                else if (priceParts[1].equalsIgnoreCase("bil"))
-                    price *= 100000000;
             }
 
             int[] parts = getParts(sign.getLine(3));
