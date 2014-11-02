@@ -64,7 +64,7 @@ public class VCToken extends ICommand {
 
                     if (player1 == null) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if(offlinePlayer != null) {
+                        if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                             OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                             user.addTokens(amount);
                             Form.at(player, Prefix.SUCCESS, "You sent " + offlinePlayer.getName() + " " + Form.at(amount) + " tokens.");
@@ -101,7 +101,7 @@ public class VCToken extends ICommand {
                     if (player1 == null) {
                         //Offline Support
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if(offlinePlayer == null) {
+                        if(offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
                             Form.at(player, Prefix.ERROR, "No such player");
                             return;
                         }
@@ -148,7 +148,7 @@ public class VCToken extends ICommand {
 
                     if (player1 == null) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-                        if(offlinePlayer != null) {
+                        if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                             OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                             int change = amount - user.getTokensOld();
                             user.addTokens(change);
@@ -166,7 +166,7 @@ public class VCToken extends ICommand {
                     player1 = Bukkit.getPlayer(args[0]);
                     if (player1 == null) {
                         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-                        if(offlinePlayer != null) {
+                        if(offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                             OfflineUser user = OfflineUser.getOfflineUser(offlinePlayer);
                             Form.at(player, Prefix.VAULT_CRAFT,  offlinePlayer.getName() + " has &a$" + Form.at((user.getTokensOld() + user.getChangeInTokens())) + ".");
                             return;
