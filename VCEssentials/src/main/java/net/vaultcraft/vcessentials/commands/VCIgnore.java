@@ -42,13 +42,22 @@ public class VCIgnore extends ICommand {
                     return;
                 }
                 User theUser = User.fromPlayer(player);
-                theUser.addGlobalUserdata("IgnoredUsers", theUser.getGlobalUserdata("IgnoredUsers") + thePlayer.getName() + ",");
+
+                if (theUser.getGlobalUserdata("IgnoredUsers") == null)
+                    theUser.addGlobalUserdata("IgnoredUsers", thePlayer.getName()+",");
+                else
+                    theUser.addGlobalUserdata("IgnoredUsers", theUser.getGlobalUserdata("IgnoredUsers") + thePlayer.getName() + ",");
+
                 Form.at(player, Prefix.SUCCESS, "Successfully ignored " + args[1]);
                 return;
             case "list":
                 Form.at(player, Prefix.VAULT_CRAFT, "Ignored users:");
-                for(String pName : User.fromPlayer(player).getGlobalUserdata("IgnoredUsers").split(",")) {
-                    Form.at(player, Prefix.VAULT_CRAFT, pName);
+                if (User.fromPlayer(player).getGlobalUserdata("IgnoredUsers") == null)
+                    Form.at(player, Prefix.VAULT_CRAFT, "None!");
+                else {
+                    for (String pName : User.fromPlayer(player).getGlobalUserdata("IgnoredUsers").split(",")) {
+                        Form.at(player, Prefix.VAULT_CRAFT, pName);
+                    }
                 }
                 return;
             case "remove":
@@ -84,6 +93,5 @@ public class VCIgnore extends ICommand {
 
     public static boolean isIgnored(Player receiver, Player player) {
         return isIgnored(receiver, player.getName());
-
     }
 }
