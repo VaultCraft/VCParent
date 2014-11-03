@@ -3,7 +3,7 @@ package net.vaultcraft.vcessentials;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.vaultcraft.vcessentials.announce.AnnounceManager;
-import net.vaultcraft.vcessentials.auction.AucListener;
+import net.vaultcraft.vcessentials.auction.AucManager;
 import net.vaultcraft.vcessentials.auction.VCAuction;
 import net.vaultcraft.vcessentials.blocks.BEnderChest;
 import net.vaultcraft.vcessentials.chestshop.ShopListener;
@@ -56,7 +56,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new VCChatListener(), this);
         Bukkit.getPluginManager().registerEvents(new VCPortalListener(), this);
         new ShopListener();
-        new AucListener();
+        //AucManager.init();
 
         saveDefaultConfig();
     }
@@ -109,7 +109,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCNick("nick", Group.WITHER, "nickname"));
         CommandManager.addCommand(new VCSocialSpy("socialspy", Group.MOD, "ss"));
         CommandManager.addCommand(new VCVanish("vanish", Group.MOD));
-        CommandManager.addCommand(new VCAuction("auction", Group.COMMON, "auc", "bid"));
+        //CommandManager.addCommand(new VCAuction("auction", Group.COMMON, "auc", "bid"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));

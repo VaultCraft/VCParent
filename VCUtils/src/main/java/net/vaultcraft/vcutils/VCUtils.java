@@ -21,6 +21,7 @@ import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.uncommon.GhostFactory;
 import net.vaultcraft.vcutils.user.User;
 import net.vaultcraft.vcutils.util.BungeeUtil;
+import net.vaultcraft.vcutils.util.SignGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -48,6 +49,7 @@ public class VCUtils extends JavaPlugin {
     public static String uniqueServerName = "Lobby1";
 
     private BarAPI barAPI;
+    private static SignGUI signGUI;
     private static GhostFactory factory; public static GhostFactory getGhostFactory() { return factory; }
 
     public void onEnable() {
@@ -68,6 +70,7 @@ public class VCUtils extends JavaPlugin {
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeUtil());
 
         barAPI = new BarAPI();
+        signGUI = new SignGUI(this);
         barAPI.onEnable();
         factory = new GhostFactory(this);
 
@@ -119,6 +122,10 @@ public class VCUtils extends JavaPlugin {
         mongoDB.close();
 
         SignLoader.getInstance().save();
+    }
+
+    public static SignGUI getSignGUI() {
+        return signGUI;
     }
 
     public BarAPI getBarAPI() {

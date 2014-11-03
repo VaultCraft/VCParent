@@ -9,6 +9,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 /**
  * @author Connor Hollasch
  * @since 11/2/2014
@@ -22,9 +24,18 @@ public class Auction {
     private double minInterval;
     private long dueBy;
 
-    public Auction(Player player) {
+    private UUID auctionId;
+
+    public Auction(OfflinePlayer player, ItemStack stack, double minInterval) {
         this.creator = player;
-        this.selling = player.getItemInHand();
+        this.selling = stack;
+        this.minInterval = minInterval;
+        this.auctionId = UUID.randomUUID();
+    }
+
+    public Auction(OfflinePlayer player, ItemStack stack, double minInterval, UUID uuid) {
+        this(player, stack, minInterval);
+        this.auctionId = uuid;
     }
 
     public void setMinInterval(double interval) {
@@ -32,7 +43,7 @@ public class Auction {
     }
 
     public void setEndingDuration(long duration) {
-        this.dueBy = (System.currentTimeMillis() + duration);
+        this.dueBy = duration;
     }
 
     public ItemStack getSellingStack() {
@@ -51,6 +62,10 @@ public class Auction {
         return minInterval;
     }
 
+    public UUID getAuctionId() {
+        return auctionId;
+    }
+
     public long getEndingTime() {
         return dueBy;
     }
@@ -59,12 +74,24 @@ public class Auction {
         return creator;
     }
 
-    public void addToCurrent(double bid, Player bidder) {
+    public void addToCurrent(double bid, OfflinePlayer bidder) {
         this.currentHolder = bidder;
         this.currentBid+=bid;
     }
 
+    public void setCurrentBid(double bid, OfflinePlayer bidder) {
+        this.currentHolder = bidder;
+        this.currentBid = bid;
+    }
+
     public void end() {
+        if (currentHolder == null) {
+            if (creator.isOnline()) {
+                Form.at(creator.getPlayer(), Prefix.AUCTION, "One of your auctions has ended with no bidders!");
+                return;
+            }
+        }
+
         if (currentHolder.isOnline()) {
             Player holder = currentHolder.getPlayer();
             if (holder.getInventory().firstEmpty() == -1) {
@@ -85,5 +112,7 @@ public class Auction {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(VCEssentials.getInstance(), drop, 20 * 10);
             }
         }
+
+        AucManager.getStore().save();
     }
 }

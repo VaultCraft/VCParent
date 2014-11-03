@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.auction;
 
+import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.user.Group;
@@ -17,6 +18,29 @@ import java.util.HashSet;
 public class AucManager {
 
     private static HashSet<Auction> auctions = new HashSet<>();
+    private static AucStore store;
+
+    public static void init() {
+        store = new AucStore();
+        store.load();
+        new AucInv();
+
+        Runnable update = () -> {
+            HashSet<Auction> remove = new HashSet<>();
+
+            auctions.stream().filter(auc -> auc.getEndingTime() <= System.currentTimeMillis()).forEach(auc -> {
+                auc.end();
+                remove.add(auc);
+            });
+
+            auctions.removeAll(remove);
+        };
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(VCEssentials.getInstance(), update, 20, 20);
+    }
+
+    public static AucStore getStore() {
+        return store;
+    }
 
     public static void createAuction(Auction auction) {
         auctions.add(auction);
@@ -26,6 +50,10 @@ public class AucManager {
             Form.at(player, Prefix.AUCTION, "Type &o\"/auction &e&o" + auction.getCreator().getName() + "&o" + Prefix.AUCTION.getChatColor()+"\"&r" + Prefix.AUCTION.getChatColor()+" to view the auction!");
             player.playSound(player.getLocation(), Sound.ANVIL_LAND, 1, 1);
         }
+    }
+
+    public static void createSilentAuction(Auction auc) {
+        auctions.add(auc);
     }
 
     public static HashSet<Auction> getAuctions() {
