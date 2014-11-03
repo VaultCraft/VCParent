@@ -14,6 +14,7 @@ public enum Prefix {
     WARNING("&e&lWARNING&f: &7", "", "&7"),
     SUCCESS("&a&lSUCCESS&f: &7", "", "&7"),
     CHARACTER("&6&l{0}&7: &f", "", "&f"),
+    AUCTION("&3&lAUCTION&f: &7", "", "&7"),
     NOTHING("", "", "");
 
     private String prefix;

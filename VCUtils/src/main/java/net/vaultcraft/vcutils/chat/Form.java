@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 
 /**
  * Created by Connor on 7/20/14. Designed for the VCUtils project.
@@ -21,6 +22,12 @@ public class Form {
     public static void atCharacter(Player player, Prefix prefix, String message, String character) {
         String sent = ChatColor.translateAlternateColorCodes('&', prefix.getPrefix().replace("{0}", character)+message+prefix.getSuffix());
         player.sendMessage(sent);
+    }
+
+    public static void at(Collection<Player> players, Prefix prefix, String message) {
+        for (Player p : players) {
+            at(p, prefix, message);
+        }
     }
 
     public static void at(Player player, String message) {
