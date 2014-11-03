@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Connor on 8/31/14. Designed for the VCUtils project.
@@ -28,7 +29,7 @@ public class VCServer extends ICommand {
         Bukkit.getPluginManager().registerEvents(new VCServerListener(), VCEssentials.getInstance());
     }
 
-    private static HashMap<ItemStack, String> server_map = new HashMap<>();
+    private static LinkedHashMap<ItemStack, String> server_map = new LinkedHashMap<>();
     static {
         server_map.put(ItemUtils.build(Material.NOTE_BLOCK, "&5&lVault &d&lLobby", "&a➤ &a&oClick to connect!"), "hub");
         server_map.put(ItemUtils.build(Material.IRON_FENCE, "&5&lVault &f&lPrison", "&a➤ &a&oClick to connect!"), "prison");
