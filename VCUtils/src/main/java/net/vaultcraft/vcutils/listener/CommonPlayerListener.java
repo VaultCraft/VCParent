@@ -94,7 +94,7 @@ public class CommonPlayerListener implements Listener {
 
         event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
 
-        if (chatter.getGroup().hasPermission(Group.HELPER))
+        if (chatter.getGroup().hasPermission(Group.SKELETON))
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
 
         //hide for invis players
