@@ -1,12 +1,15 @@
 package net.vaultcraft.vcessentials.auction;
 
+import com.google.common.collect.Lists;
 import net.minecraft.util.com.google.gson.Gson;
 import net.minecraft.util.com.google.gson.GsonBuilder;
 import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.file.FileController;
 import net.vaultcraft.vcutils.item.ItemSerializer;
+import net.vaultcraft.vcutils.item.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,7 +20,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Connor Hollasch
@@ -55,6 +60,15 @@ public class AucStore implements FileController {
                 aucObj.put("selling", ItemSerializer.fromStack(getSelling));
                 auctions.add(aucObj);
             }
+            JSONArray due = new JSONArray();
+            for (OfflinePlayer key : AucManager.getItemsDue().keySet()) {
+                JSONObject dueObj = new JSONObject();
+                dueObj.put("player", key.getUniqueId().toString());
+                JSONArray items = AucManager.getItemsDue(key).stream().map(ItemSerializer::fromStack).collect(Collectors.toCollection(() -> new JSONArray()));
+                dueObj.put("items", items);
+                due.add(dueObj);
+            }
+            obj.put("items-due", due);
             obj.put("auctions", auctions);
 
             JSONParser parser = new JSONParser();
@@ -111,6 +125,23 @@ public class AucStore implements FileController {
             auc.setCurrentBid(currentBid, bidder);
 
             AucManager.createSilentAuction(auc);
+        }
+
+        JSONArray due = (JSONArray) data.get("items-due");
+
+        Iterator dueIt = due.iterator();
+        while (dueIt.hasNext()) {
+            JSONObject in = (JSONObject) dueIt.next();
+            OfflinePlayer owe = Bukkit.getOfflinePlayer(UUID.fromString(in.get("player").toString()));
+
+            JSONArray itemsOwed = (JSONArray)in.get("items");
+            List<ItemStack> items = Lists.newArrayList();
+            Iterator itemsOwedIt = itemsOwed.iterator();
+            while (itemsOwedIt.hasNext()) {
+                items.add(ItemSerializer.fromString(itemsOwedIt.next().toString()));
+            }
+
+            items.forEach((item) -> AucManager.initDue(owe, item));
         }
     }
 }

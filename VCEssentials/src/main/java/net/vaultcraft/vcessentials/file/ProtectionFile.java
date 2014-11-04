@@ -54,6 +54,7 @@ public class ProtectionFile implements FileController{
 
         JSONParser parser = new JSONParser();
         JSONObject data = null;
+
         try {
             data = (JSONObject) parser.parse(new FileReader(file));
         } catch (IOException e) {
@@ -61,6 +62,7 @@ public class ProtectionFile implements FileController{
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
         if (data.isEmpty())
             return;
 

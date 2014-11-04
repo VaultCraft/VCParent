@@ -1,5 +1,6 @@
 package net.vaultcraft.vcessentials.auction;
 
+import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
@@ -11,11 +12,20 @@ import net.vaultcraft.vcutils.util.DateUtil;
 import net.vaultcraft.vcutils.util.SignGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author Connor Hollasch
@@ -33,7 +43,7 @@ public class VCAuction extends ICommand {
     public void processCommand(Player player, String[] args) {
         if (args.length == 0) {
             //Open the auction GUI
-            AucInv.open(player);
+            AucInv.open(player, null);
             return;
         }
 
@@ -50,6 +60,64 @@ public class VCAuction extends ICommand {
                 processRemove(player, StringUtils.buildFromArray(args, 1).split(" "));
                 return;
             }
+            case "receive":
+            case "claim": {
+                List<ItemStack> claim = AucManager.getItemsDue(player);
+                if (claim == null || claim.size() == 0) {
+                    Form.at(player, Prefix.ERROR, "You do not have any items due!");
+                    return;
+                }
+
+                int slots = (int)((Math.ceil(claim.size()/9))*9);
+                if (slots < 9)
+                    slots = 9;
+
+                Inventory inv = Bukkit.createInventory(null, slots, ChatColor.GOLD+"Items Due");
+                inv.addItem(claim.toArray(new ItemStack[0]));
+                player.openInventory(inv);
+
+                Listener listener = new Listener() {
+                    @EventHandler
+                    public void onThing(InventoryClickEvent event) {
+                        if (event.getWhoClicked().equals(player)) {
+                            event.setCancelled(true);
+
+                            if (event.getCurrentItem() == null)
+                                return;
+
+                            ItemStack move = event.getCurrentItem();
+                            if (player.getInventory().firstEmpty() == -1) {
+                                Form.at(player, Prefix.ERROR, "Cannot take out item when your inventory is full!");
+                                return;
+                            }
+
+                            event.getInventory().removeItem(move);
+                            event.setCurrentItem(null);
+                            player.getInventory().addItem(move);
+                            player.updateInventory();
+
+                            AucManager.removeDue(player, move);
+                            Form.at(player, Prefix.AUCTION, "You have claimed your &e" + move.getType().toString().toLowerCase() + Prefix.AUCTION.getChatColor()+"!");
+                        }
+                    }
+
+                    @EventHandler
+                    public void onInventoryClose(InventoryCloseEvent event) {
+                        HandlerList.unregisterAll(this);
+                    }
+                };
+                Bukkit.getPluginManager().registerEvents(listener, VCEssentials.getInstance());
+                return;
+            }
+            default: {
+                OfflinePlayer find = Bukkit.getOfflinePlayer(args[0]);
+                if (find == null) {
+                    Form.at(player, Prefix.ERROR, "Cannot find player &e" + args[0] + Prefix.ERROR.getChatColor() + "!");
+                    return;
+                }
+
+                AucInv.open(player, find);
+            }
         }
     }
 
@@ -63,6 +131,12 @@ public class VCAuction extends ICommand {
         }
 
         ItemStack holding = player.getItemInHand();
+
+        if (holding == null || holding.getType().equals(Material.AIR)) {
+            Form.at(player, Prefix.ERROR, "You cannot auction nothing!");
+            return;
+        }
+
         SignGUI.SignGUIListener listener = (player1, lines) -> {
             if (lines[1] == null || lines[1].equals("")) {
                 Form.at(player, Prefix.ERROR, "You didn't specify a time for the auction to last!");
@@ -88,7 +162,11 @@ public class VCAuction extends ICommand {
 
             double minBid = 0.0;
             try {
-                Double.parseDouble(lines[3].replace("$", ""));
+                minBid = Double.parseDouble(lines[3].replace("$", ""));
+                if (minBid < 1.0) {
+                    Form.at(player, Prefix.ERROR, "You cannot set the minimum bid less than $1");
+                    return;
+                }
             } catch (Exception ex) {
                 Form.at(player, Prefix.ERROR, "Could not parse the time specified in the sign");
                 return;
@@ -98,8 +176,11 @@ public class VCAuction extends ICommand {
             auc.setEndingDuration(System.currentTimeMillis() + diff);
             AucManager.createAuction(auc);
             AucManager.getStore().save();
+
+            player.getInventory().removeItem(player.getItemInHand());
+            player.updateInventory();
         };
-        VCUtils.getSignGUI().open(player, new String[]{"Auction time", "(e.g) 1d ", "Min bid amount", "$"}, listener);
+        VCUtils.getSignGUI().open(player, new String[]{"Auction time", "(e.g) 1d ", "Min interval", "$"}, listener);
     }
 
     private void processRemove(Player player, String[] args) {

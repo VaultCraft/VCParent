@@ -4,6 +4,8 @@ import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
+import net.vaultcraft.vcutils.user.OfflineUser;
+import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -88,12 +90,41 @@ public class Auction {
         if (currentHolder == null) {
             if (creator.isOnline()) {
                 Form.at(creator.getPlayer(), Prefix.AUCTION, "One of your auctions has ended with no bidders!");
+                Player c = creator.getPlayer();
+                if (c.getInventory().firstEmpty() == -1) {
+                    Form.at(c, Prefix.WARNING, "You do not have enough room in your inventory for your item!");
+                    Form.at(c, Prefix.WARNING, "This item will be dropped at your location in 10 seconds!");
+
+                    Runnable drop = () -> {
+                        if (c.getInventory().firstEmpty() == -1) {
+                            c.getWorld().dropItemNaturally(c.getEyeLocation(), selling);
+                            Form.at(c, Prefix.WARNING, "Item dropped at your location!");
+                            return;
+                        }
+
+                        c.getInventory().addItem(selling);
+                        Form.at(c, Prefix.SUCCESS, "Item added to your inventory!");
+                        return;
+                    };
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(VCEssentials.getInstance(), drop, 20 * 10);
+                } else {
+                    c.getInventory().addItem(selling);
+                }
                 return;
             }
+            return;
+        }
+
+        if (creator.isOnline()) {
+            Form.at(creator.getPlayer(), Prefix.AUCTION, "One of your auctions has ended! You received &e$" + currentBid + Prefix.AUCTION.getChatColor()+"!");
+            User.fromPlayer(creator.getPlayer()).addMoney(currentBid);
+        } else {
+            OfflineUser.getOfflineUser(creator).addMoney(currentBid);
         }
 
         if (currentHolder.isOnline()) {
             Player holder = currentHolder.getPlayer();
+            Form.at(holder, Prefix.AUCTION, "You won one of your auctions! The item will be deposited into your inventory immediately");
             if (holder.getInventory().firstEmpty() == -1) {
                 Form.at(holder, Prefix.WARNING, "You do not have enough room in your inventory for this item!");
                 Form.at(holder, Prefix.WARNING, "This item will be dropped at your location in 10 seconds!");
@@ -110,9 +141,11 @@ public class Auction {
                     return;
                 };
                 Bukkit.getScheduler().scheduleSyncDelayedTask(VCEssentials.getInstance(), drop, 20 * 10);
+            } else {
+                holder.getInventory().addItem(selling);
             }
+        } else {
+            AucManager.initDue(currentHolder, selling);
         }
-
-        AucManager.getStore().save();
     }
 }
