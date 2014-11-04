@@ -161,6 +161,7 @@ public class AucInv implements Listener {
 
                 viewing.remove(player);
                 player.closeInventory();
+
                 SignGUI.SignGUIListener bid = (player1, lines) -> {
                     if (lines[0] == null || lines[0].equals("")) {
                         Form.at(player1, Prefix.ERROR, "You didn't enter a valid price to bid!");
@@ -193,6 +194,7 @@ public class AucInv implements Listener {
                         } else
                             OfflineUser.getOfflineUser(oldBidder).addMoney(value.getCurrentBid());
                     }
+
                     value.addToCurrent(price, player);
                     player.closeInventory();
                     viewing.remove(player);
@@ -204,7 +206,7 @@ public class AucInv implements Listener {
                         Form.at(value.getCreator().getPlayer(), Prefix.AUCTION, "&e" + player.getName() + Prefix.AUCTION.getChatColor() + " has bid on your auction! Currently: &e$" + value.getCurrentBid());
                     }
                 };
-                VCUtils.getSignGUI().open(player, new String[]{"$", "Enter bid", "amount"}, bid);
+                VCUtils.getSignGUI().open(player, new String[]{"$", "Enter bid", "amount", ""}, bid);
                 return;
             } else if (event.getCurrentItem().getType().equals(Material.REDSTONE_BLOCK)) {
                 viewing.remove(player);

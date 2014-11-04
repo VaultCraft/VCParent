@@ -86,6 +86,9 @@ public class VCAuction extends ICommand {
                                 return;
 
                             ItemStack move = event.getCurrentItem();
+                            if (move == null || move.getType().equals(Material.AIR) || player.getInventory().equals(event.getInventory()))
+                                return;
+
                             if (player.getInventory().firstEmpty() == -1) {
                                 Form.at(player, Prefix.ERROR, "Cannot take out item when your inventory is full!");
                                 return;
@@ -110,8 +113,15 @@ public class VCAuction extends ICommand {
                 return;
             }
             default: {
+                Player canFind = Bukkit.getPlayer(args[0]);
+
+                if (canFind != null) {
+                    AucInv.open(player, canFind);
+                    return;
+                }
+
                 OfflinePlayer find = Bukkit.getOfflinePlayer(args[0]);
-                if (find == null) {
+                if (find == null || !find.hasPlayedBefore()) {
                     Form.at(player, Prefix.ERROR, "Cannot find player &e" + args[0] + Prefix.ERROR.getChatColor() + "!");
                     return;
                 }

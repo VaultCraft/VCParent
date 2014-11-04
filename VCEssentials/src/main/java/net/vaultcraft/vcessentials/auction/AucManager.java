@@ -32,6 +32,12 @@ public class AucManager implements Listener {
     private static AucStore store;
 
     public static void init() {
+        if (auctions != null) {
+            auctions.clear();
+        } if (due != null) {
+            due.clear();
+        }
+
         store = new AucStore();
         store.load();
         new AucInv();
@@ -65,6 +71,7 @@ public class AucManager implements Listener {
         List<ItemStack> make = Lists.newArrayList();
         make.add(stack);
         due.put(player, make);
+
         store.save();
     }
 
