@@ -71,7 +71,6 @@ public class VCIgnore extends ICommand {
                 }
                 User.fromPlayer(player).addGlobalUserdata("IgnoredUsers", User.fromPlayer(player).getGlobalUserdata("IgnoredUsers").replaceAll(args[1] + ",", ""));
                 Form.at(player, Prefix.SUCCESS, "Successfully unignored " + args[1]);
-                return;
         }
     }
 
