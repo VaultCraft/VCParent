@@ -43,19 +43,19 @@ public class VCIgnore extends ICommand {
                 }
                 User theUser = User.fromPlayer(player);
 
-                if (theUser.getGlobalUserdata("IgnoredUsers") == null)
-                    theUser.addGlobalUserdata("IgnoredUsers", thePlayer.getName()+",");
+                if (theUser.getUserdata("IgnoredUsers") == null)
+                    theUser.addUserdata("IgnoredUsers", thePlayer.getName()+",");
                 else
-                    theUser.addGlobalUserdata("IgnoredUsers", theUser.getGlobalUserdata("IgnoredUsers") + thePlayer.getName() + ",");
+                    theUser.addUserdata("IgnoredUsers", theUser.getUserdata("IgnoredUsers") + thePlayer.getName() + ",");
 
-                Form.at(player, Prefix.SUCCESS, "Successfully ignored " + args[1]);
+                Form.at(player, Prefix.SUCCESS, "Successfully ignored " + thePlayer.getName());
                 return;
             case "list":
                 Form.at(player, Prefix.VAULT_CRAFT, "Ignored users:");
                 if (User.fromPlayer(player).getGlobalUserdata("IgnoredUsers") == null)
                     Form.at(player, Prefix.VAULT_CRAFT, "None!");
                 else {
-                    for (String pName : User.fromPlayer(player).getGlobalUserdata("IgnoredUsers").split(",")) {
+                    for (String pName : User.fromPlayer(player).getUserdata("IgnoredUsers").split(",")) {
                         Form.at(player, Prefix.VAULT_CRAFT, pName);
                     }
                 }
@@ -69,7 +69,7 @@ public class VCIgnore extends ICommand {
                     Form.at(player, Prefix.ERROR, "You aren't ignoring " + args[1] + "!");
                     return;
                 }
-                User.fromPlayer(player).addGlobalUserdata("IgnoredUsers", User.fromPlayer(player).getGlobalUserdata("IgnoredUsers").replaceAll(args[1] + ",", ""));
+                User.fromPlayer(player).addUserdata("IgnoredUsers", User.fromPlayer(player).getUserdata("IgnoredUsers").replaceAll(args[1] + ",", ""));
                 Form.at(player, Prefix.SUCCESS, "Successfully unignored " + args[1]);
         }
     }
@@ -80,7 +80,7 @@ public class VCIgnore extends ICommand {
             return false;
         }
 
-        String listOfNames = recv.getGlobalUserdata("IgnoredUsers");
+        String listOfNames = recv.getUserdata("IgnoredUsers");
         if(listOfNames == null || listOfNames.equals("")) {
             return false;
         }
