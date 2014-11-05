@@ -174,8 +174,28 @@ public class AucInv implements Listener {
                 }
 
                 if (event.getAction().equals(InventoryAction.PICKUP_HALF)) {
-                    double min = value.getMinInterval();
-                    value.setCurrentBid(min, player);
+                    double price = value.getMinInterval();
+
+                    OfflinePlayer oldBidder = value.getCurrentBidder();
+                    if (oldBidder != null) {
+                        if (oldBidder.isOnline()) {
+                            Form.at(oldBidder.getPlayer(), Prefix.AUCTION, "You were outbid on one of your auctions! You received &e$" + value.getCurrentBid() + Prefix.AUCTION.getChatColor() + " back!");
+                            User.fromPlayer(oldBidder.getPlayer()).addMoney(value.getCurrentBid());
+                        } else
+                            OfflineUser.getOfflineUser(oldBidder).addMoney(value.getCurrentBid());
+                    }
+
+                    value.addToCurrent(price, player);
+                    player.closeInventory();
+                    viewing.remove(player);
+                    open(player, null);
+
+                    User.fromPlayer(player).addMoney(-(value.getCurrentBid()));
+                    Form.at(player, Prefix.WARNING, "A safety deposit of " + (value.getCurrentBid()) + " was taken from your balance!");
+                    if (value.getCreator().isOnline()) {
+                        Form.at(value.getCreator().getPlayer(), Prefix.AUCTION, "&e" + player.getName() + Prefix.AUCTION.getChatColor() + " has bid on your auction! Currently: &e$" + value.getCurrentBid());
+                    }
+                    return;
                 }
 
                 viewing.remove(player);
@@ -186,7 +206,7 @@ public class AucInv implements Listener {
                         Form.at(player1, Prefix.ERROR, "You cannot bid on an auction that has ended!");
                         return;
                     }
-                    
+
                     if (lines[0] == null || lines[0].equals("")) {
                         Form.at(player1, Prefix.ERROR, "You didn't enter a valid price to bid!");
                         return;
