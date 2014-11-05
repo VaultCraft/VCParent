@@ -182,6 +182,11 @@ public class AucInv implements Listener {
                 player.closeInventory();
 
                 SignGUI.SignGUIListener bid = (player1, lines) -> {
+                    if (!AucManager.getAuctions().contains(value)) {
+                        Form.at(player1, Prefix.ERROR, "You cannot bid on an auction that has ended!");
+                        return;
+                    }
+                    
                     if (lines[0] == null || lines[0].equals("")) {
                         Form.at(player1, Prefix.ERROR, "You didn't enter a valid price to bid!");
                         return;
