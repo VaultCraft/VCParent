@@ -36,7 +36,8 @@ public class VCAuction extends ICommand {
     public VCAuction(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
         subCmds.put("create", "Creates an auction with the item you're holding");
-        subCmds.put("remove", "Used to remove one of your current auctions");
+        subCmds.put("toggle", "Turns on /off the auction create notification");
+        subCmds.put("claim", "Claim the items you have won while offline");
     }
 
     @Override
