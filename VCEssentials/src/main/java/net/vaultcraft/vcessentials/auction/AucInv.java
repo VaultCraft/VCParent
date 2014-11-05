@@ -16,6 +16,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -53,9 +54,10 @@ public class AucInv implements Listener {
 
         List<Auction> auctions = fromHashSet(AucManager.getAuctions());
         int totalAuctions = auctions.size();
-        int totalPages = (int)Math.ceil(totalAuctions/45);
+        int totalPages = (int)Math.ceil((double)totalAuctions/45.0);
+
         for (int i = 0; i < totalPages; ++i) {
-            pages.put(i, Bukkit.createInventory(null, 54, ChatColor.GOLD+"Auctions"));
+            pages.put(i+1, Bukkit.createInventory(null, 54, ChatColor.GOLD+"Auctions"));
         }
 
         if (!(pages.containsKey(1)))
@@ -69,11 +71,23 @@ public class AucInv implements Listener {
                 if (pages.size() > 1)
                     value.setItem(8, NEXT_PAGE);
 
+                for (int i = 0; i < 8; i++) {
+                    value.setItem(i, ItemUtils.build(Material.ENDER_PEARL, "&aPage #: &f&l" + page));
+                }
+
+                if (pages.size() == 1)
+                    value.setItem(8, ItemUtils.build(Material.ENDER_PEARL, "&aPage #: &f&l" + page));
             } else if (page == pages.size()) {
                 value.setItem(0, PREV_PAGE);
+                for (int i = 1; i < 9; i++) {
+                    value.setItem(i, ItemUtils.build(Material.ENDER_PEARL, "&aPage #: &f&l" + page));
+                }
             } else {
                 value.setItem(0, PREV_PAGE);
                 value.setItem(8, NEXT_PAGE);
+                for (int i = 1; i < 8; i++) {
+                    value.setItem(i, ItemUtils.build(Material.ENDER_PEARL, "&aPage #: &f&l" + page));
+                }
             }
 
             for (int i = 0; i < 45; i++) {
@@ -114,7 +128,7 @@ public class AucInv implements Listener {
     public static void open(Player player, OfflinePlayer other) {
         if (other != null) {
             HashSet<Auction> filtered = AucManager.filter((auc) -> auc.getCreator().equals(other));
-            int slots = (int)((Math.ceil(filtered.size()/9))*9);
+            int slots = (int)((Math.ceil((double)filtered.size()/9.0))*9);
             if (slots < 9)
                 slots = 9;
 
@@ -149,7 +163,7 @@ public class AucInv implements Listener {
         if (viewing.containsKey(player)) {
             Auction value = viewing.get(player);
             if (event.getCurrentItem().getType().equals(Material.GOLD_INGOT)) {
-                if (value.getCurrentBid() > User.fromPlayer(player).getMoney()) {
+                if (value.getCurrentBid()+value.getMinInterval() > User.fromPlayer(player).getMoney()) {
                     Form.at(player, Prefix.ERROR, "You do not have enough money to bid on this!");
                     return;
                 }
@@ -157,6 +171,11 @@ public class AucInv implements Listener {
                 if (value.getCreator().getPlayer().equals(player)) {
                     Form.at(player, Prefix.ERROR, "You cannot bid on your own auction!");
                     return;
+                }
+
+                if (event.getAction().equals(InventoryAction.PICKUP_HALF)) {
+                    double min = value.getMinInterval();
+                    value.setCurrentBid(min, player);
                 }
 
                 viewing.remove(player);
@@ -215,6 +234,29 @@ public class AucInv implements Listener {
                 Form.at(player, Prefix.AUCTION, "Closing auction menu!");
                 open(player, null);
                 return;
+            } else if (event.getCurrentItem().getType().equals(Material.LAVA_BUCKET)) {
+                viewing.remove(player);
+                player.closeInventory();
+
+                Form.at(player, Prefix.AUCTION, "You remove this auction!");
+
+                if (value.getCurrentBidder() != null) {
+                    OfflinePlayer bidder = value.getCurrentBidder();
+                    if (bidder.isOnline()) {
+                        User u = User.fromPlayer(bidder.getPlayer());
+                        Form.at(u.getPlayer(), Prefix.WARNING, "One of the auctions you have bid on was deleted!");
+                        Form.at(u.getPlayer(), Prefix.WARNING, "The money has been refunded to you!");
+
+                        u.addMoney(value.getCurrentBid());
+                    } else {
+                        OfflineUser.getOfflineUser(bidder).addMoney(value.getCurrentBid());
+                    }
+                }
+
+                AucManager.getAuctions().remove(value);
+                AucManager.getStore().save();
+
+                open(player, null);
             }
         }
         if (event.getCurrentItem().getItemMeta() != null) {
@@ -237,14 +279,14 @@ public class AucInv implements Listener {
 
         if (event.getCurrentItem().equals(NEXT_PAGE)) {
             //next page
-            int at = opened.get(player)+1;
+            int at = opened.get(player) + 1;
             player.closeInventory();
             player.openInventory(pages.get(at));
             opened.put(player, at);
         } else if (event.getCurrentItem().equals(PREV_PAGE)) {
             //prev page
+            int at = opened.remove(player) - 1;
             player.closeInventory();
-            int at = opened.remove(player)-1;
             player.openInventory(pages.get(at));
             opened.put(player, at);
         }
@@ -252,10 +294,17 @@ public class AucInv implements Listener {
 
     private Inventory createViewInventory(Player player, Auction get) {
         Inventory inv = Bukkit.createInventory(player, 9, ChatColor.GOLD+"Auctions");
+
         inv.setItem(0, ItemUtils.build(Material.GOLD_INGOT, "&e&lClick to bid", "Current bid: " + get.getCurrentBid() + " by " +
                 (get.getCurrentBidder() == null ? "No one" : get.getCurrentBidder().getName())));
+
         inv.setItem(1, ItemUtils.build(Material.REDSTONE, "&e&lMinimum Bid: &a$" + get.getMinInterval()));
         inv.setItem(2, ItemUtils.build(Material.WATCH, "&e&lTime left: &f&l" + formatTime(get.getEndingTime() - System.currentTimeMillis())));
+
+        if (get.getCreator().getUniqueId().equals(player.getUniqueId())) {
+            inv.setItem(4, ItemUtils.build(Material.LAVA_BUCKET, "&c&lRemove auction"));
+        }
+
         inv.setItem(8, ItemUtils.build(Material.REDSTONE_BLOCK, "&c&lClose Window"));
         return inv;
     }
@@ -274,6 +323,9 @@ public class AucInv implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (opened.containsKey(event.getPlayer()))
             opened.remove(event.getPlayer());
+
+        if (viewing.containsKey(event.getPlayer()))
+            viewing.remove(event.getPlayer());
     }
 
     @EventHandler

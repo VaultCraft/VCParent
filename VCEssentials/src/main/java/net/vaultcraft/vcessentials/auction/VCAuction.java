@@ -52,17 +52,38 @@ public class VCAuction extends ICommand {
                 Form.atHelp(player, this);
                 return;
             }
+            case "begin":
+            case "add":
+            case "start":
             case "create": {
                 processCreate(player, StringUtils.buildFromArray(args, 1).split(" "));
                 return;
             }
-            case "remove": {
-                processRemove(player, StringUtils.buildFromArray(args, 1).split(" "));
+            case "toggle":
+            case "on":
+            case "off":
+            case "silent":
+            case "ignore":
+            case "stfu":
+            case "quiet": {
+                User user = User.fromPlayer(player);
+                if (!user.hasUserdata("auc-silent"))
+                    user.addUserdata("auc-silent", ""+false);
+
+                Boolean current = Boolean.valueOf(user.getUserdata("auc-silent"));
+                if (current == true) current = false; else current = true;
+
+                user.addUserdata("auc-silent", current.toString());
+                if (current) {
+                    Form.at(player, Prefix.AUCTION, "You have silenced auction notifications!");
+                } else {
+                    Form.at(player, Prefix.AUCTION, "You have un-silenced auction notifications!");
+                }
                 return;
             }
             case "receive":
             case "claim": {
-                List<ItemStack> claim = AucManager.getItemsDue(player);
+                List<ItemStack> claim = AucManager.getItemsDue(player.getUniqueId());
                 if (claim == null || claim.size() == 0) {
                     Form.at(player, Prefix.ERROR, "You do not have any items due!");
                     return;
@@ -99,13 +120,14 @@ public class VCAuction extends ICommand {
                             player.getInventory().addItem(move);
                             player.updateInventory();
 
-                            AucManager.removeDue(player, move);
+                            AucManager.removeDue(player.getUniqueId(), move);
                             Form.at(player, Prefix.AUCTION, "You have claimed your &e" + move.getType().toString().toLowerCase() + Prefix.AUCTION.getChatColor()+"!");
                         }
                     }
 
                     @EventHandler
                     public void onInventoryClose(InventoryCloseEvent event) {
+                        AucManager.getStore().save();
                         HandlerList.unregisterAll(this);
                     }
                 };
@@ -144,6 +166,11 @@ public class VCAuction extends ICommand {
 
         if (holding == null || holding.getType().equals(Material.AIR)) {
             Form.at(player, Prefix.ERROR, "You cannot auction nothing!");
+            return;
+        }
+
+        if (AucManager.isPrison && (holding.getType().equals(Material.DIAMOND_PICKAXE) || holding.getType().equals(Material.DIAMOND_SWORD))) {
+            Form.at(player, Prefix.ERROR, "You cannot auction this item!");
             return;
         }
 
@@ -187,13 +214,9 @@ public class VCAuction extends ICommand {
             AucManager.createAuction(auc);
             AucManager.getStore().save();
 
-            player.getInventory().removeItem(player.getItemInHand());
+            player.getInventory().setItemInHand(new ItemStack(Material.AIR));
             player.updateInventory();
         };
         VCUtils.getSignGUI().open(player, new String[]{"Auction time", "(e.g) 1d ", "Min interval", "$"}, listener);
-    }
-
-    private void processRemove(Player player, String[] args) {
-
     }
 }

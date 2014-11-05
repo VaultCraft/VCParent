@@ -145,7 +145,8 @@ public class Auction {
                 holder.getInventory().addItem(selling);
             }
         } else {
-            AucManager.initDue(currentHolder, selling);
+            System.out.println("Init");
+            AucManager.initDue(currentHolder.getUniqueId(), selling);
         }
     }
 }

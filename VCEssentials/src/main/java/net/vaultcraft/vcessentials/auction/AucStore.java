@@ -61,9 +61,9 @@ public class AucStore implements FileController {
                 auctions.add(aucObj);
             }
             JSONArray due = new JSONArray();
-            for (OfflinePlayer key : AucManager.getItemsDue().keySet()) {
+            for (UUID key : AucManager.getItemsDue().keySet()) {
                 JSONObject dueObj = new JSONObject();
-                dueObj.put("player", key.getUniqueId().toString());
+                dueObj.put("player", key.toString());
                 JSONArray items = AucManager.getItemsDue(key).stream().map(ItemSerializer::fromStack).collect(Collectors.toCollection(() -> new JSONArray()));
                 dueObj.put("items", items);
                 due.add(dueObj);
@@ -132,16 +132,11 @@ public class AucStore implements FileController {
         Iterator dueIt = due.iterator();
         while (dueIt.hasNext()) {
             JSONObject in = (JSONObject) dueIt.next();
-            OfflinePlayer owe = Bukkit.getOfflinePlayer(UUID.fromString(in.get("player").toString()));
+            UUID owe = UUID.fromString(in.get("player").toString());
 
             JSONArray itemsOwed = (JSONArray)in.get("items");
-            List<ItemStack> items = Lists.newArrayList();
-            Iterator itemsOwedIt = itemsOwed.iterator();
-            while (itemsOwedIt.hasNext()) {
-                items.add(ItemSerializer.fromString(itemsOwedIt.next().toString()));
-            }
 
-            items.forEach((item) -> AucManager.initDue(owe, item));
+            itemsOwed.iterator().forEachRemaining((stack) -> AucManager.initDue(owe, (ItemStack)stack));
         }
     }
 }
