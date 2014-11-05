@@ -107,9 +107,9 @@ public class AucManager implements Listener {
         auctions.add(auction);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (User.fromPlayer(player).getUserdata("auc-silent").equals("true"))
+            if (User.fromPlayer(player).hasUserdata("auc-silent") && User.fromPlayer(player).getUserdata("auc-silent").equals("true"))
                 continue;
-            
+
             Form.at(player, Prefix.AUCTION, "&e" + auction.getCreator().getName() + Prefix.AUCTION.getChatColor() + " has created an auction!");
             Form.at(player, Prefix.AUCTION, "Type &o\"/auction &e&o" + auction.getCreator().getName() + "&o" + Prefix.AUCTION.getChatColor()+"\"&r" + Prefix.AUCTION.getChatColor()+" to view the auction!");
             player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
