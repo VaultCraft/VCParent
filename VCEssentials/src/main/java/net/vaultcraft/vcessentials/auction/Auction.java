@@ -117,7 +117,7 @@ public class Auction {
 
         if (creator.isOnline()) {
             Form.at(creator.getPlayer(), Prefix.AUCTION, "One of your auctions has ended! You received &e$" + currentBid + Prefix.AUCTION.getChatColor()+"!");
-            User.fromPlayer(creator.getPlayer()).addMoney(currentBid);
+            User.fromPlayer(Bukkit.getPlayer(creator.getUniqueId())).addMoney(currentBid);
         } else {
             OfflineUser.getOfflineUser(creator).addMoney(currentBid);
         }
