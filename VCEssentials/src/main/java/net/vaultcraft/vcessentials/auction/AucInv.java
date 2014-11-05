@@ -264,6 +264,8 @@ public class AucInv implements Listener {
                 player.closeInventory();
 
                 Form.at(player, Prefix.AUCTION, "You remove this auction!");
+                Form.at(player, Prefix.AUCTION, "Type /auction claim to get your item back!");
+                AucManager.initDue(player.getUniqueId(), value.getSellingStack());
 
                 if (value.getCurrentBidder() != null) {
                     OfflinePlayer bidder = value.getCurrentBidder();
