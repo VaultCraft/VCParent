@@ -24,7 +24,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -282,7 +281,6 @@ public class AucInv implements Listener {
 
                 AucManager.getAuctions().remove(value);
                 AucManager.getStore().save();
-
                 open(player, null);
             }
         }
