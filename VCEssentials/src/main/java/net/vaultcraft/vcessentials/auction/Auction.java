@@ -1,7 +1,6 @@
 package net.vaultcraft.vcessentials.auction;
 
 import net.vaultcraft.vcessentials.VCEssentials;
-import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.user.OfflineUser;

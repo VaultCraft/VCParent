@@ -8,9 +8,6 @@ import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class VCIgnore extends ICommand {
     public VCIgnore(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
@@ -52,7 +49,7 @@ public class VCIgnore extends ICommand {
                 return;
             case "list":
                 Form.at(player, Prefix.VAULT_CRAFT, "Ignored users:");
-                if (User.fromPlayer(player).getGlobalUserdata("IgnoredUsers") == null)
+                if (User.fromPlayer(player).getUserdata("IgnoredUsers") == null)
                     Form.at(player, Prefix.VAULT_CRAFT, "None!");
                 else {
                     for (String pName : User.fromPlayer(player).getUserdata("IgnoredUsers").split(",")) {
@@ -85,8 +82,13 @@ public class VCIgnore extends ICommand {
             return false;
         }
 
-        List<String> playerNames = Arrays.asList(listOfNames.split(","));
-        return playerNames.contains(senderName);
+        for(String s : recv.getUserdata("IgnoredUsers").split(",")) {
+            if(s.equalsIgnoreCase(senderName)) {
+                return true;
+            }
+        }
+        return false;
+
 
     }
 
