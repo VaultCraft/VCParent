@@ -360,10 +360,16 @@ public class User {
             String[] parts = data.split("▼");
             for (String s : parts) {
                 String[] entry = s.split("▲");
+                if (entry.length != 2)
+                    continue;
+
                 userdata.put(entry[0], entry[1]);
             }
         } else {
             String[] parts = data.split("▲");
+            if (parts.length != 2)
+                return userdata;
+
             userdata.put(parts[0], parts[1]);
         }
         return userdata;
