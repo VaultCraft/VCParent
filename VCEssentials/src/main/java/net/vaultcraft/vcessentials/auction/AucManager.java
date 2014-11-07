@@ -1,26 +1,46 @@
 package net.vaultcraft.vcessentials.auction;
 
+import com.google.common.collect.Lists;
 import net.vaultcraft.vcessentials.VCEssentials;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * @author Connor Hollasch
  * @since 11/2/2014
  */
-public class AucManager {
+public class AucManager implements Listener {
 
     private static HashSet<Auction> auctions = new HashSet<>();
+    private static HashMap<UUID, List<ItemStack>> due = new HashMap<>();
+
     private static AucStore store;
 
+    public static boolean isPrison = false;
+
     public static void init() {
+        if (auctions != null) {
+            auctions.clear();
+        } if (due != null) {
+            due.clear();
+        }
+
         store = new AucStore();
         store.load();
         new AucInv();
@@ -34,8 +54,49 @@ public class AucManager {
             });
 
             auctions.removeAll(remove);
+            if (remove.size() > 0)
+                store.save();
         };
         Bukkit.getScheduler().scheduleSyncRepeatingTask(VCEssentials.getInstance(), update, 20, 20);
+        Bukkit.getPluginManager().registerEvents(new AucManager(), VCEssentials.getInstance());
+    }
+
+    public static void initDue(UUID player, ItemStack stack) {
+        System.out.println("Called! " + due.toString());
+
+        if (due.containsKey(player)) {
+            List<ItemStack> list = due.remove(player);
+            if (list == null) {
+                list = Lists.newArrayList();
+            }
+            list.add(stack);
+            due.put(player, list);
+            return;
+        }
+        List<ItemStack> make = Lists.newArrayList();
+        make.add(stack);
+        due.put(player, make);
+
+        store.save();
+
+        System.out.println(due.toString());
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (due.containsKey(player.getUniqueId())) {
+            Form.at(player, Prefix.AUCTION, "You have won one or more auctions while you were gone!");
+            Form.at(player, Prefix.AUCTION, "Please type /auc claim to get your items!");
+        }
+    }
+
+    public static List<ItemStack> getItemsDue(UUID player) {
+        return due.get(player);
+    }
+
+    public static HashMap<UUID, List<ItemStack>> getItemsDue() {
+        return due;
     }
 
     public static AucStore getStore() {
@@ -46,9 +107,12 @@ public class AucManager {
         auctions.add(auction);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
+            if (User.fromPlayer(player).hasUserdata("auc-silent") && User.fromPlayer(player).getUserdata("auc-silent").equals("true"))
+                continue;
+
             Form.at(player, Prefix.AUCTION, "&e" + auction.getCreator().getName() + Prefix.AUCTION.getChatColor() + " has created an auction!");
             Form.at(player, Prefix.AUCTION, "Type &o\"/auction &e&o" + auction.getCreator().getName() + "&o" + Prefix.AUCTION.getChatColor()+"\"&r" + Prefix.AUCTION.getChatColor()+" to view the auction!");
-            player.playSound(player.getLocation(), Sound.ANVIL_LAND, 1, 1);
+            player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
         }
     }
 
@@ -82,6 +146,8 @@ public class AucManager {
     }
 
     public static int getMaxAuctions(Group highest) {
+        if (Group.hasPermission(highest, Group.DEVELOPER))
+            return Integer.MAX_VALUE;
         if (Group.hasPermission(highest, Group.ENDERDRAGON))
             return 10;
         if (Group.hasPermission(highest, Group.WITHER))
@@ -96,5 +162,31 @@ public class AucManager {
             return 2;
 
         return 1;
+    }
+
+    public static Auction fromUUID(UUID uuid) {
+        for (Auction auc : auctions) {
+            if (auc.getAuctionId().equals(uuid))
+                return auc;
+        }
+        return null;
+    }
+
+    public static HashSet<Auction> filter(Predicate<? super Auction> filter) {
+        HashSet<Auction> values = new HashSet<>();
+        auctions.stream().filter(filter).forEach((auc) -> values.add(auc));
+        return values;
+    }
+
+    public static void removeDue(UUID player, ItemStack move) {
+        if (due.containsKey(player)) {
+            List<ItemStack> change = due.remove(player);
+            change.remove(move);
+
+            if (change.size() == 0)
+                return;
+
+            due.put(player, change);
+        }
     }
 }
