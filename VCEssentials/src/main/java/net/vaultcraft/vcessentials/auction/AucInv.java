@@ -259,12 +259,16 @@ public class AucInv implements Listener {
                 open(player, null);
                 return;
             } else if (event.getCurrentItem().getType().equals(Material.LAVA_BUCKET)) {
+                if (player.getInventory().firstEmpty() == -1) {
+                    Form.at(player, Prefix.ERROR, "You do not have enough room in your inventory to remove this auction!");
+                    return;
+                }
+
                 viewing.remove(player);
                 player.closeInventory();
 
                 Form.at(player, Prefix.AUCTION, "You remove this auction!");
-                Form.at(player, Prefix.AUCTION, "Type /auction claim to get your item back!");
-                AucManager.initDue(player.getUniqueId(), value.getSellingStack());
+                player.getInventory().addItem(value.getSellingStack());
 
                 if (value.getCurrentBidder() != null) {
                     OfflinePlayer bidder = value.getCurrentBidder();
@@ -320,10 +324,10 @@ public class AucInv implements Listener {
     private Inventory createViewInventory(Player player, Auction get) {
         Inventory inv = Bukkit.createInventory(player, 9, ChatColor.GOLD+"Auctions");
 
-        inv.setItem(0, ItemUtils.build(Material.GOLD_INGOT, "&e&lClick to bid", "Current bid: " + get.getCurrentBid() + " by " +
+        inv.setItem(0, ItemUtils.build(Material.GOLD_INGOT, "&e&lClick to bid", "Current bid: " + Form.at(get.getCurrentBid(), true) + " by " +
                 (get.getCurrentBidder() == null ? "No one" : get.getCurrentBidder().getName())));
 
-        inv.setItem(1, ItemUtils.build(Material.REDSTONE, "&e&lMinimum Bid: &a$" + get.getMinInterval()));
+        inv.setItem(1, ItemUtils.build(Material.REDSTONE, "&e&lMinimum Bid: &a$" + Form.at(get.getMinInterval(), true)));
         inv.setItem(2, ItemUtils.build(Material.WATCH, "&e&lTime left: &f&l" + formatTime(get.getEndingTime() - System.currentTimeMillis())));
 
         if (get.getCreator().getUniqueId().equals(player.getUniqueId())) {
