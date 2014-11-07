@@ -136,7 +136,7 @@ public class AucStore implements FileController {
 
             JSONArray itemsOwed = (JSONArray)in.get("items");
 
-            itemsOwed.iterator().forEachRemaining((stack) -> AucManager.initDue(owe, (ItemStack)stack));
+            itemsOwed.iterator().forEachRemaining((stack) -> AucManager.initDue(owe, ItemSerializer.fromString(stack.toString())));
         }
     }
 }
