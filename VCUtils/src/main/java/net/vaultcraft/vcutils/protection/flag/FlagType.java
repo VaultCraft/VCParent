@@ -6,6 +6,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.*;
 
 /**
@@ -29,6 +30,7 @@ public enum FlagType {
     HUNGER(FoodLevelChangeEvent.class, "food", "hunger", "foodchange"),
     BUCKET_EMPTY(PlayerBucketEmptyEvent.class, "bucketempty", "emptybucket", "bucketdrain"),
     BUCKET_FILL(PlayerBucketFillEvent.class, "bucketfill", "fillbucket"),
+    HANGING_PLACE(HangingPlaceEvent.class, "hanging-place", "hangingplace", "paintingplace", "itemframeplace"),
     BLOCK_SPREAD(BlockSpreadEvent.class, "spread", "firespread");
 
     private String[] aliases;

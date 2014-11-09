@@ -19,6 +19,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.*;
 
 /**
@@ -177,13 +178,20 @@ public class ProtectionListener implements Listener {
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Player player = (Player) event.getPlayer();
 
-        event.setCancelled(willCancel(FlagType.BUCKET_EMPTY, player, player.getLocation()));
+        event.setCancelled(willCancel(FlagType.BUCKET_EMPTY, player, event.getBlockClicked().getLocation()));
     }
 
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
         Player player = (Player) event.getPlayer();
 
-        event.setCancelled(willCancel(FlagType.BUCKET_FILL, player, player.getLocation()));
+        event.setCancelled(willCancel(FlagType.BUCKET_FILL, player, event.getBlockClicked().getLocation()));
+    }
+
+    @EventHandler
+    public void onHangingPlace(HangingPlaceEvent event) {
+        Player player = event.getPlayer();
+
+        event.setCancelled(willCancel(FlagType.HANGING_PLACE, player, event.getBlock().getLocation()));
     }
 }
