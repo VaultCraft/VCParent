@@ -1,5 +1,8 @@
 package net.vaultcraft.vcutils.listener;
 
+import net.minecraft.server.v1_7_R4.ChatSerializer;
+import net.minecraft.server.v1_7_R4.IChatBaseComponent;
+import net.minecraft.server.v1_7_R4.PlayerConnection;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
@@ -8,11 +11,13 @@ import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.UpdatedUserData;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.spigotmc.ProtocolInjector;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -39,13 +44,18 @@ public class CommonPlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
 
-        for (Player p : VCUtils.getInstance().getServer().getOnlinePlayers()) {
-            if (p != event.getPlayer() && p.getName().equalsIgnoreCase(event.getPlayer().getName())) {
-                event.getPlayer().kickPlayer("Another player with your name is already on this server!");
-            }
-        }
+        VCUtils.getInstance().getServer().getOnlinePlayers().stream().filter(p -> p != event.getPlayer() && p.getName().equalsIgnoreCase(event.getPlayer().getName())).forEach(p -> {
+            event.getPlayer().kickPlayer("Another player with your name is already on this server!");
+        });
 
         Player member = event.getPlayer();
+
+        if (validate1_8(member)) {
+            PlayerConnection con = ((CraftPlayer)member).getHandle().playerConnection;
+            IChatBaseComponent head = ChatSerializer.a("{'color': 'purple', 'text': 'VaultCraft Network'}");
+            IChatBaseComponent foot = ChatSerializer.a("{'color': 'gray', 'text': 'mc.vaultcraft.net'}");
+            con.sendPacket(new ProtocolInjector.PacketTabHeader(head, foot));
+        }
 
         new User(member);
     }
@@ -123,6 +133,10 @@ public class CommonPlayerListener implements Listener {
         } catch (Exception err) {
             err.printStackTrace();
         }
+    }
+
+    private static boolean validate1_8(Player player) {
+        return ((CraftPlayer)player).getHandle().playerConnection.networkManager.getVersion() >= 47;
     }
 
     @EventHandler
