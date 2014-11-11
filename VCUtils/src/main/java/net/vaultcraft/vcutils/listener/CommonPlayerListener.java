@@ -52,7 +52,7 @@ public class CommonPlayerListener implements Listener {
 
         if (validate1_8(member)) {
             PlayerConnection con = ((CraftPlayer)member).getHandle().playerConnection;
-            IChatBaseComponent head = ChatSerializer.a("{'color': 'purple', 'text': 'VaultCraft Network'}");
+            IChatBaseComponent head = ChatSerializer.a("{'color': 'dark_purple', 'text': 'VaultCraft Network'}");
             IChatBaseComponent foot = ChatSerializer.a("{'color': 'gray', 'text': 'mc.vaultcraft.net'}");
             con.sendPacket(new ProtocolInjector.PacketTabHeader(head, foot));
         }
