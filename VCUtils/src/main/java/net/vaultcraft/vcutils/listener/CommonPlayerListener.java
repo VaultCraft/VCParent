@@ -7,7 +7,6 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.network.PacketReceivedEvent;
-import net.vaultcraft.vcutils.title.Title;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.UpdatedUserData;
 import net.vaultcraft.vcutils.user.User;
