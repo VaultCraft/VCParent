@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.title;
 import net.minecraft.server.v1_7_R4.ChatSerializer;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.spigotmc.ProtocolInjector;
@@ -19,13 +20,9 @@ public class Title {
     private int stay = 100;
     private int fadeOut = 10;
 
-    public Title(String title) {
+    public Title (String title, String subtitle) {
         this.title = title;
-    }
-
-    public Title subtitle(String subtitle) {
         this.subtitle = subtitle;
-        return this;
     }
 
     public Title fadeIn(int ticks) {
@@ -46,8 +43,8 @@ public class Title {
     public void sendTitle(Player player) {
         if(((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion() < 47)
             return;
-        IChatBaseComponent chatTitle = ChatSerializer.a("{\"Text:\" \"" + title + "\"");
-        IChatBaseComponent chatSubtitle = ChatSerializer.a("{\"Text:\" \"" + subtitle + "\"");
+        IChatBaseComponent chatTitle = ChatSerializer.a("{'color': 'dark_purple', 'text': '" + title + "'");
+        IChatBaseComponent chatSubtitle = ChatSerializer.a("{'color': 'gray', 'text': '" + subtitle + "'");
         ProtocolInjector.PacketTitle titlePacket = new ProtocolInjector.PacketTitle(ProtocolInjector.PacketTitle.Action.TITLE, chatTitle);
         ProtocolInjector.PacketTitle subtitlePacket = new ProtocolInjector.PacketTitle(ProtocolInjector.PacketTitle.Action.SUBTITLE, chatSubtitle);
         ProtocolInjector.PacketTitle timesPacket = new ProtocolInjector.PacketTitle(ProtocolInjector.PacketTitle.Action.TIMES, fadeIn, stay, fadeOut);
