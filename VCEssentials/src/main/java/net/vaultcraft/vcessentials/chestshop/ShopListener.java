@@ -274,7 +274,7 @@ public class ShopListener implements Listener {
             chest.update();
 
             User.fromPlayer(event.getPlayer()).addMoney(price);
-            Form.at(event.getPlayer(), Prefix.SUCCESS, "You sold " + itemStack.getAmount() + " " + itemStack.getType().name() + " to " + sign.getLine(0));
+            Form.at(event.getPlayer(), Prefix.SUCCESS, "You sold " + getParts(sign.getLine(3))[2] + " " + itemStack.getType().name() + " to " + sign.getLine(0));
         }
     }
 
