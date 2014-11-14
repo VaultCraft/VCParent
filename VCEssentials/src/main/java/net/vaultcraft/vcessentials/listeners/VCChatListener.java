@@ -37,6 +37,10 @@ public class VCChatListener implements Listener {
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if(User.fromPlayer(event.getPlayer()).isMuted()) {
+            return;
+        }
+
         if(emotingPlayers.contains(event.getPlayer())) {
             emotingPlayers.remove(event.getPlayer());
             event.setFormat("* " + event.getFormat().replaceFirst("\\:", ""));
