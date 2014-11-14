@@ -70,10 +70,12 @@ public class VCChatListener implements Listener {
             return;
         }
 
-        String[] swears = {"fuck", "cunt", "bitch"};
-        for(String s : swears) {
-            event.setMessage(event.getMessage().replaceAll(s, "vault"));
+        if (denySwears(event.getMessage())) {
+            Form.at(event.getPlayer(), Prefix.WARNING, "Please keep swearing to a minimum!");
+            event.setCancelled(true);
+            return;
         }
+        
         // Do anti-advertising stuff here
         if(event.getMessage().replace(" ", "").replaceAll("[^0-9\\^.]", "").matches("^.*(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).*$")) {
             Form.at(event.getPlayer(), Prefix.WARNING, "Please do not put IP addresses in chat!");
@@ -102,6 +104,16 @@ public class VCChatListener implements Listener {
         } else {
             playerTimes.put(event.getPlayer(), System.currentTimeMillis());
         }
+    }
+
+    private static boolean denySwears(String input) {
+        input = input.toLowerCase();
+        input = input.replace("$", "s").replace("@", "a").replace("(", "c");
+        input = input.replaceAll("[^a-zA-Z]", "");
+        if (input.contains("fuck") || input.contains("bitch") || input.contains("cunt")
+        || input.contains("nigger") || input.contains("faggot") || input.contains("fag"))
+            return true;
+        return false;
     }
 
 
