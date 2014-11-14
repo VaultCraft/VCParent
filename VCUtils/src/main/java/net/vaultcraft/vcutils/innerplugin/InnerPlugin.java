@@ -22,8 +22,6 @@ public abstract class InnerPlugin {
 
     public InnerPlugin() {
         instance = this;
-
-        onEnable();
     }
 
     public static InnerPlugin getInstance() {

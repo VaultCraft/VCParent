@@ -79,7 +79,7 @@ public class ProtectionFile implements FileController{
             if (!(name.equals("global"))) {
                 if (obj.get("world") == null)
                     continue;
-                
+
                 World world = Bukkit.getWorld(obj.get("world").toString());
                 int xMin = Integer.valueOf(obj.get("xMin").toString());
                 int yMin = Integer.valueOf(obj.get("yMin").toString());
