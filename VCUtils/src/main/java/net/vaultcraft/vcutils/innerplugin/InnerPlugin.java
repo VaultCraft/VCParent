@@ -13,6 +13,8 @@ public abstract class InnerPlugin {
     public void onEnable() {
         if (enabled)
             return;
+
+        enabled = true;
     }
 
     public abstract void onDisable();
@@ -21,15 +23,5 @@ public abstract class InnerPlugin {
 
     /***********************/
 
-    private static InnerPlugin instance;
-
-    private static boolean enabled = false;
-
-    public InnerPlugin() {
-        instance = this;
-    }
-
-    public static InnerPlugin getInstance() {
-        return instance;
-    }
+    protected boolean enabled = false;
 }
