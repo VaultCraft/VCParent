@@ -65,17 +65,16 @@ public class VCChatListener implements Listener {
             }
         }
 
+        if (!event.getPlayer().isOp() && denySwears(event.getMessage())) {
+            Form.at(event.getPlayer(), Prefix.WARNING, "Please keep swearing to a minimum!");
+            event.setCancelled(true);
+            return;
+        }
 
         if(User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER) || User.fromPlayer(event.getPlayer()).getGroup().getAllGroups().contains(Group.YOUTUBE)) {
             return;
         }
 
-        if (denySwears(event.getMessage())) {
-            Form.at(event.getPlayer(), Prefix.WARNING, "Please keep swearing to a minimum!");
-            event.setCancelled(true);
-            return;
-        }
-        
         // Do anti-advertising stuff here
         if(event.getMessage().replace(" ", "").replaceAll("[^0-9\\^.]", "").matches("^.*(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).*$")) {
             Form.at(event.getPlayer(), Prefix.WARNING, "Please do not put IP addresses in chat!");
