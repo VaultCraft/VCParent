@@ -150,9 +150,8 @@ public class VCTeam {
             if (addMembers.size() > 0) {
                 for (VCScoreboard vcScoreboard : objective.getScoreboards()) {
                     ScoreboardTeam team = vcScoreboard.getScoreboard().getTeam(name);
-                    team.getPlayerNameSet().add(addMembers);
+                    PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(team, addMembers, 3);
                     addMembers.clear();
-                    PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(team, 3);
                     vcScoreboard.sendPacket(packet);
                 }
             }
@@ -160,9 +159,8 @@ public class VCTeam {
             if (removeMembers.size() > 0) {
                 for (VCScoreboard vcScoreboard : objective.getScoreboards()) {
                     ScoreboardTeam team = vcScoreboard.getScoreboard().getTeam(name);
-                    team.getPlayerNameSet().remove(removeMembers);
+                    PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(team, removeMembers, 4);
                     removeMembers.clear();
-                    PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam(team, 4);
                     vcScoreboard.sendPacket(packet);
                 }
             }
