@@ -100,7 +100,7 @@ public class VCAuction extends ICommand {
 
                 Listener listener = new Listener() {
                     @EventHandler
-                    public void onThing(InventoryClickEvent event) {
+                    public void onInvClick(InventoryClickEvent event) {
                         if (event.getWhoClicked().equals(player)) {
                             event.setCancelled(true);
 
@@ -128,6 +128,9 @@ public class VCAuction extends ICommand {
 
                     @EventHandler
                     public void onInventoryClose(InventoryCloseEvent event) {
+                        if (!event.getPlayer().equals(player))
+                            return;
+
                         AucManager.getStore().save();
                         HandlerList.unregisterAll(this);
                     }

@@ -6,6 +6,8 @@ import net.vaultcraft.vcutils.user.User;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * Created by tacticalsk8er on 9/2/2014.
  */
@@ -25,7 +27,7 @@ public class VCScoreboard {
     }
 
     public void sendPacket(Packet packet) {
-        if(player.isOnline())
+        if (player.isOnline())
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 }

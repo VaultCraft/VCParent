@@ -37,6 +37,10 @@ public class VCChatListener implements Listener {
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if(User.fromPlayer(event.getPlayer()).isMuted()) {
+            return;
+        }
+
         if(emotingPlayers.contains(event.getPlayer())) {
             emotingPlayers.remove(event.getPlayer());
             event.setFormat("* " + event.getFormat().replaceFirst("\\:", ""));
@@ -61,6 +65,11 @@ public class VCChatListener implements Listener {
             }
         }
 
+        if (!event.getPlayer().isOp() && denySwears(event.getMessage())) {
+            Form.at(event.getPlayer(), Prefix.WARNING, "Please keep swearing to a minimum!");
+            event.setCancelled(true);
+            return;
+        }
 
         if(User.fromPlayer(event.getPlayer()).getGroup().hasPermission(Group.HELPER) || User.fromPlayer(event.getPlayer()).getGroup().getAllGroups().contains(Group.YOUTUBE)) {
             return;
@@ -94,6 +103,16 @@ public class VCChatListener implements Listener {
         } else {
             playerTimes.put(event.getPlayer(), System.currentTimeMillis());
         }
+    }
+
+    private static boolean denySwears(String input) {
+        input = input.toLowerCase();
+        input = input.replace("$", "s").replace("@", "a").replace("(", "c");
+        input = input.replaceAll("[^a-zA-Z]", "");
+        if (input.contains("fuck") || input.contains("bitch") || input.contains("cunt")
+        || input.contains("nigger") || input.contains("faggot") || input.contains("fag"))
+            return true;
+        return false;
     }
 
 
