@@ -166,7 +166,12 @@ public class VoteStation {
                                 drop.remove();
 
                                 if (chestOneClicked && chestTwoClicked && chestThreeClicked) {
-                                    end();
+                                    Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), new Runnable() {
+                                        @Override
+                                        public void run() {
+                                         end();
+                                        }
+                                    }, 20 * 5);
                                 }
                             }
                         };
