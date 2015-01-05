@@ -1,12 +1,9 @@
 package net.vaultcraft.vcutils.voting;
 
-import common.network.PacketInSendAll;
-import net.md_5.bungee.api.ChatColor;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.item.ItemUtils;
-import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.title.TitleObject;
 import net.vaultcraft.vcutils.user.OfflineUser;
 import net.vaultcraft.vcutils.user.User;
@@ -14,16 +11,13 @@ import net.vaultcraft.vcutils.util.ConfigLocation;
 import net.vaultcraft.vcutils.voting.listener.RewardListener;
 import net.vaultcraft.vcutils.voting.rewards.VoteReward;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
