@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.scoreboard.VCScoreboard;
+import net.vaultcraft.vcutils.user.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -49,6 +50,8 @@ public class User {
     private String prefix;
     private String nick;
 
+    private Long lastVoted = null;
+
     private HashMap<String, String> globalUserdata = new HashMap<>();
     private HashMap<String, String> userdata = new HashMap<>();
 
@@ -68,11 +71,17 @@ public class User {
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
             nick = dbObject.get("Nick") == null ? null : dbObject.get("Nick").toString();
+            lastVoted = dbObject.get("LastVoted") == null ? null : Long.parseLong(dbObject.get("LastVoted").toString());
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             money = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
             tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
             globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData(dbObject.get("Global-UserData").toString());
+            String permList = dbObject.get("Permissions") == null ? null : dbObject.get("Permission").toString();
+            if (permList != null) {
+                for (String s : permList.split(","))
+                    group.addPermission(Permission.fromId(Integer.parseInt(s)));
+            }
         } else {
             group.merge(Group.COMMON);
         }
@@ -208,12 +217,14 @@ public class User {
         DBObject dbObject = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
         dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
         dbObject.put("Group", groupsToString(user.getGroup()));
+        dbObject.put("Permissions", permsToString(user.getGroup().getPermissions()));
         dbObject.put("Banned", user.isBanned());
         dbObject.put("TempBan", user.getTempBan());
         dbObject.put("Muted", user.isMuted());
         dbObject.put("TempMute", user.getTempMute());
         dbObject.put("Prefix", user.getPrefix());
         dbObject.put("Nick", user.getNick());
+        dbObject.put("LastVoted", user.getLastVoted());
         dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
         dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
         dbObject.put("Tokens", user.getTokens());
@@ -223,6 +234,17 @@ public class User {
             VCUtils.getInstance().getMongoDB().insert(VCUtils.mongoDBName, "Users", dbObject);
         else
             VCUtils.getInstance().getMongoDB().update(VCUtils.mongoDBName, "Users", dbObject1, dbObject);
+    }
+
+    private static String permsToString(HashSet<Permission> permissions) {
+        String s = "";
+        for (Permission p : permissions) {
+            s+=p.getPermissionNode()+",";
+        }
+        if (s.length() == 0)
+            return null;
+
+        return s.substring(0, s.length()-1);
     }
 
     public void addGroup(Group group) {
@@ -415,5 +437,24 @@ public class User {
 
     public String getNick() {
         return nick;
+    }
+
+    public boolean voted() {
+        if (lastVoted == null)
+            return false;
+
+        //                                                1 day
+        return System.currentTimeMillis() < (lastVoted + 86400000l);
+    }
+
+    public long getLastVoted() {
+        if (lastVoted == null)
+            return 0;
+
+        return lastVoted;
+    }
+
+    public void setLastVoted(long lastVoted) {
+        this.lastVoted = lastVoted;
     }
 }

@@ -7,6 +7,7 @@ import net.vaultcraft.vcutils.protection.flag.FlagResult;
 import net.vaultcraft.vcutils.protection.flag.FlagType;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.user.permission.Permission;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -65,6 +66,9 @@ public class ProtectionListener implements Listener {
     @EventHandler (priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
+        if (User.fromPlayer(player).getGroup().hasPermission(Permission.BUILD_MAP))
+            return;
+
         Location broken = event.getBlock().getLocation();
 
         event.setCancelled(willCancel(FlagType.BLOCK_BREAK, player, broken));
@@ -80,6 +84,9 @@ public class ProtectionListener implements Listener {
     @EventHandler (priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
+        if (User.fromPlayer(player).getGroup().hasPermission(Permission.BUILD_MAP))
+            return;
+
         Location broken = event.getBlock().getLocation();
 
         event.setCancelled(willCancel(FlagType.BLOCK_PLACE, player, broken));
@@ -150,6 +157,8 @@ public class ProtectionListener implements Listener {
     @EventHandler (priority = EventPriority.LOW)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
+        if (User.fromPlayer(player).getGroup().hasPermission(Permission.BUILD_MAP))
+            return;
 
         boolean will = willCancel(FlagType.ITEM_DROP, player, player.getLocation());
         if (will) {
@@ -177,6 +186,8 @@ public class ProtectionListener implements Listener {
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Player player = (Player) event.getPlayer();
+        if (User.fromPlayer(player).getGroup().hasPermission(Permission.BUILD_MAP))
+            return;
 
         event.setCancelled(willCancel(FlagType.BUCKET_EMPTY, player, event.getBlockClicked().getLocation()));
     }
@@ -184,6 +195,8 @@ public class ProtectionListener implements Listener {
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
         Player player = (Player) event.getPlayer();
+        if (User.fromPlayer(player).getGroup().hasPermission(Permission.BUILD_MAP))
+            return;
 
         event.setCancelled(willCancel(FlagType.BUCKET_FILL, player, event.getBlockClicked().getLocation()));
     }
@@ -191,6 +204,8 @@ public class ProtectionListener implements Listener {
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent event) {
         Player player = event.getPlayer();
+        if (User.fromPlayer(player).getGroup().hasPermission(Permission.BUILD_MAP))
+            return;
 
         event.setCancelled(willCancel(FlagType.HANGING_PLACE, player, event.getBlock().getLocation()));
     }

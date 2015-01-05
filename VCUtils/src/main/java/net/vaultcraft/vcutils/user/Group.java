@@ -1,9 +1,11 @@
 package net.vaultcraft.vcutils.user;
 
 import com.google.common.collect.Lists;
+import net.vaultcraft.vcutils.user.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -112,7 +114,10 @@ public enum Group {
     public static class GroupHandler {
 
         private Player player;
+
         private List<Group> all = Lists.newArrayList();
+        private HashSet<Permission> permissions = new HashSet<>();
+
         private Group highest;
 
         public GroupHandler(Player player) {
@@ -137,6 +142,18 @@ public enum Group {
             }
 
             this.highest = highest;
+        }
+
+        public boolean hasPermission(Permission perm) {
+            return permissions.contains(perm);
+        }
+
+        public void addPermission(Permission permission) {
+            permissions.add(permission);
+        }
+
+        public void removePermission(Permission permission) {
+            permissions.remove(permission);
         }
 
         public boolean hasPermission(Group other) {
@@ -165,6 +182,10 @@ public enum Group {
 
         public Group getHighest() {
             return highest;
+        }
+
+        public HashSet<Permission> getPermissions() {
+            return permissions;
         }
     }
 }

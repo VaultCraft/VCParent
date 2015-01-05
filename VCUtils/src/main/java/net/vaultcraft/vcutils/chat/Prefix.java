@@ -15,6 +15,7 @@ public enum Prefix {
     SUCCESS("&a&lSUCCESS&f: &7", "", "&7"),
     CHARACTER("&6&l{0}&7: &f", "", "&f"),
     AUCTION("&3&lAUCTION&f: &7", "", "&7"),
+    VOTE("&d&lVOTE&f: &7", "", "&7"),
     NOTHING("", "", "");
 
     private String prefix;

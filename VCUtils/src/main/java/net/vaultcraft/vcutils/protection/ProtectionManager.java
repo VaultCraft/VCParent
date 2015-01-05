@@ -8,6 +8,7 @@ import org.bukkit.Location;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by Connor on 7/21/14. Designed for the VCUtils project.
@@ -47,10 +48,7 @@ public class ProtectionManager {
 
     public Collection<ProtectedArea> fromLocation(Location location) {
         Collection<ProtectedArea> coll = Lists.newArrayList();
-        for (ProtectedArea areas : protect.values()) {
-            if (areas.getArea().isInArea(location))
-                coll.add(areas);
-        }
+        coll.addAll(protect.values().stream().filter(areas -> areas.getArea().isInArea(location)).collect(Collectors.toList()));
         return coll;
     }
 

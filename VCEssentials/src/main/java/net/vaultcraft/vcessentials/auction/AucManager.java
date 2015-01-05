@@ -164,6 +164,14 @@ public class AucManager implements Listener {
         return 1;
     }
 
+    private static boolean allPermission(Group.GroupHandler handler, Group other) {
+        for (Group g : handler.getAllGroups()) {
+            if (Group.hasPermission(g, other))
+                return true;
+        }
+        return false;
+    }
+
     public static Auction fromUUID(UUID uuid) {
         for (Auction auc : auctions) {
             if (auc.getAuctionId().equals(uuid))
