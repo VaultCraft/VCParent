@@ -35,7 +35,7 @@ public class RewardListener implements Listener {
             if (!(holding.hasItemMeta()))
                 return;
 
-            if (holding.getItemMeta().getDisplayName() == null)
+            if (!(holding.getItemMeta().hasDisplayName()))
                 return;
 
             if (RewardHandler.me.getVoteStation().isInUse()) {

@@ -36,6 +36,8 @@ public class OfflineUser {
     private double moneyOld = 0;
     private int tokensOld = 0;
 
+    private Long lastVoted;
+
     private double money = 0;
     private int tokens = 0;
 
@@ -66,6 +68,7 @@ public class OfflineUser {
             muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
             tempMute = (Date) dbObject.get("TempMute");
             prefix = dbObject.get("Prefix") == null ? null : dbObject.get("Prefix").toString();
+            lastVoted = dbObject.get("LastVoted") == null ? null : Long.parseLong(dbObject.get("LastVoted").toString());
             nick = dbObject.get("Nick") == null ? null : dbObject.get("Nick").toString();
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             moneyOld = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
@@ -126,6 +129,7 @@ public class OfflineUser {
                     dbObject.put("Banned", banned);
                     dbObject.put("TempBan", tempBan);
                     dbObject.put("Muted", muted);
+                    dbObject.put("LastVoted", getLastVoted());
                     dbObject.put("TempMute", tempMute);
                     dbObject.put("Prefix", prefix);
                     dbObject.put(VCUtils.serverName + "-Money", moneyNew);
@@ -230,5 +234,24 @@ public class OfflineUser {
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    public boolean voted() {
+        if (lastVoted == null)
+            return false;
+
+        //                                                1 day
+        return System.currentTimeMillis() < (lastVoted + 86400000l);
+    }
+
+    public long getLastVoted() {
+        if (lastVoted == null)
+            return 0;
+
+        return lastVoted;
+    }
+
+    public void setLastVoted(long lastVoted) {
+        this.lastVoted = lastVoted;
     }
 }

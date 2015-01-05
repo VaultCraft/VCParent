@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
+import net.vaultcraft.vcutils.item.ItemUtils;
 import net.vaultcraft.vcutils.network.MessageClient;
 import net.vaultcraft.vcutils.title.TitleObject;
 import net.vaultcraft.vcutils.user.OfflineUser;
@@ -14,6 +15,7 @@ import net.vaultcraft.vcutils.voting.listener.RewardListener;
 import net.vaultcraft.vcutils.voting.rewards.VoteReward;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,12 +67,20 @@ public class RewardHandler implements Listener {
             }
             OfflineUser offline = OfflineUser.getOfflineUser(exists);
             offline.addTokens(1);
-        }
+            offline.setLastVoted(System.currentTimeMillis());
+            return;
+        } else {
+            Form.at(user.getPlayer(), Prefix.VOTE, "Thank you for your vote!");
+            Form.at(user.getPlayer(), Prefix.VOTE, "You may now use this token at any vote station.");
 
-        user.addTokens(1);
-        Form.at(user.getPlayer(), Prefix.VOTE, "Thank you for your vote!");
-        Form.at(user.getPlayer(), Prefix.VOTE, "You may now use this token at any vote station.");
-        user.setLastVoted(System.currentTimeMillis());
+            if (user.getPlayer().getInventory().firstEmpty() != -1) {
+                user.getPlayer().getInventory().addItem(ItemUtils.build(Material.NETHER_STAR, "&e&lVote Token"));
+            } else {
+                user.addTokens(1);
+                Form.at(user.getPlayer(), Prefix.VOTE, "You didn't have enough room in your inventory, type /redeem to get the token!");
+            }
+            user.setLastVoted(System.currentTimeMillis());
+        }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             User _u = User.fromPlayer(player);

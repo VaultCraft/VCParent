@@ -114,6 +114,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCIgnore("ignore", Group.COMMON));
         CommandManager.addCommand(new VCPermission("permission", Group.MANAGER));
         CommandManager.addCommand(new VCSetVoteCenter("setvotecenter", Group.DEVELOPER));
+        CommandManager.addCommand(new VCRedeem("redeem", Group.COMMON, "redeemvote"));
 
         //protection
         CommandManager.addCommand(new VCProtection("protect", Group.DEVELOPER, "p", "region", "prot", "protection"));
