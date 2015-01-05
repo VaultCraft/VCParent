@@ -27,7 +27,7 @@ public class VCVote extends ICommand {
     public void processCommand(Player player, String[] args) {
         Form.at(player, Prefix.ERROR, "Voting is not yet released. Stay tuned!");
 
-        if (User.fromPlayer(player).getGroup().hasPermission(Group.MANAGER)) {
+        if (User.fromPlayer(player).getGroup().hasPermission(Group.MANAGER) && args.length > 0) {
             if (args[0].equalsIgnoreCase("givetoken")) {
                 if (args[1] == null) {
                     Form.at(player, Prefix.ERROR, "Syntax /vote givetoken [player]");
