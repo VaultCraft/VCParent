@@ -125,6 +125,8 @@ public class VoteStation {
         if (b == null)
             return;
 
+        event.setCancelled(true);
+
         if (b.equals(chestOne) && !chestOneClicked) {
             chestOneClicked = true;
             giveReward(chestOne);
