@@ -1,7 +1,6 @@
 package net.vaultcraft.vcutils.voting;
 
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.hologram.Hologram;
 import net.vaultcraft.vcutils.hologram.StaticHologram;
 import net.vaultcraft.vcutils.uncommon.Particles;
 import net.vaultcraft.vcutils.voting.rewards.VoteReward;
