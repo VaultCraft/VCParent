@@ -167,7 +167,6 @@ public class VoteStation {
 
                                 if (chestOneClicked && chestTwoClicked && chestThreeClicked) {
                                     Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), new Runnable() {
-                                        @Override
                                         public void run() {
                                          end();
                                         }

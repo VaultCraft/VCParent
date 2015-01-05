@@ -84,11 +84,16 @@ public class RewardHandler implements Listener {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             User _u = User.fromPlayer(player);
-            if (_u.voted())
+            if (_u == null)
+                continue;
+
+            if (_u.voted() && !_u.equals(user))
                 continue;
 
             TitleObject to = new TitleObject(ChatColor.translateAlternateColorCodes('&', "&e&l" + user.getPlayer().getName() + " &d&l has voted!"),
                     ChatColor.translateAlternateColorCodes('&', "&7Vote to remove these messages. Type \"/vote\""));
+            to.setFadeIn(5);
+            to.setFadeOut(30);
             to.send(player);
         }
     }
