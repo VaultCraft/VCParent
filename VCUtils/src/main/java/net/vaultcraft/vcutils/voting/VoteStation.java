@@ -1,6 +1,8 @@
 package net.vaultcraft.vcutils.voting;
 
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.chat.Form;
+import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.hologram.StaticHologram;
 import net.vaultcraft.vcutils.uncommon.Particles;
 import net.vaultcraft.vcutils.voting.rewards.VoteReward;
@@ -59,6 +61,8 @@ public class VoteStation {
         user = player;
 
         player.teleport(center);
+        Form.at(player, Prefix.VOTE, "Vote station activated!");
+        Form.at(player, Prefix.VOTE, "Click the chests to receive your rewards...");
 
         //make gates
         Location gateStart = center.clone().add(-1, 0, 0);
