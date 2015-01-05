@@ -120,10 +120,10 @@ public class VoteStation {
         old.clear();
     }
 
-    public void onClick(PlayerInteractEvent event) {
+    public PlayerInteractEvent onClick(PlayerInteractEvent event) {
         Block b = event.getClickedBlock();
         if (b == null)
-            return;
+            return event;
 
         event.setCancelled(true);
 
@@ -137,6 +137,8 @@ public class VoteStation {
             chestThreeClicked = true;
             giveReward(chestThree);
         }
+
+        return event;
     }
 
     private void giveReward(Block chest) {
