@@ -27,7 +27,8 @@ public class RewardListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (RewardHandler.me.getVoteStation().getInUse().equals(event.getPlayer()))
+        Player using = RewardHandler.me.getVoteStation().getInUse();
+        if (using != null && using.equals(event.getPlayer()))
             RewardHandler.me.getVoteStation().onClick(event);
 
         else if (player.getItemInHand().getType().equals(Material.NETHER_STAR)) {
