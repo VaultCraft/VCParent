@@ -9,6 +9,7 @@ import net.vaultcraft.vcutils.database.sql.MySQL;
 import net.vaultcraft.vcutils.database.sql.SQLInfo;
 import net.vaultcraft.vcutils.database.sqlite.SQLite;
 import net.vaultcraft.vcutils.file.FileController;
+import net.vaultcraft.vcutils.hologram.StaticHologramRegistry;
 import net.vaultcraft.vcutils.innerplugin.InnerPlugin;
 import net.vaultcraft.vcutils.innerplugin.VCPluginManager;
 import net.vaultcraft.vcutils.item.menu.MenuListener;
@@ -74,6 +75,12 @@ public class VCUtils extends JavaPlugin {
         signGUI = new SignGUI(this);
         barAPI.onEnable();
         factory = new GhostFactory(this);
+
+        try {
+            new StaticHologramRegistry();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             new MessageClient(NetworkInfo.host, NetworkInfo.port).init();

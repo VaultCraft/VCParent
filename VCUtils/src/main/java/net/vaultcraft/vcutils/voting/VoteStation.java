@@ -2,19 +2,19 @@ package net.vaultcraft.vcutils.voting;
 
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.hologram.Hologram;
+import net.vaultcraft.vcutils.hologram.StaticHologram;
 import net.vaultcraft.vcutils.uncommon.Particles;
 import net.vaultcraft.vcutils.voting.rewards.VoteReward;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,10 +98,8 @@ public class VoteStation {
                 if (!(chestThreeClicked)) {
                     giveReward(chestThree);
                 }
-
-                end();
             }
-        }, 20 * 45);
+        }, 20 * 20);
     }
 
     private void end() {
@@ -138,10 +136,6 @@ public class VoteStation {
             chestThreeClicked = true;
             giveReward(chestThree);
         }
-
-        if (chestOneClicked && chestTwoClicked && chestThreeClicked) {
-            end();
-        }
     }
 
     private void giveReward(Block chest) {
@@ -154,24 +148,30 @@ public class VoteStation {
                     Particles.FIREWORKS_SPARK.sendToLocation(nxt, 0f, 0f, 0f, 0f, 1);
                     if (_i == 0) {
                         nxt.getWorld().playEffect(nxt, Effect.STEP_SOUND, Material.CHEST.getId());
+                        nxt.getWorld().playSound(nxt, Sound.ANVIL_LAND, 1, 1);
                         VoteReward reward = RewardHandler.getRandomReward();
                         Item drop = nxt.getWorld().dropItem(nxt.clone().add(0, 1, 0), new ItemStack(reward.getIdentifier()));
+                        drop.setVelocity(new Vector(0, 0, 0));
                         drop.setPickupDelay(20 * 60 * 60);
 
-                        Hologram display = new Hologram(reward.reward(user));
-                        display.show(chest.getLocation().clone().add(0, 1, 0));
+                        StaticHologram display = new StaticHologram(Arrays.asList(reward.reward(user)), chest.getLocation().clone().add(0, 1, 0));
+                        display.respawnLines();
 
                         Runnable destroy = new Runnable() {
                             public void run() {
                                 display.destroy();
                                 drop.remove();
+
+                                if (chestOneClicked && chestTwoClicked && chestThreeClicked) {
+                                    end();
+                                }
                             }
                         };
                         Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), destroy, 20 * 5);
                     }
                 }
             };
-            Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), play, accumulate+=5);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(VCUtils.getInstance(), play, accumulate+=2);
         }
     }
 
