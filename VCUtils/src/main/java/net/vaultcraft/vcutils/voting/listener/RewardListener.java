@@ -56,7 +56,8 @@ public class RewardListener implements Listener {
         if (event.getFrom().getBlock().equals(event.getTo().getBlock()))
             return;
 
-        if (RewardHandler.me.getVoteStation().getInUse().equals(event.getPlayer()))
+        Player using = RewardHandler.me.getVoteStation().getInUse();
+        if (using != null && using.equals(event.getPlayer()))
             event.getPlayer().teleport(RewardHandler.me.getVoteStation().getCenter());
     }
 
