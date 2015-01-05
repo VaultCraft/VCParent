@@ -49,16 +49,6 @@ public class RewardHandler implements Listener {
 
     public static void registerReward(VoteReward reward) {
         rewards.add(reward);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream objOut = new ObjectOutputStream(out);
-            objOut.writeObject(reward);
-            objOut.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PacketInSendAll packet = new PacketInSendAll("Register-Reward", out);
-        MessageClient.sendPacket(packet);
     }
 
     public static VoteReward getRandomReward() {
