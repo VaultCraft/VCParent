@@ -29,6 +29,7 @@ public class RewardListener implements Listener {
         Player player = event.getPlayer();
         if (RewardHandler.me.getVoteStation().getInUse().equals(event.getPlayer()))
             RewardHandler.me.getVoteStation().onClick(event);
+
         else if (player.getItemInHand().getType().equals(Material.NETHER_STAR)) {
             //vote token...?
             ItemStack holding = player.getItemInHand();

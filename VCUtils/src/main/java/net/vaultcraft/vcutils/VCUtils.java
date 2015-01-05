@@ -22,6 +22,7 @@ import net.vaultcraft.vcutils.uncommon.GhostFactory;
 import net.vaultcraft.vcutils.user.User;
 import net.vaultcraft.vcutils.util.BungeeUtil;
 import net.vaultcraft.vcutils.util.SignGUI;
+import net.vaultcraft.vcutils.voting.RewardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -86,6 +87,8 @@ public class VCUtils extends JavaPlugin {
         } catch (UnknownHostException e) {
             Logger.error(this, e);
         }
+
+        new RewardHandler();
 
         sqlite = new SQLite(this, this.getDataFolder()+"/sqlite.db"); // TODO un-hardcode this.
 
