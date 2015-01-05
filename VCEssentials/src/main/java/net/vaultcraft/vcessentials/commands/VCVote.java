@@ -25,11 +25,9 @@ public class VCVote extends ICommand {
 
     @Override
     public void processCommand(Player player, String[] args) {
-        Form.at(player, Prefix.ERROR, "Voting is not yet released. Stay tuned!");
-
         if (User.fromPlayer(player).getGroup().hasPermission(Group.MANAGER) && args.length > 0) {
             if (args[0].equalsIgnoreCase("givetoken")) {
-                if (args.length > 1) {
+                if (args.length <= 1) {
                     Form.at(player, Prefix.ERROR, "Syntax /vote givetoken [player]");
                     return;
                 }
@@ -46,7 +44,7 @@ public class VCVote extends ICommand {
                 Form.at(player, Prefix.VOTE, "Gave &e" + find.getName() + Prefix.VOTE.getChatColor() + " a vote token!");
                 return;
             } else if (args[0].equalsIgnoreCase("callvote")) {
-                if (args.length > 1) {
+                if (args.length <= 1) {
                     Form.at(player, Prefix.ERROR, "Syntax /vote callvote [player]");
                     return;
                 }
@@ -65,6 +63,7 @@ public class VCVote extends ICommand {
             }
         }
 
+        Form.at(player, Prefix.ERROR, "Voting is not yet released. Stay tuned!");
         return;
     }
 }
