@@ -33,6 +33,8 @@ public class VoteStation {
     private Block chestTwo;
     private Block chestThree;
 
+    private boolean usable = false;
+
     private boolean chestOneClicked = false;
     private boolean chestTwoClicked = false;
     private boolean chestThreeClicked = false;
@@ -44,9 +46,17 @@ public class VoteStation {
     public VoteStation(Location center) {
         this.center = center;
 
+        if (center == null)
+            return;
+
+        usable = true;
         chestOne = center.clone().add(0, 0, -2).getBlock();
         chestTwo = center.clone().add(2, 0, 0).getBlock();
         chestThree = center.clone().add(0, 0, 2).getBlock();
+    }
+
+    public boolean isUsable() {
+        return usable;
     }
 
     public boolean isInUse() {

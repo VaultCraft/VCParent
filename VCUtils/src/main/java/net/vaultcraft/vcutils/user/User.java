@@ -75,7 +75,7 @@ public class User {
             Object o = dbObject.get(VCUtils.serverName + "-Money");
             money = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
             userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
-            tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
+            tokens = dbObject.get(VCUtils.serverName + "-Tokens") == null ? 0 : (Integer) dbObject.get(VCUtils.serverName + "-Tokens");
             globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData(dbObject.get("Global-UserData").toString());
             String permList = dbObject.get("Permissions") == null ? null : dbObject.get("Permission").toString();
             if (permList != null) {
@@ -227,7 +227,7 @@ public class User {
         dbObject.put("LastVoted", user.getLastVoted());
         dbObject.put(VCUtils.serverName + "-Money", user.getMoney());
         dbObject.put(VCUtils.serverName + "-UserData", dataToString(user.getAllUserdata()));
-        dbObject.put("Tokens", user.getTokens());
+        dbObject.put(VCUtils.serverName + "-Tokens", user.getTokens());
         dbObject.put("Global-UserData", dataToString(user.getAllGlobalUserdata()));
         DBObject dbObject1 = VCUtils.getInstance().getMongoDB().query(VCUtils.mongoDBName, "Users", "UUID", user.getPlayer().getUniqueId().toString());
         if (dbObject1 == null)

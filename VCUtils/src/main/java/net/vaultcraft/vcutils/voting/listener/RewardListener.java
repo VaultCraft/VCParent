@@ -40,6 +40,11 @@ public class RewardListener implements Listener {
             if (!(holding.getItemMeta().hasDisplayName()))
                 return;
 
+            if (!RewardHandler.me.getVoteStation().isUsable()) {
+                Form.at(player, Prefix.VOTE, "There is no vote station on this server!");
+                return;
+            }
+
             if (RewardHandler.me.getVoteStation().isInUse()) {
                 Form.at(player, Prefix.VOTE, "The vote station is already in use!");
                 return;

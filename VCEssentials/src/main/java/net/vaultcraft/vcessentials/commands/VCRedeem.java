@@ -5,6 +5,7 @@ import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.command.ICommand;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.voting.RewardHandler;
 import org.bukkit.entity.Player;
 
 /**
@@ -18,6 +19,11 @@ public class VCRedeem extends ICommand {
     }
 
     public void processCommand(Player player, String[] args) {
+        if (!RewardHandler.me.getVoteStation().isUsable()) {
+            Form.at(player, Prefix.VOTE, "There is no vote station on this server!");
+            return;
+        }
+
         User user = User.fromPlayer(player);
         if (user.getTokens() > 0) {
             if (player.getInventory().firstEmpty() == -1) {

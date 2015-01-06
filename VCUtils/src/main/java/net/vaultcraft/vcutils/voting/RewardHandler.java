@@ -53,6 +53,10 @@ public class RewardHandler implements Listener {
 
     @EventHandler
     public void onVote(VoteEvent event) {
+        if (!getVoteStation().isUsable()) {
+            return;
+        }
+
         User user = User.fromUUID(event.getUserUUID().toString());
         if(user == null) {
             OfflinePlayer exists = Bukkit.getOfflinePlayer(event.getUserUUID());
