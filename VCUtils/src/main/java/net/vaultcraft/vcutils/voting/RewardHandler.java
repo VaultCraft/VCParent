@@ -88,11 +88,12 @@ public class RewardHandler implements Listener {
             if (_u.voted() && !_u.equals(user))
                 continue;
 
-            TitleObject to = new TitleObject(ChatColor.translateAlternateColorCodes('&', "&e&l" + user.getPlayer().getName() + " &d&l has voted!"),
-                    ChatColor.translateAlternateColorCodes('&', "&7Vote to remove these messages. Type \"/vote\""));
-            to.setFadeIn(5);
-            to.setFadeOut(30);
-            to.send(player);
+            player.sendMessage(ChatColor.YELLOW.toString() + ChatColor.STRIKETHROUGH + "------------------------");
+            player.sendMessage("");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&l" + user.getPlayer().getName() + " &d&lvoted!"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Vote to remove these messages. Type \"/vote\""));
+            player.sendMessage("");
+            player.sendMessage(ChatColor.YELLOW.toString() + ChatColor.STRIKETHROUGH + "------------------------");
         }
     }
 

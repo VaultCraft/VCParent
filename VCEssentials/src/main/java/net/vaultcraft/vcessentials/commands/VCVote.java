@@ -56,7 +56,7 @@ public class VCVote extends ICommand {
                     return;
                 }
 
-                VoteEvent ve = new VoteEvent(player.getUniqueId());
+                VoteEvent ve = new VoteEvent(find.getUniqueId());
                 Bukkit.getPluginManager().callEvent(ve);
                 Form.at(player, Prefix.SUCCESS, "Vote event called!");
                 return;

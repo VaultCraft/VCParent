@@ -77,7 +77,7 @@ public class User {
             userdata = dbObject.get(VCUtils.serverName + "-UserData") == null ? new HashMap<>() : parseData(dbObject.get(VCUtils.serverName + "-UserData").toString());
             tokens = dbObject.get(VCUtils.serverName + "-Tokens") == null ? 0 : (Integer) dbObject.get(VCUtils.serverName + "-Tokens");
             globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<>() : parseData(dbObject.get("Global-UserData").toString());
-            String permList = dbObject.get("Permissions") == null ? null : dbObject.get("Permission").toString();
+            String permList = dbObject.get("Permissions") == null ? null : dbObject.get("Permissions").toString();
             if (permList != null) {
                 for (String s : permList.split(","))
                     group.addPermission(Permission.fromId(Integer.parseInt(s)));
