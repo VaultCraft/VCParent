@@ -44,7 +44,7 @@ public abstract class ICommand {
         return name;
     }
 
-    public Permission gerPermission() {
+    public Permission getPermission() {
         return permission;
     }
 

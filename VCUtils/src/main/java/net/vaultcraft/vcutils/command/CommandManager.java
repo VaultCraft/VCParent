@@ -5,19 +5,15 @@ import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.chat.Form;
 import net.vaultcraft.vcutils.chat.Prefix;
 import net.vaultcraft.vcutils.logging.Logger;
-import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -91,7 +87,7 @@ public class CommandManager implements Listener {
             commands.put(alias.toLowerCase(), cmd);
         }
         commands.put(cmd.getName(), cmd);
-        VCUtils.getInstance().getServer().getPluginManager().addPermission(cmd.gerPermission());
+        VCUtils.getInstance().getServer().getPluginManager().addPermission(cmd.getPermission());
     }
 
     public static void removeCommand(ICommand cmd) {
