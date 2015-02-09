@@ -91,6 +91,7 @@ public class CommandManager implements Listener {
             commands.put(alias.toLowerCase(), cmd);
         }
         commands.put(cmd.getName(), cmd);
+        VCUtils.getInstance().getServer().getPluginManager().addPermission(cmd.gerPermission());
     }
 
     public static void removeCommand(ICommand cmd) {
