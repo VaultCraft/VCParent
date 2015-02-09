@@ -3,6 +3,7 @@ package net.vaultcraft.vcutils.command;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,31 +14,37 @@ import java.util.Map;
 public abstract class ICommand {
 
     private String name;
-    private Group permission;
+    private Permission permission;
     private String[] aliases;
     protected Map<String, String> subCmds = new HashMap<>();
     protected Map<String, Group> groupPerms = new HashMap<>();
     protected boolean display_group;
 
-    public ICommand(String name, Group permission, String... aliases) {
+    public ICommand(String name, Permission permission, String... aliases) {
         this.name = name;
         this.permission = permission;
         this.aliases = aliases;
     }
 
-    public ICommand(String name, Group permission) {
+    public ICommand(String name, Permission permission) {
         this(name, permission, new String[0]);
     }
 
+    @Deprecated
+    public ICommand(String name, Group permission, String... aliases)
+    {
+        this(name, new Permission("vc.legacy."+permission.getName()), aliases);
+    }
+
     public boolean checkPerms(User player) {
-        return player.getGroup().hasPermission(permission);
+        return player.getPlayer().hasPermission(permission);
     }
 
     public String getName() {
         return name;
     }
 
-    public Group gerPermission() {
+    public Permission gerPermission() {
         return permission;
     }
 

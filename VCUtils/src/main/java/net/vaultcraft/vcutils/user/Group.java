@@ -33,7 +33,7 @@ public enum Group {
     COMMON("&7%user%&f: &7%message%", 1, 1, false, ChatColor.GRAY, ChatColor.GRAY),
 
     //EXTRA
-    YOUTUBE("&f/&c&lYOU&f&lTUBE&f/ &7%user%&c: &7%message%", 5, 20, true, ChatColor.DARK_RED, ChatColor.GRAY);
+    YOUTUBE("&f/&c&lYOU&f&lTUBE&f/ &7%user %&c: &7%message%", 5, 20, true, ChatColor.DARK_RED, ChatColor.GRAY);
 
     private String tag;
     private int permLevel;

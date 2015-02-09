@@ -126,14 +126,4 @@ public class CommandManager implements Listener {
         return commands;
     }
 
-    public static LinkedList<ICommand> getCommandsForGroup(Group g) {
-        LinkedList<ICommand> theCommands = new LinkedList<ICommand>();
-        for(ICommand command : getCommands().values()) {
-            if(Group.hasPermission(g, command.gerPermission())) {
-                theCommands.add(command);
-            }
-        }
-
-       return theCommands;
-    }
 }

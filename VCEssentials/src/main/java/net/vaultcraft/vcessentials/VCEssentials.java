@@ -101,7 +101,7 @@ public class VCEssentials extends JavaPlugin implements Listener {
         CommandManager.addCommand(new VCClearChatPersonal("ccp", Group.COMMON, "clearchat"));
         CommandManager.addCommand(new VCChatDelay("chatdelay", Group.ADMIN, "ccd"));
         CommandManager.addCommand(new VCVote("vote", Group.COMMON, "v"));
-        CommandManager.addCommand(new VCCommands("commands", Group.COMMON, "permissions"));
+
         CommandManager.addCommand(new VCAfk("afk", Group.COMMON, "away"));
         CommandManager.addCommand(new VCMe("me", Group.WOLF, "emote"));
         CommandManager.addCommand(new VCSetPrefix("setprefix", Group.MANAGER));
