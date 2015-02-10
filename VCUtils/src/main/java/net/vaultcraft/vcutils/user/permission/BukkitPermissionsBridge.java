@@ -2,7 +2,14 @@ package net.vaultcraft.vcutils.user.permission;
 
 import net.vaultcraft.vcutils.VCUtils;
 import net.vaultcraft.vcutils.user.Group;
+import net.vaultcraft.vcutils.user.UserLoadedEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.PermissionAttachment;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -12,8 +19,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class BukkitPermissionsBridge implements Listener {
+
+    private BukkitPermissionsFile permsFile;
+    private HashMap<Player, PermissionAttachment> activePermissions;
+
+    public BukkitPermissionsBridge()
+    {
+        try {
+            permsFile = new BukkitPermissionsFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        activePermissions = new HashMap<>();
+    }
     private class BukkitPermissionsFile {
 
         private HashMap<Group, List<String>> permissions;
@@ -65,6 +87,31 @@ public class BukkitPermissionsBridge implements Listener {
             writer.write(data.toJSONString());
             writer.flush();
             writer.close();
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    public void onUserLoad(UserLoadedEvent event) throws Exception {
+        Player p = event.getUser().getPlayer();
+        PermissionAttachment attachment = p.addAttachment(VCUtils.getInstance());
+        List<String> perms = permsFile.permissions.get(event.getUser().getGroup().getHighest());
+        if(perms == null)
+        {
+            throw new Exception("Group's permission object is null! Go bug CK to fix this.");
+        }
+        for(String perm : perms) {
+            attachment.setPermission(perm, true);
+        }
+
+        activePermissions.put(p, attachment);
+
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        if(activePermissions.containsKey(event.getPlayer())) {
+            activePermissions.remove(event.getPlayer());
         }
     }
 }
