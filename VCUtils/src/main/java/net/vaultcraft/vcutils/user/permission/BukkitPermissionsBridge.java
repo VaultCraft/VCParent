@@ -95,14 +95,17 @@ public class BukkitPermissionsBridge implements Listener {
     public void onUserLoad(UserLoadedEvent event) throws Exception {
         Player p = event.getUser().getPlayer();
         PermissionAttachment attachment = p.addAttachment(VCUtils.getInstance());
-        List<String> perms = permsFile.permissions.get(event.getUser().getGroup().getHighest());
-        if(perms == null)
-        {
-            throw new Exception("Group's permission object is null! Go bug CK to fix this.");
+        for(Group g : event.getUser().getGroup().getAllGroups()) {
+            List<String> perms = permsFile.permissions.get(g);
+            if(perms == null)
+            {
+                throw new Exception("Group " + g.getName() + " permission object is null! Go bug CK to fix this.");
+            }
+            for(String perm : perms) {
+                attachment.setPermission(perm, true);
+            }
         }
-        for(String perm : perms) {
-            attachment.setPermission(perm, true);
-        }
+
 
         activePermissions.put(p, attachment);
 
