@@ -22,6 +22,7 @@ import net.vaultcraft.vcutils.sign.SignLoader;
 import net.vaultcraft.vcutils.uncommon.GhostFactory;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.User;
+import net.vaultcraft.vcutils.user.permission.BukkitPermissionsBridge;
 import net.vaultcraft.vcutils.util.BungeeUtil;
 import net.vaultcraft.vcutils.util.SignGUI;
 import net.vaultcraft.vcutils.voting.RewardHandler;
@@ -102,6 +103,7 @@ public class VCUtils extends JavaPlugin {
         }
 
         new RewardHandler();
+        new BukkitPermissionsBridge(this);
 
         sqlite = new SQLite(this, this.getDataFolder()+"/sqlite.db"); // TODO un-hardcode this.
 

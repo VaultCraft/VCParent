@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -19,15 +19,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class BukkitPermissionsBridge implements Listener {
 
     private BukkitPermissionsFile permsFile;
     private HashMap<Player, PermissionAttachment> activePermissions;
 
-    public BukkitPermissionsBridge()
+    public BukkitPermissionsBridge(Plugin plugin)
     {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         try {
             permsFile = new BukkitPermissionsFile();
         } catch (Exception e) {
