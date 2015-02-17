@@ -54,23 +54,20 @@ public class BukkitPermissionsBridge implements Listener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                GenDefaultPermissions(new JSONObject());
+            } else {
+
+
+                JSONParser parser = new JSONParser();
+                JSONObject data = null;
+
+                data = (JSONObject) parser.parse(new FileReader(permsJson));
+
+                for (Group g : Group.values()) {
+                    permissions.put(g, (List<String>) data.get(g.getName()));
+                }
             }
-
-
-            JSONParser parser = new JSONParser();
-            JSONObject data = null;
-
-            data = (JSONObject) parser.parse(new FileReader(permsJson));
-            if(data.isEmpty())
-            {
-                GenDefaultPermissions(data);
-            }
-
-            for(Group g : Group.values())
-            {
-                permissions.put(g, (List<String>) data.get(g.getName()));
-            }
-
 
         }
 
