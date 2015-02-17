@@ -1,6 +1,7 @@
 package net.vaultcraft.vcutils.user.permission;
 
 import net.vaultcraft.vcutils.VCUtils;
+import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.UserLoadedEvent;
 import org.bukkit.entity.Player;
@@ -45,20 +46,16 @@ public class BukkitPermissionsBridge implements Listener {
         private BukkitPermissionsFile() throws Exception {
             permissions = new HashMap<>();
             permsJson = new File(VCUtils.getInstance().getDataFolder().getAbsolutePath(), "permissions.json");
-            boolean success = false;
             if(!permsJson.exists())
             {
                 try {
-                    success = permsJson.createNewFile();
+                    //noinspection ResultOfMethodCallIgnored
+                    permsJson.createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-            if(!success)
-            {
-                throw new Exception("Couldn't create new permissions JSON file.");
-            }
 
             JSONParser parser = new JSONParser();
             JSONObject data = null;
