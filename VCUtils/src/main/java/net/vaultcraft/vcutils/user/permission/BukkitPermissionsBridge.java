@@ -36,7 +36,8 @@ public class BukkitPermissionsBridge implements Listener {
 
         activePermissions = new HashMap<>();
     }
-    private class BukkitPermissionsFile {
+
+    public class BukkitPermissionsFile {
 
         private HashMap<Group, List<String>> permissions;
         File permsJson;
