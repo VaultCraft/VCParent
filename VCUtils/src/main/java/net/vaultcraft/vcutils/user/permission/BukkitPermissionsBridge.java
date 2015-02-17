@@ -40,7 +40,7 @@ public class BukkitPermissionsBridge implements Listener {
 
     public class BukkitPermissionsFile {
 
-        private HashMap<Group, List<String>> permissions;
+        private HashMap<String, List<String>> permissions;
         File permsJson;
 
         private BukkitPermissionsFile() throws Exception {
@@ -65,7 +65,7 @@ public class BukkitPermissionsBridge implements Listener {
                 data = (JSONObject) parser.parse(new FileReader(permsJson));
 
                 for (Group g : Group.values()) {
-                    permissions.put(g, (List<String>) data.get(g.getName()));
+                    permissions.put(g.getName(), (List<String>) data.get(g.getName()));
                 }
             }
 
@@ -91,7 +91,7 @@ public class BukkitPermissionsBridge implements Listener {
         Player p = event.getUser().getPlayer();
         PermissionAttachment attachment = p.addAttachment(VCUtils.getInstance());
         for(Group g : event.getUser().getGroup().getAllGroups()) {
-            List<String> perms = permsFile.permissions.get(g);
+            List<String> perms = permsFile.permissions.get(g.toString());
             if(perms == null)
             {
                 throw new Exception("Group " + g.getName() + " permission object is null! Go bug CK to fix this.");
