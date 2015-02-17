@@ -1,7 +1,6 @@
 package net.vaultcraft.vcutils.user.permission;
 
 import net.vaultcraft.vcutils.VCUtils;
-import net.vaultcraft.vcutils.logging.Logger;
 import net.vaultcraft.vcutils.user.Group;
 import net.vaultcraft.vcutils.user.UserLoadedEvent;
 import org.bukkit.entity.Player;
@@ -18,6 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class BukkitPermissionsBridge implements Listener {
         private void GenDefaultPermissions(JSONObject data) throws IOException {
             for(Group g : Group.values())
             {
-                data.put(g.getName(), new String[] {"vc.legacy."+g.getName()});
+                data.put(g.getName(), Arrays.asList("vc.legacy."+g.getName()));
             }
 
             FileWriter writer = new FileWriter(permsJson, false);
