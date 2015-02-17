@@ -87,8 +87,11 @@ public class CommandManager implements Listener {
             commands.put(alias.toLowerCase(), cmd);
         }
         commands.put(cmd.getName(), cmd);
-        if(!VCUtils.getInstance().getServer().getPluginManager().getPermissions().contains(cmd.getPermission()))
+        try {
             VCUtils.getInstance().getServer().getPluginManager().addPermission(cmd.getPermission());
+        } catch (IllegalArgumentException ex) {
+            Logger.warning(VCUtils.getInstance(), "Permission Collision? " + ex.getMessage());
+        }
     }
 
     public static void removeCommand(ICommand cmd) {
