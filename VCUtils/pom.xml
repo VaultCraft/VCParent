@@ -18,6 +18,7 @@
                 </excludes>
             </resource>
         </resources>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>

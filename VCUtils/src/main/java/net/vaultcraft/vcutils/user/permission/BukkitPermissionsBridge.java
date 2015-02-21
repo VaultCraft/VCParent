@@ -10,14 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.Plugin;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,53 +29,6 @@ public class BukkitPermissionsBridge implements Listener {
         }
 
         activePermissions = new HashMap<>();
-    }
-
-    public class BukkitPermissionsFile {
-
-        private HashMap<String, List<String>> permissions;
-        File permsJson;
-
-        private BukkitPermissionsFile() throws Exception {
-            permissions = new HashMap<>();
-            permsJson = new File(VCUtils.getInstance().getDataFolder().getAbsolutePath(), "permissions.json");
-            if(!permsJson.exists())
-            {
-                try {
-                    //noinspection ResultOfMethodCallIgnored
-                    permsJson.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                GenDefaultPermissions(new JSONObject());
-            } else {
-
-
-                JSONParser parser = new JSONParser();
-                JSONObject data = null;
-
-                data = (JSONObject) parser.parse(new FileReader(permsJson));
-
-                for (Group g : Group.values()) {
-                    permissions.put(g.getName(), (List<String>) data.get(g.getName()));
-                }
-            }
-
-        }
-
-
-        private void GenDefaultPermissions(JSONObject data) throws IOException {
-            for(Group g : Group.values())
-            {
-                data.put(g.getName(), Arrays.asList("vc.legacy."+g.getName()));
-            }
-
-            FileWriter writer = new FileWriter(permsJson, false);
-            writer.write(data.toJSONString());
-            writer.flush();
-            writer.close();
-        }
     }
 
 
