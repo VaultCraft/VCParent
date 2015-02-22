@@ -24,7 +24,7 @@ import java.util.*;
 
 public class VCServer extends ICommand {
 
-    private static LinkedList<VCServerConfigItem> server_map = new LinkedList<>();
+    private static ArrayList<VCServerConfigItem> server_map = new ArrayList<>();
 
     public VCServer(String name, Group permission, String... aliases) {
         super(name, permission, aliases);
@@ -46,7 +46,7 @@ public class VCServer extends ICommand {
                 e.printStackTrace();
             }
         } else {
-            server_map = (LinkedList<VCServerConfigItem>) serversConfig.get("servers");
+            server_map = (ArrayList<VCServerConfigItem>) serversConfig.get("servers");
         }
 
         Bukkit.getPluginManager().registerEvents(new VCServerListener(), VCEssentials.getInstance());
