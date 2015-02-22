@@ -10,6 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**

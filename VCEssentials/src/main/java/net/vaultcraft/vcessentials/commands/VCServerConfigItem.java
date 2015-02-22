@@ -5,7 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VCServerConfigItem implements ConfigurationSerializable
@@ -13,14 +15,14 @@ public class VCServerConfigItem implements ConfigurationSerializable
     Material material;
     String displayName;
     String server;
-    String[] lore;
+    List<String> lore;
 
     public VCServerConfigItem(Map<String, Object> map)
     {
         this.material = Material.getMaterial((String) map.get("material"));
         this.displayName = (String) map.get("displayName");
         this.server = (String) map.get("server");
-        this.lore = (String[]) map.get("lore");
+        this.lore = (List<String>) map.get("lore");
     }
 
     public VCServerConfigItem(Material m, String displayName, String server, String... lore)
@@ -28,13 +30,13 @@ public class VCServerConfigItem implements ConfigurationSerializable
         this.material = m;
         this.displayName = displayName;
         this.server = server;
-        this.lore = lore;
+        this.lore = Arrays.asList(lore);
     }
 
 
     public ItemStack toItemStack()
     {
-        return ItemUtils.build(material, displayName, lore);
+        return ItemUtils.build(material, displayName, (String[]) lore.toArray());
     }
 
     @Override
