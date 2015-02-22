@@ -36,7 +36,7 @@ public class VCServerConfigItem implements ConfigurationSerializable
 
     public ItemStack toItemStack()
     {
-        return ItemUtils.build(material, displayName, (String[]) lore.toArray());
+        return ItemUtils.build(material, displayName, lore.toArray(new String[lore.size()]));
     }
 
     @Override
